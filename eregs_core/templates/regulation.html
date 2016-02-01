@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block title %}
+Main
+{% endblock %}
+
+{% block body %}
+<div class="container-fluid">
+    <div clas="row">
+        <div class="col-md-2">
+            {% include "sidebar.html" %}
+        </div>
+        <div class="col-md-10">
+            {% with node=reg %}
+                {% include "regnode.html" %}
+            {% endwith %}
+        </div>
+    </div>
+</div>
+{% endblock %}

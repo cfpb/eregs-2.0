@@ -1,0 +1,12 @@
+<div>
+    <ul>
+        {% for entry in toc.children %}
+        <li>
+            <a href="{{ entry.attributes.target }}">
+                {{ entry.children.1.children.0 }}
+            </a>
+        </li>
+        {% endfor %}
+    </ul>
+
+</div>

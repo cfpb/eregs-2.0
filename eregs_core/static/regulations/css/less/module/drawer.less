@@ -1,0 +1,268 @@
+/*
+Regulation Drawer
+=========================
+* drawer.less contains and imports styles for the left-hand navigation drawer
+* On large displays it is on the screen by default.
+* It can be toggled with the "open" and "close" classes.
+*/
+
+/*
+Universal drawer styles
+--------------------- */
+
+.panel {
+    background-color: @bg_gray;
+    border-right: 2px solid @medium_gray;
+    .avenir-next-demi;
+    font-size: .875em;
+    overflow-y: scroll; /* allow content to be scrollable */
+}
+
+.toc-head {
+    a:hover,
+    a:active {
+        background-color: @light_field;
+    }
+}
+
+/*
+Drawer Behavior
+===============
+
+* The default state of the drawer is open on large screens
+* In the default state the `close` class closes the drawer
+* Browsers with resolutions below 1100px wide will default to a closed drawer
+
+Drawer default state
+==================== */
+
+/*
+Panel Header
+------------ */
+
+.drawer-header {
+
+    .toc-type {
+        position: fixed;
+        margin: 0;
+        width: 240px;
+        height: 40px;
+        line-height: 40px;
+        background-color: @bg_gray;
+        border-right: 2px solid @medium_gray;
+        z-index: 100;
+        border-bottom: 1px solid @medium_gray;
+        padding: 0 15px;
+    }
+
+    h2 {
+        color: @mid_text;
+        font-size: .875em; /* 12px / (26px * .875em) */
+        .avenir-next-demi;
+        text-transform: uppercase;
+    }
+}
+
+/*
+Drawer Links
+============ */
+
+.toc-head {
+    a:link,
+    a:visited {
+        color: @dark_gray;
+        text-decoration: none;
+    }
+
+    a:hover,
+    a:active {
+            background-color: @light_field;
+            border-bottom: 1px solid @medium_gray;
+    }
+}
+
+/*
+Panel Slide Button
+------------------
+.panel-slide toggles the drawer open and closed  */
+
+.panel-slide {
+    display: block;
+    height: 34px; /* match height of main header */
+    line-height: 34px;
+    width: 40px;
+    float: right;
+    cursor: pointer;
+    text-align: center;
+    font-size: 0.875em;
+
+    /* use an image for IE7 and browsers that don't support @font-face */
+    .lt-ie8 &,
+    html.no-fontface & {
+        background: url(../img/left.png) center center no-repeat;
+        color: transparent;
+    }
+
+    .close & {
+        border-bottom: 1px solid @medium_gray;
+
+        .lt-ie8 &,
+         html.no-fontface & {
+            background: url(../img/right.png) center center no-repeat;
+            color: transparent;
+        }
+    }
+}
+
+/* use the icon font for the drawer toggle arrow in browsers that support it */
+.panel-slide:before {
+    .cf-icon;
+    content: "\e000";
+
+    .close & {        
+        content: "\e002";
+    }
+}
+
+
+/*
+TOC Nav Links
+-------------
+.toc-nav-links toggle between the types of drawer content
+currently these are TOC, History, and Search
+*/
+
+.toc-nav-link {
+    display: inline-block;
+    zoom: 1;
+    *display: inline;
+    height: 100%;
+    padding: 0;
+    margin: 0;
+    width: 56px;
+    text-align: center;
+    border-right: 1px solid @medium_gray;
+    vertical-align: center;
+
+    &.current {
+        background-color: @light_field;
+        border-bottom: 1px solid @medium_gray;
+    }
+
+    .close & {
+        display: block;
+        *display: block;
+        border-right: none;
+        width: 40px;
+    }
+
+    /* Fall back to PNG images for drawer icons when @font-face isn't supported */
+    .cf-icon {
+        html.no-fontface & {
+            background-size: 20px;
+            color: transparent;
+        }
+    }
+
+    .cf-icon-table-of-contents {
+        html.no-fontface & {
+            background: url(../img/nav-link.png) center center no-repeat;
+        }
+    }
+
+    .cf-icon-search {
+        html.no-fontface & {
+            background: url(../img/search.png) center center no-repeat;
+        }
+    }
+
+    .cf-icon-history {
+        html.no-fontface & {
+            background: url(../img/history.png) center center no-repeat;
+        }
+    }
+}
+
+.close {
+     .toc-nav-link {
+          &.current {
+              background-color: @bg_gray;
+              border-bottom: none;
+          }
+      }
+
+      .toc-nav-link:hover {
+          background-color: @light_field;
+          border-bottom: none;
+      }
+}
+
+/* align the drawer toggle list*/
+.drawer-toggles {
+    position: relative;
+    top: 0;
+    left: 0;
+    margin: 0;
+    width: 200px;
+
+    .close & {
+        position: absolute;
+        width: 40px;
+        top: 33px;
+        border-top: 1px solid @medium_gray;
+        right: 0;
+        left: 198px;
+    }
+}
+
+.drawer-toggles li {
+    display: inline-block;
+    zoom: 1;
+    *display: inline;
+    margin-left: -4px;
+    border-right: 1px solid @medium_gray;
+
+    .close & {
+        margin-left: 0;
+        display: list-item;
+        border-bottom: 1px solid @medium_gray;
+        border-right: none;
+    }
+}
+
+
+/*
+Drawer default closed state
+---------------------------- */
+
+.panel.close {
+    left: -200px;
+    top: 200px;
+    overflow-y: hidden;
+
+/* slide content fully offscreen*/
+    .drawer-content {
+        position: absolute;
+        left: -999px;
+    }
+
+    .drawer-header {
+        left: -260px; /*60px extra to accomodate for stacked buttons*/
+
+        .toc-type {
+            display: none;
+        }
+    }
+}
+
+.close .toc-head {
+    left: -200px;
+    margin-right: 15px;
+    height: 150px; /* extra height for TOC toggle buttons */
+}
+
+/*
+Small resolution drawer state
+============================= */
+
+@import "drawer-content.less";

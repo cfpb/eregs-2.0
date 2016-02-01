@@ -1,0 +1,615 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <title>Code coverage report for source/views/main/child-view.js</title>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="../../../prettify.css">
+    <link rel="stylesheet" href="../../../base.css">
+    <style type='text/css'>
+        div.coverage-summary .sorter {
+            background-image: url(../../../sort-arrow-sprite.png);
+        }
+    </style>
+</head>
+<body>
+<div class="header low">
+    <h1>Code coverage report for <span class="entity">source/views/main/child-view.js</span></h1>
+    <h2>
+        Statements: <span class="metric">41.57% <small>(37 / 89)</small></span> &nbsp;&nbsp;&nbsp;&nbsp;
+        Branches: <span class="metric">21.43% <small>(9 / 42)</small></span> &nbsp;&nbsp;&nbsp;&nbsp;
+        Functions: <span class="metric">33.33% <small>(4 / 12)</small></span> &nbsp;&nbsp;&nbsp;&nbsp;
+        Lines: <span class="metric">41.57% <small>(37 / 89)</small></span> &nbsp;&nbsp;&nbsp;&nbsp;
+        Ignored: <span class="metric"><span class="ignore-none">none</span></span> &nbsp;&nbsp;&nbsp;&nbsp;
+    </h2>
+    <div class="path"><a href="../../../index.html">All files</a> &#187; <a href="index.html">source/views/main/</a> &#187; child-view.js</div>
+</div>
+<div class="body">
+<pre><table class="coverage">
+<tr><td class="line-count">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90
+91
+92
+93
+94
+95
+96
+97
+98
+99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117
+118
+119
+120
+121
+122
+123
+124
+125
+126
+127
+128
+129
+130
+131
+132
+133
+134
+135
+136
+137
+138
+139
+140
+141
+142
+143
+144
+145
+146
+147
+148
+149
+150
+151
+152
+153
+154
+155
+156
+157
+158
+159
+160
+161
+162
+163
+164
+165
+166
+167
+168
+169
+170
+171
+172
+173
+174
+175
+176
+177
+178
+179
+180
+181
+182
+183
+184
+185
+186
+187
+188
+189
+190
+191</td><td class="line-coverage"><span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">6</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">6</span>
+<span class="cline-any cline-yes">6</span>
+<span class="cline-any cline-yes">6</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">6</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">6</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">6</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">6</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">6</span>
+<span class="cline-any cline-yes">6</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">6</span>
+<span class="cline-any cline-yes">6</span>
+<span class="cline-any cline-yes">6</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">6</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">6</span>
+<span class="cline-any cline-yes">3</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">6</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">6</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">6</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">6</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">6</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">6</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">6</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">6</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">'use strict';
+var $ = require('jquery');
+var _ = require('underscore');
+var Backbone = require('backbone');
+require('../../events/scroll-stop.js');
+var Router = require('../../router');
+var HeaderEvents = require('../../events/header-events');
+var DrawerEvents = require('../../events/drawer-events');
+var Helpers = require('../../helpers');
+var MainEvents = require('../../events/main-events');
+var GAEvents = require('../../events/ga-events');
+Backbone.$ = $;
+&nbsp;
+var ChildView = Backbone.View.extend({
+    initialize: function() {
+        var cb;
+&nbsp;
+        this.model = this.options.model;
+        this.externalEvents = MainEvents;
+        this.listenTo(this.externalEvents, 'section:rendered', this.setElement);
+&nbsp;
+        // callback to be sent to model's get method
+        // called after ajax resolves sucessfully
+        cb = <span class="fstat-no" title="function not covered" >function(success, returned) {</span>
+<span class="cstat-no" title="statement not covered" >            if (success) {</span>
+<span class="cstat-no" title="statement not covered" >                if (typeof this.options.cb !== 'undefined') {</span>
+<span class="cstat-no" title="statement not covered" >                    this.options.cb(returned, this.options);</span>
+                }
+&nbsp;
+<span class="cstat-no" title="statement not covered" >                if (typeof this.title === 'undefined') {</span>
+<span class="cstat-no" title="statement not covered" >                    this.title = this.assembleTitle();</span>
+                }
+&nbsp;
+<span class="cstat-no" title="statement not covered" >                this.route(this.options);</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >                GAEvents.trigger('section:open', this.options);</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >                this.attachWayfinding();</span>
+<span class="cstat-no" title="statement not covered" >                this.render();</span>
+            }
+            else {
+<span class="cstat-no" title="statement not covered" >                this.externalEvents.trigger('section:error');</span>
+            }
+        }.bind(this);
+&nbsp;
+        // if the site wasn't loaded on this content
+        <span class="missing-if-branch" title="if path not taken" >I</span>if (this.options.render) {
+<span class="cstat-no" title="statement not covered" >            this.model.get(this.options.id, cb);</span>
+        }
+        else <span class="missing-if-branch" title="else path not taken" >E</span>if (this.options.id) {
+            // hard code the id update for users who directly load a section
+            $('.wayfinding').attr('id', 'wayfind-' + this.id);
+            // attach wayfinding and trigger the section:open drawer event
+            this.attachWayfinding();
+            DrawerEvents.trigger('section:open', this.id);
+        }
+&nbsp;
+        this.$sections = this.$sections || <span class="branch-1 cbranch-no" title="branch not covered" >{};</span>
+        this.activeSection = this.id;
+        this.$activeSection = $('#' + this.activeSection);
+&nbsp;
+        return this;
+    },
+&nbsp;
+    setElement: function() {
+        if (this.id) {
+            Backbone.View.prototype.setElement.call(this, '#' + this.id);
+        }
+    },
+&nbsp;
+    attachWayfinding: function() {
+        this.updateWayfinding();
+        // * when a scroll event completes, check what the active secion is
+        // we can't scope the scroll to this.$el because there's no localized
+        // way to grab the scroll event, even with overflow:scroll
+        $(window).on('scrollstop', (_.bind(this.checkActiveSection, this)));
+    },
+&nbsp;
+    render: <span class="fstat-no" title="function not covered" >function() {</span>
+<span class="cstat-no" title="statement not covered" >        this.updateWayfinding();</span>
+<span class="cstat-no" title="statement not covered" >        HeaderEvents.trigger('section:rendered', this.id);</span>
+<span class="cstat-no" title="statement not covered" >        DrawerEvents.trigger('section:open', this.id);</span>
+    },
+&nbsp;
+    changeFocus: <span class="fstat-no" title="function not covered" >function(id) {</span>
+<span class="cstat-no" title="statement not covered" >        $(id).focus();</span>
+    },
+&nbsp;
+    assembleTitle: <span class="fstat-no" title="function not covered" >function() {</span>
+<span class="cstat-no" title="statement not covered" >        var titleParts, newTitle;</span>
+<span class="cstat-no" title="statement not covered" >        titleParts = _.compact(document.title.split(' '));</span>
+<span class="cstat-no" title="statement not covered" >        newTitle = [titleParts[0], titleParts[1], Helpers.idToRef(this.id), '|', 'eRegulations'];</span>
+<span class="cstat-no" title="statement not covered" >        return newTitle.join(' ');</span>
+    },
+&nbsp;
+    // naive way to update the active table of contents link and wayfinding header
+    // once a scroll event ends, we loop through each content section DOM node
+    // the first one whose offset is greater than the window scroll position, accounting
+    // for the fixed position header, is deemed the active section
+    checkActiveSection: <span class="fstat-no" title="function not covered" >function() {</span>
+<span class="cstat-no" title="statement not covered" >        var len = this.$contentContainer.length - 1;</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        for (var i = 0; i &lt;= len; i++) {</span>
+<span class="cstat-no" title="statement not covered" >            if (this.$sections[i].offset().top + this.$contentHeader.height() &gt;= $(window).scrollTop()) {</span>
+<span class="cstat-no" title="statement not covered" >                if (_.isEmpty(this.activeSection) || (this.activeSection !== this.$sections[i].id)) {</span>
+<span class="cstat-no" title="statement not covered" >                    this.activeSection = this.$sections[i][0].id;</span>
+<span class="cstat-no" title="statement not covered" >                    this.$activeSection = $(this.$sections[i][0]);</span>
+                    // **Event** trigger active section change
+<span class="cstat-no" title="statement not covered" >                    HeaderEvents.trigger('section:open', this.activeSection);</span>
+<span class="cstat-no" title="statement not covered" >                    this.externalEvents.trigger('paragraph:active', this.activeSection);</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >                    if (typeof window.history !== 'undefined' &amp;&amp; typeof window.history.replaceState !== 'undefined') {</span>
+                        // update hash in url
+<span class="cstat-no" title="statement not covered" >                        window.history.replaceState(</span>
+                            null,
+                            null,
+                            window.location.origin + window.location.pathname + window.location.search + '#' + this.activeSection
+                        );
+                    }
+&nbsp;
+<span class="cstat-no" title="statement not covered" >                    return;</span>
+                }
+            }
+        }
+&nbsp;
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        return this;</span>
+    },
+&nbsp;
+    updateWayfinding: function() {
+        var i, len;
+&nbsp;
+        // cache all sections in the DOM eligible to be the active section
+        // also cache some jQobjs that we will refer to frequently
+        this.$contentHeader = this.$contentHeader || $('header.reg-header');
+&nbsp;
+        // sections that are eligible for being the active section
+        this.$contentContainer = $('#' + this.id).find('.level-1 li[id], .reg-section, .appendix-section, .supplement-section');
+&nbsp;
+        // cache jQobjs of each reg section
+        len = this.$contentContainer.length;
+&nbsp;
+        // short term solution: sometimes, back buttoning on diffs, this.$sections undefined. why?
+        this.$sections = this.$sections || {};
+&nbsp;
+        for (i = 0; i &lt; len; i++) {
+<span class="cstat-no" title="statement not covered" >            this.$sections[i] = $(this.$contentContainer[i]);</span>
+        }
+    },
+&nbsp;
+    route: <span class="fstat-no" title="function not covered" >function(options) {</span>        <span class="cstat-no" title="statement not covered" >if (Router.hasPushState &amp;&amp; typeof options.noRoute === 'undefined') {</span>
+<span class="cstat-no" title="statement not covered" >            var url = this.url,</span>
+                hashPosition;
+&nbsp;
+            // if a hash has been passed in
+<span class="cstat-no" title="statement not covered" >            if (options &amp;&amp; typeof options.scrollToId !== 'undefined') {</span>
+<span class="cstat-no" title="statement not covered" >                url += '#' + options.scrollToId;</span>
+<span class="cstat-no" title="statement not covered" >                this.navigate(url);</span>
+<span class="cstat-no" title="statement not covered" >                $('html, body').scrollTop($('#' + options.scrollToId).offset().top);</span>
+            } else {
+<span class="cstat-no" title="statement not covered" >                if (typeof Backbone.history.fragment === 'undefined') {</span>
+<span class="cstat-no" title="statement not covered" >                    hashPosition = -1;</span>
+                } else {
+<span class="cstat-no" title="statement not covered" >                    hashPosition = Backbone.history.fragment.indexOf('#');</span>
+                }
+&nbsp;
+<span class="cstat-no" title="statement not covered" >                if (hashPosition !== -1) {</span>
+<span class="cstat-no" title="statement not covered" >                    url = url.slice(0, hashPosition) + '#' + options.id;</span>
+                } else <span class="cstat-no" title="statement not covered" >if (options.type !== 'diff') {</span>
+<span class="cstat-no" title="statement not covered" >                    url += '#' + options.id;</span>
+                }
+<span class="cstat-no" title="statement not covered" >            this.navigate(url);</span>
+            }
+        }
+    },
+&nbsp;
+    navigate: <span class="fstat-no" title="function not covered" >function(url) {</span>
+<span class="cstat-no" title="statement not covered" >        Router.navigate(url);</span>
+<span class="cstat-no" title="statement not covered" >        document.title = this.title;</span>
+    },
+&nbsp;
+    remove: <span class="fstat-no" title="function not covered" >function() {</span>
+<span class="cstat-no" title="statement not covered" >        $(window).off('scrollstop');</span>
+<span class="cstat-no" title="statement not covered" >        this.stopListening();</span>
+<span class="cstat-no" title="statement not covered" >        this.off();</span>
+<span class="cstat-no" title="statement not covered" >        return this;</span>
+    }
+});
+&nbsp;
+module.exports = ChildView;
+&nbsp;</pre></td></tr>
+</table></pre>
+
+</div>
+<div class="footer">
+    <div class="meta">Generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Thu Dec 17 2015 17:46:22 GMT-0500 (EST)</div>
+</div>
+<script src="../../../prettify.js"></script>
+<script>
+window.onload = function () {
+        if (typeof prettyPrint === 'function') {
+            prettyPrint();
+        }
+};
+</script>
+<script src="../../../sorter.js"></script>
+</body>
+</html>

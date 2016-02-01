@@ -1,0 +1,25 @@
+<div>
+    {% if node.tag == "section" or node.tag == "paragraph" or node.tag == "appendix" or node.tag == "appendixSection" %}
+        {% for child in node.children %}
+            {% with node=child template_name="regnode.html" %}
+                {% include template_name %}
+            {% endwith %}
+        {% endfor %}
+    {% elif node.tag == "subject" %}
+        <h2>{{ node.children.0 }}</h2>
+    {% elif node.tag == "title" %}
+        <h3>{{ node.children.0 }}</h3>
+    {% elif node.tag == "content" %}
+        <p>
+            {% for child in node.children %}
+                {% if child.tag == "ref" %}
+                    <a href="{{ child.attributes.target }}">{{ child.children.0 }}</a>
+                {% elif child.tag == "def" %}
+                    {{ child.children.0 }}
+                {% else %}
+                    {{ child }}
+                {% endif %}
+            {% endfor %}
+        </p>
+    {% endif %}
+</div>

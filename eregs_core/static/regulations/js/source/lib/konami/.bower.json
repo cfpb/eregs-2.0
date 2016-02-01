@@ -1,0 +1,13 @@
+{
+  "name": "konami",
+  "_cacheHeaders": {
+    "ETag": "\"15882b9f45e820ecd11f142d1d8eb5f65bc8f0f3\"",
+    "Content-Length": "3340",
+    "Content-Type": "text/plain; charset=utf-8"
+  },
+  "_release": "e-tag:15882b9f4",
+  "main": "index.js",
+  "_source": "https://raw.githubusercontent.com/snaptortoise/konami-js/master/konami.js",
+  "_target": "*",
+  "_originalSource": "https://raw.githubusercontent.com/snaptortoise/konami-js/master/konami.js"
+}

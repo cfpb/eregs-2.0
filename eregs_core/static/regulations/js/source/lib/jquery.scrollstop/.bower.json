@@ -1,0 +1,13 @@
+{
+  "name": "jquery.scrollstop",
+  "_cacheHeaders": {
+    "ETag": "\"a6b805f5dce20023abced8b4accffa4c05e9906d\"",
+    "Content-Length": "1848",
+    "Content-Type": "text/plain; charset=utf-8"
+  },
+  "_release": "e-tag:a6b805f5d",
+  "main": "index.js",
+  "_source": "https://raw.github.com/ssorallen/jquery-scrollstop/v1.0.1/jquery.scrollstop.js",
+  "_target": "*",
+  "_originalSource": "https://raw.github.com/ssorallen/jquery-scrollstop/v1.0.1/jquery.scrollstop.js"
+}

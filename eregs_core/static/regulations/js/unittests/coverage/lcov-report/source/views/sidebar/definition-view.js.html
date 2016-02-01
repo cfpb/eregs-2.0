@@ -1,0 +1,639 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <title>Code coverage report for source/views/sidebar/definition-view.js</title>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="../../../prettify.css">
+    <link rel="stylesheet" href="../../../base.css">
+    <style type='text/css'>
+        div.coverage-summary .sorter {
+            background-image: url(../../../sort-arrow-sprite.png);
+        }
+    </style>
+</head>
+<body>
+<div class="header medium">
+    <h1>Code coverage report for <span class="entity">source/views/sidebar/definition-view.js</span></h1>
+    <h2>
+        Statements: <span class="metric">55.26% <small>(42 / 76)</small></span> &nbsp;&nbsp;&nbsp;&nbsp;
+        Branches: <span class="metric">30% <small>(6 / 20)</small></span> &nbsp;&nbsp;&nbsp;&nbsp;
+        Functions: <span class="metric">50% <small>(7 / 14)</small></span> &nbsp;&nbsp;&nbsp;&nbsp;
+        Lines: <span class="metric">55.26% <small>(42 / 76)</small></span> &nbsp;&nbsp;&nbsp;&nbsp;
+        Ignored: <span class="metric"><span class="ignore-none">none</span></span> &nbsp;&nbsp;&nbsp;&nbsp;
+    </h2>
+    <div class="path"><a href="../../../index.html">All files</a> &#187; <a href="index.html">source/views/sidebar/</a> &#187; definition-view.js</div>
+</div>
+<div class="body">
+<pre><table class="coverage">
+<tr><td class="line-count">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90
+91
+92
+93
+94
+95
+96
+97
+98
+99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117
+118
+119
+120
+121
+122
+123
+124
+125
+126
+127
+128
+129
+130
+131
+132
+133
+134
+135
+136
+137
+138
+139
+140
+141
+142
+143
+144
+145
+146
+147
+148
+149
+150
+151
+152
+153
+154
+155
+156
+157
+158
+159
+160
+161
+162
+163
+164
+165
+166
+167
+168
+169
+170
+171
+172
+173
+174
+175
+176
+177
+178
+179
+180
+181
+182
+183
+184
+185
+186
+187
+188
+189
+190
+191
+192
+193
+194
+195
+196
+197
+198
+199</td><td class="line-coverage"><span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">6</span>
+<span class="cline-any cline-yes">6</span>
+<span class="cline-any cline-yes">6</span>
+<span class="cline-any cline-yes">6</span>
+<span class="cline-any cline-yes">6</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">6</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">6</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">6</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">6</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">8</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">'use strict';
+var $ = require('jquery');
+var _ = require('underscore');
+var Backbone = require('backbone');
+var SidebarModuleView = require('./sidebar-module-view');
+var RegModel = ('../../models/reg-model.js');
+var Helpers = require('../../helpers');
+var Router = require('../../router');
+var MainEvents = require('../../events/main-events');
+var SidebarEvents = require('../../events/sidebar-events');
+var GAEvents = require('../../events/ga-events');
+Backbone.$ = $;
+&nbsp;
+// **Constructor**
+// this.options:
+//
+// * **id** string, dash-delimited id of definition paragraph
+// * **$anchor** jQobj, the reg-view link that opened the def
+//
+// this.options turns into this.model
+var DefinitionView = SidebarModuleView.extend({
+    el: '#definition',
+&nbsp;
+    events: {
+        'click .close-button': 'close',
+        'click .update-definition': 'updateDefinition'
+    },
+&nbsp;
+    initialize: function() {
+        this.externalEvents = SidebarEvents;
+        this.listenTo(this.externalEvents, 'definition:outOfScope', this.displayScopeMsg);
+        this.listenTo(this.externalEvents, 'definition:inScope', this.removeScopeMsg);
+        this.listenTo(this.externalEvents, 'definition:activate', this.unGrayDefinition);
+        this.listenTo(this.externalEvents, 'definition:deactivate', this.grayOutDefinition);
+&nbsp;
+        <span class="missing-if-branch" title="if path not taken" >I</span>if (typeof this.options.id !== 'undefined') {
+<span class="cstat-no" title="statement not covered" >            this.id = this.options.id;</span>
+        }
+&nbsp;
+        <span class="missing-if-branch" title="if path not taken" >I</span>if (typeof this.options.term !== 'undefined') {
+<span class="cstat-no" title="statement not covered" >            this.term = this.options.term;</span>
+<span class="cstat-no" title="statement not covered" >            this.$el.data('defined-term', this.term);</span>
+        }
+&nbsp;
+        // insert the spinner header to be replaced
+        // by the full def once it loads
+        this.renderHeader();
+&nbsp;
+        // if pushState is supported, attach the
+        // appropriate event handlers
+        <span class="missing-if-branch" title="if path not taken" >I</span>if (Router.hasPushState) {
+<span class="cstat-no" title="statement not covered" >            this.events['click .continue-link.interp'] = 'openInterpretation';</span>
+<span class="cstat-no" title="statement not covered" >            this.events['click .continue-link.full-def'] = 'openFullDefinition';</span>
+<span class="cstat-no" title="statement not covered" >            this.events['click .definition'] = 'openFullDefinition';</span>
+<span class="cstat-no" title="statement not covered" >            this.delegateEvents(this.events);</span>
+        }
+    },
+&nbsp;
+    // temporary header w/spinner while definition is loading
+    renderHeader: function() {
+        this.$el.html('&lt;div class="sidebar-header group spinner"&gt;&lt;h4&gt;Defined Term&lt;/h4&gt;&lt;/div&gt;');
+    },
+&nbsp;
+    render: function(html) {
+        this.$el.html(html);
+    },
+&nbsp;
+    renderError: function(error) {
+        this.$el.html('');
+        this.renderHeader();
+        this.$el.children().removeClass('spinner');
+        this.$el.append('&lt;div class="error"&gt;&lt;span class="cf-icon cf-icon-error icon-warning"&gt;&lt;/span&gt;' + error + '&lt;/div&gt;');
+    },
+&nbsp;
+    close: function(e) {
+        e.preventDefault();
+        // return focus to the definition link once the definition is removed
+        $('.definition.active').focus();
+&nbsp;
+        MainEvents.trigger('definition:close');
+        GAEvents.trigger('definition:close', {
+            type: 'definition',
+            by: 'header close button'
+        });
+        this.remove();
+    },
+&nbsp;
+    updateDefinition: <span class="fstat-no" title="function not covered" >function(e) {</span>
+<span class="cstat-no" title="statement not covered" >        e.preventDefault(e);</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        this.externalEvents.trigger('definition:open', {</span>
+            id: $(e.target).data('definition'),
+            term: this.term,
+            cb: <span class="fstat-no" title="function not covered" >function() {</span>
+                // update list of out of scope paragraphs for new definition
+<span class="cstat-no" title="statement not covered" >                MainEvents.trigger('definition:carriedOver');</span>
+            }
+        });
+    },
+&nbsp;
+    // displayed when an open definition doesn't apply to the
+    // whole open section
+    displayScopeMsg: function(id) {
+        var msg = '&lt;p&gt;This term has a different definition for some portions of ';
+        msg += (id) ? Helpers.idToRef(id) + '.' : <span class="branch-1 cbranch-no" title="branch not covered" >'this section.';</span>
+        msg += '&lt;/p&gt;';
+&nbsp;
+        this.$warningContainer = this.$warningContainer || this.$el.find('.definition-warning');
+&nbsp;
+        this.$warningContainer.removeClass('hidden')
+                              .find('.msg').html(msg);
+    },
+&nbsp;
+    // when a definition is fully applicable to the section
+    removeScopeMsg: <span class="fstat-no" title="function not covered" >function() {</span>
+<span class="cstat-no" title="statement not covered" >        if (typeof this.$warningContainer !== 'undefined' &amp;&amp; this.$warningContainer.length &gt; 0) {</span>
+<span class="cstat-no" title="statement not covered" >            this.$warningContainer.addClass('hidden').find('.msg').html('');</span>
+        }
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        this.unGrayDefinition();</span>
+    },
+&nbsp;
+    // for when the definition does not apply to the active section
+    grayOutDefinition: <span class="fstat-no" title="function not covered" >function(defId, href, activeSectionId) {</span>
+<span class="cstat-no" title="statement not covered" >        var $text = this.$el.find('.definition-text'),</span>
+            linkText = 'Load the correct definition for ',
+            link,
+            $msg;
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        if (typeof this.$warningContainer === 'undefined') {</span>
+<span class="cstat-no" title="statement not covered" >            this.displayScopeMsg(Helpers.findBaseSection(activeSectionId));</span>
+        }
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        $msg = this.$warningContainer.find('.msg');</span>
+<span class="cstat-no" title="statement not covered" >        linkText += (defId) ? Helpers.idToRef(activeSectionId) : 'this section';</span>
+<span class="cstat-no" title="statement not covered" >        link = '&lt;a href="' + href + '" class="update-definition inactive internal" data-definition="' + defId + '"&gt;';</span>
+<span class="cstat-no" title="statement not covered" >        link += linkText + '&lt;/a&gt;';</span>
+&nbsp;
+        // remove duplicates
+<span class="cstat-no" title="statement not covered" >        $msg.find('a').remove();</span>
+&nbsp;
+        // insert link to load applicable definition
+<span class="cstat-no" title="statement not covered" >        $msg.append(link);</span>
+&nbsp;
+        // gray out definition text
+<span class="cstat-no" title="statement not covered" >        $text.addClass('inactive');</span>
+    },
+&nbsp;
+    // for when a definition is not in conflict for the active section,
+    // but doesn't apply to the entire section, either
+    unGrayDefinition: <span class="fstat-no" title="function not covered" >function() {</span>
+<span class="cstat-no" title="statement not covered" >        var $text = this.$el.find('.definition-text');</span>
+<span class="cstat-no" title="statement not covered" >        $text.removeClass('inactive');</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        this.$el.find('.definition-warning a').remove();</span>
+    },
+&nbsp;
+    openFullDefinition: <span class="fstat-no" title="function not covered" >function(e) {</span>
+<span class="cstat-no" title="statement not covered" >        e.preventDefault();</span>
+<span class="cstat-no" title="statement not covered" >        var id = $(e.target).data('linked-section') || $(e.target).data('definition'),</span>
+            parentId = Helpers.findBaseSection(id);
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        MainEvents.trigger('section:open', parentId, {</span>
+            scrollToId: id
+        }, 'reg-section');
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        GAEvents.trigger('definition:followCitation', {</span>
+            id: id,
+            type: 'definition'
+        });
+    },
+&nbsp;
+    openInterpretation: <span class="fstat-no" title="function not covered" >function(e) {</span>
+<span class="cstat-no" title="statement not covered" >        e.preventDefault();</span>
+<span class="cstat-no" title="statement not covered" >        var $e = $(e.target),</span>
+            id = $e.data('linked-section'),
+            pid = $e.data('linked-subsection');
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        MainEvents.trigger('section:open', id, {</span>
+            scrollToId: pid
+        }, 'interpretation');
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        GAEvents.trigger('definition:followCitation', {</span>
+            id: id,
+            type: 'definition'
+        });
+    },
+&nbsp;
+    remove: function() {
+        this.stopListening();
+        this.off();
+        this.$el.html('');
+&nbsp;
+        return this;
+    }
+});
+&nbsp;
+module.exports = DefinitionView;
+&nbsp;</pre></td></tr>
+</table></pre>
+
+</div>
+<div class="footer">
+    <div class="meta">Generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Thu Dec 17 2015 17:46:22 GMT-0500 (EST)</div>
+</div>
+<script src="../../../prettify.js"></script>
+<script>
+window.onload = function () {
+        if (typeof prettyPrint === 'function') {
+            prettyPrint();
+        }
+};
+</script>
+<script src="../../../sorter.js"></script>
+</body>
+</html>

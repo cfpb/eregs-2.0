@@ -74,7 +74,7 @@ def recursive_insert(node):
     # if we're a content node, we'd better restore the children that
     # we don't need to recurse on
 
-    if node['tag'] in ['paragraph', 'interpParagraph', 'analysisParagraph']:
+    if node['tag'] in ['paragraph', 'interpParagraph', 'analysisParagraph', 'tocSecEntry', 'tocAppEntry']:
         for child in node['children']:
             if 'label' not in child['attributes']:
                 node_to_insert.setdefault('children', []).append(child)
@@ -91,7 +91,7 @@ def recursive_insert(node):
         coll = interps
     elif node['tag'] in ['analysisSection', 'analysisParagraph']:
         coll = analysis
-    elif node['tag'] in ['tableOfContents']:
+    elif node['tag'] in ['tableOfContents', 'tocSecEntry', 'tocAppEntry']:
         coll = toc
     elif node['tag'] in ['fdsys', 'preamble']:
         coll = meta
@@ -134,7 +134,10 @@ def get_with_descendants(coll, node_id, return_format='nested'):
     descendants = coll.find({'node_id': {'$regex': node_prefix},
                              'left': {'$gt': result['left']},
                              'right': {'$lt': result['right']}}, sort=[('left', ASCENDING)])
-    result['children'] = []
+
+    # regnodes don't have any children, but some nodes like meta and fdsys do
+    if 'children' not in result:
+        result['children'] = []
 
     if return_format == 'nested':
         last_node_at_depth = {result['depth']: result}
@@ -166,7 +169,7 @@ def get_ancestors(coll, node_id, ancestor_tag=None):
     """
 
     # TODO: add the option to return as hierarchy, same as get_all_descendants
-    
+
     node = coll.find_one({'node_id': node_id})
     # dump the Mongo id, which is not serializable
     del node['_id']
@@ -243,8 +246,8 @@ def load_xml(xml_filename):
     part_content_tree, _ = xml_to_json(part_content, 1, prefix)
     part_toc_tree, _ = xml_to_json(part_toc, 1, prefix)
 
-    # output_file = os.path.join(json_root, prefix + ':part.json')
-    # json.dump(part_content_tree, open(output_file, 'w'), indent=4)
+    output_file = os.path.join(json_root, prefix + ':part.json')
+    json.dump(part_content_tree, open(output_file, 'w'), indent=4)
 
     # insert the metadata
     recursive_insert(xml_to_json(preamble, 1, prefix)[0])

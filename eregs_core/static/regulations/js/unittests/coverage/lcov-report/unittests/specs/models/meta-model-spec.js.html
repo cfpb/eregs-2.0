@@ -1,0 +1,306 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <title>Code coverage report for unittests/specs/models/meta-model-spec.js</title>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="../../../prettify.css">
+    <link rel="stylesheet" href="../../../base.css">
+    <style type='text/css'>
+        div.coverage-summary .sorter {
+            background-image: url(../../../sort-arrow-sprite.png);
+        }
+    </style>
+</head>
+<body>
+<div class="header high">
+    <h1>Code coverage report for <span class="entity">unittests/specs/models/meta-model-spec.js</span></h1>
+    <h2>
+        Statements: <span class="metric">100% <small>(47 / 47)</small></span> &nbsp;&nbsp;&nbsp;&nbsp;
+        Branches: <span class="metric">100% <small>(0 / 0)</small></span> &nbsp;&nbsp;&nbsp;&nbsp;
+        Functions: <span class="metric">100% <small>(10 / 10)</small></span> &nbsp;&nbsp;&nbsp;&nbsp;
+        Lines: <span class="metric">100% <small>(47 / 47)</small></span> &nbsp;&nbsp;&nbsp;&nbsp;
+        Ignored: <span class="metric"><span class="ignore-none">none</span></span> &nbsp;&nbsp;&nbsp;&nbsp;
+    </h2>
+    <div class="path"><a href="../../../index.html">All files</a> &#187; <a href="index.html">unittests/specs/models/</a> &#187; meta-model-spec.js</div>
+</div>
+<div class="body">
+<pre><table class="coverage">
+<tr><td class="line-count">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88</td><td class="line-coverage"><span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-yes">7</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">7</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">var chai = require('chai');
+var expect = chai.expect;
+var sinon = require('sinon'); // Run npm install for this.
+var sinonChai = require('sinon-chai');
+var jsdom = require('mocha-jsdom');
+&nbsp;
+chai.use(sinonChai);
+&nbsp;
+&nbsp;
+describe('MetaModel:', function() {
+    'use strict';
+&nbsp;
+    var $, Backbone, MetaModel, Resources;
+&nbsp;
+    jsdom();
+&nbsp;
+    before(function (){
+        Backbone = require('backbone');
+        $ = require('jquery');
+        Backbone.$ = $;
+        MetaModel = require('../../../source/models/meta-model');
+        Resources = require('../../../source/resources');
+        window.APP_PREFIX = '/eregulations/';
+    });
+&nbsp;
+    beforeEach(function(){
+        this.metamodel = new MetaModel({
+            content: {
+              '1005-2-a': '&lt;li id="1005-2-a"&gt;Paragraph content&lt;/li&gt;',
+              '1005-3-a': '&lt;li id="1005-3-a"&gt;Paragraph content&lt;/li&gt;'
+            }
+        });
+&nbsp;
+        Resources.versionElements = {
+            toc: $('&lt;nav id="toc" data-toc-version="2014-20681"&gt;&lt;/nav&gt;'),
+        };
+    });
+&nbsp;
+    it('has is called correctly.', function() {
+        expect(this.metamodel.has).to.be.ok; // Returns ok
+        expect(this.metamodel.has()).to.be.not.ok; // Returns ok
+    });
+&nbsp;
+    it('has can tell if an id exists', function() {
+        expect(this.metamodel.has('1005-2-a')).to.be.ok; // Returns true. '1005-2-a' is in the content.
+        expect(this.metamodel.has('foo')).to.be.not.ok; // Returns false. Can't find foo in content.
+    });
+&nbsp;
+    it('set returns true for cached &amp; formatted reg content', function() {
+        expect(this.metamodel.set('1005-2-a', '&lt;li id="1005-2-a"&gt;Paragraph content&lt;/li&gt;')).to.be.ok;
+        expect(this.metamodel.set('1005-4-a', '&lt;li id="1005-4-a"&gt;Paragraph content&lt;/li&gt;')).to.be.ok;
+        expect(this.metamodel.set('', '')).to.be.not.ok;
+    });
+&nbsp;
+    it('getAJAXUrl returns the correct URL endpoint', function() {
+        expect(this.metamodel.getAJAXUrl('1005-2')).to.equal('/eregulations/partial/1005-2/2014-20681');
+&nbsp;
+&nbsp;
+        window.APP_PREFIX = ''; // Test without a urlPrefix
+        expect(this.metamodel.getAJAXUrl('1005-2')).to.equal('/partial/1005-2/2014-20681');
+&nbsp;
+        window.APP_PREFIX = '/eregulations/'; //Return to normal
+&nbsp;
+    });
+&nbsp;
+    it('retrieve returns true with a promise', function() {
+        expect(this.metamodel.retrieve('1005-2-a')).to.be.ok;
+        expect(this.metamodel.retrieve('1005-2-a')).to.have.property('promise');
+    });
+&nbsp;
+    it('request returns promise', function() {
+        expect(this.metamodel.request('1005-2-a')).to.be.ok;
+        expect(this.metamodel.request('1005-2-a')).to.have.property('promise');
+    });
+&nbsp;
+    it('get calls the callback correctly', function() {
+        var cb = sinon.spy();
+        var cbfail = sinon.spy();
+&nbsp;
+        expect(this.metamodel.get('1005-2-a', cb)).to.be.ok; // Test a cached regulation
+        expect(cb).to.have.been.called;
+&nbsp;
+        expect(this.metamodel.get('1005-5-a', cb)).to.be.ok; // Test a reg that doesn't exist
+        expect(cb).to.have.been.calledWith(false);
+    });
+});
+&nbsp;
+&nbsp;</pre></td></tr>
+</table></pre>
+
+</div>
+<div class="footer">
+    <div class="meta">Generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Mon Sep 21 2015 17:12:32 GMT-0400 (EDT)</div>
+</div>
+<script src="../../../prettify.js"></script>
+<script>
+window.onload = function () {
+        if (typeof prettyPrint === 'function') {
+            prettyPrint();
+        }
+};
+</script>
+<script src="../../../sorter.js"></script>
+</body>
+</html>
