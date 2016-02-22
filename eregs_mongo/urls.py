@@ -21,5 +21,8 @@ from eregs_core.views import *
 urlpatterns = [
     # url(r'^admin/', include(admin.site.urls)),
     url(r'^$', main),
-    url(r'^regulation/(?P<version>[\d]+-[\d]+)/(?P<eff_date>[\d]{4}-[\d]{2}-[\d]{2})/(?P<node>.*)$', regulation)
+    url(r'^regulation/(?P<version>[\d]+-[\d]+)/(?P<eff_date>[\d]{4}-[\d]{2}-[\d]{2})/(?P<node>.*)$', regulation),
+    url(r'^interpretations/(?P<version>[\d]+-[\d]+)/(?P<eff_date>[\d]{4}-[\d]{2}-[\d]{2})/(?P<node>.*)$', interpretations),
+    url(r'^api/regulation/(?P<version>[\d]+-[\d]+)/(?P<eff_date>[\d]{4}-[\d]{2}-[\d]{2})/(?P<node>.*)$', regulation_json),
+    url(r'^api/meta/(?P<version>[\d]+-[\d]+)/(?P<eff_date>[\d]{4}-[\d]{2}-[\d]{2})$', meta_json)
 ]

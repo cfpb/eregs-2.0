@@ -1,25 +1,52 @@
+{% load marker %}
+{% load paragraph %}
 <div>
-    {% if node.tag == "section" or node.tag == "paragraph" or node.tag == "appendix" or node.tag == "appendixSection" %}
-        {% for child in node.children %}
-            {% with node=child template_name="regnode.html" %}
-                {% include template_name %}
-            {% endwith %}
-        {% endfor %}
-    {% elif node.tag == "subject" %}
-        <h2>{{ node.children.0 }}</h2>
-    {% elif node.tag == "title" %}
-        <h3>{{ node.children.0 }}</h3>
-    {% elif node.tag == "content" %}
-        <p>
-            {% for child in node.children %}
+    {% if node.tag == "section" %}
+        <h2>{{ node.children.0.children.0 }}</h2>
+    {% elif node.tag == "appendix" %}
+        <h2>{{ node.children.0.children.0 }}</h2>
+    {% elif node.tag == "interpSection" %}
+        <h2>{{ node.children.0.children.0 }}</h2>
+    {% elif node.tag == "paragraph" or node.tag == "interpParagraph" %}
+        {% if node.children.0.tag == "title" %}
+            <h5>{{ node.attributes.marker }} {{ node.children.0.children.0 }}</h5>
+            <p>
+            {% for child in node|paragraph_content %}
                 {% if child.tag == "ref" %}
-                    <a href="{{ child.attributes.target }}">{{ child.children.0 }}</a>
+                    <a href="{% ref_url child meta %}">{{ child.children.0 }}</a>
                 {% elif child.tag == "def" %}
                     {{ child.children.0 }}
+                {% elif child.tag == "graphic" %}
+                    <img src="{{ child.children.2.children.0 }}"/>
                 {% else %}
                     {{ child }}
                 {% endif %}
             {% endfor %}
-        </p>
+            </p>
+        {% else %}
+            <p>
+            {% if node.attributes.marker != "none" and node.attributes.marker != None %}
+                {{ node.attributes.marker }}
+            {% endif %}
+            {% for child in node|paragraph_content %}
+                {% if child.tag == "ref" %}
+                    <a href="{{ child.attributes.target }}">{{ child.children.0 }}</a>
+                {% elif child.tag == "def" %}
+                    <b>{{ child.children.0 }}</b>
+                {% elif child.tag == "graphic" %}
+                    <img src="{{ child.children.2.children.0 }}"/>
+                {% else %}
+                    {{ child }}
+                {% endif %}
+            {% endfor %}
+            </p>
+        {% endif %}
     {% endif %}
+    {% for child in node.children %}
+        <ul type="">
+            {% with node=child template_name="regnode.html" %}
+                {% include template_name %}
+            {% endwith %}
+        </ul>
+    {% endfor %}
 </div>

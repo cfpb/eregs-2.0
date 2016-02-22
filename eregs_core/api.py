@@ -9,10 +9,10 @@ def meta_api(version=None, eff_date=None, meta_tag='preamble'):
         del data['_id']
     elif version is not None:
         node_id = version
-        data = meta.find({'node_id': {'$regex': node_id}})
+        data = meta.find({'node_id': {'$regex': node_id}, 'tag': meta_tag})
     else:
         node_id = '.*'
-        data = meta.find({'node_id': {'$regex': node_id}})
+        data = meta.find({'node_id': {'$regex': node_id}, 'tag': meta_tag})
 
     if node_id == version or node_id == '.*':
         return_data = []

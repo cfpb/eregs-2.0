@@ -17,11 +17,30 @@ def regulation(request, version, eff_date, node):
         node_id = ':'.join([version, eff_date, node])
         toc_id = ':'.join([version, eff_date, 'tableOfContents'])
         data = get_with_descendants(regtext, node_id)
+        metadata = meta_api(version, eff_date)
         toc_data = toc.find_one({'node_id': toc_id})
 
         if data is not None and toc_data is not None:
             return render_to_response('regulation.html', {'toc': toc_data,
-                                                          'reg': data})
+                                                          'reg': data,
+                                                          'meta': metadata})
+
+
+def interpretations(request, version, eff_date, node):
+
+    if request.method == 'GET':
+        # print version
+        # return render(request, 'main.html')
+        node_id = ':'.join([version, eff_date, node])
+        toc_id = ':'.join([version, eff_date, 'tableOfContents'])
+        data = get_with_descendants(interps, node_id)
+        metadata = meta_api(version, eff_date)
+        toc_data = toc.find_one({'node_id': toc_id})
+
+        if data is not None and toc_data is not None:
+            return render_to_response('regulation.html', {'toc': toc_data,
+                                                          'reg': data,
+                                                          'meta': metadata})
 
 def regulation_json(request, version, eff_date, node):
 
@@ -53,5 +72,7 @@ def main(request):
     if request.method == 'GET':
         preamble = meta_api(meta_tag='preamble')
         fdsys = meta_api(meta_tag='fdsys')
+        #print preamble
+        #print fdsys
         return render_to_response('main.html', {'preamble': preamble,
                                                 'fdsys': fdsys})

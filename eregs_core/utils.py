@@ -6,6 +6,8 @@ import pdb
 from collections import OrderedDict
 from pymongo import MongoClient, ASCENDING
 from lxml import etree
+from elasticsearch import Elasticsearch
+
 from pprint import pprint
 
 client = MongoClient()
@@ -19,7 +21,10 @@ meta = db['meta']
 
 all_collections = [regtext, interps, toc, appendices, meta]
 
-json_root = '/Users/vinokurovy/Development/eregs-mongo/json'
+es = Elasticsearch()
+es_indices = ['regtext', 'interps', 'toc', 'appendices', 'analysis', 'meta']
+
+json_root = '/Users/vinokurovy/Development/eregs-2.0/json'
 
 
 def xml_to_json(root, counter, id_prefix, depth=1):
@@ -74,7 +79,9 @@ def recursive_insert(node):
     # if we're a content node, we'd better restore the children that
     # we don't need to recurse on
 
-    if node['tag'] in ['paragraph', 'interpParagraph', 'analysisParagraph', 'tocSecEntry', 'tocAppEntry']:
+    if node['tag'] in ['paragraph', 'interpParagraph', 'analysisParagraph',
+                       'section', 'appendix', 'tocSecEntry', 'tocAppEntry',
+                       'interpSection', 'interpretations']:
         for child in node['children']:
             if 'label' not in child['attributes']:
                 node_to_insert.setdefault('children', []).append(child)
@@ -85,20 +92,30 @@ def recursive_insert(node):
 
     if node['tag'] in ['paragraph', 'section', 'appendix', 'appendixSection']:
         coll = regtext
+        es_index = 'regtext'
     #elif node['tag'] in ['appendix', 'appendixSection']:
     #    coll = appendices
     elif node['tag'] in ['interpretations', 'interpParagraph', 'interpSection']:
         coll = interps
+        es_index = 'interps'
     elif node['tag'] in ['analysisSection', 'analysisParagraph']:
         coll = analysis
+        es_index = 'analysis'
     elif node['tag'] in ['tableOfContents', 'tocSecEntry', 'tocAppEntry']:
         coll = toc
+        es_index = 'toc'
     elif node['tag'] in ['fdsys', 'preamble']:
         coll = meta
+        es_index = 'meta'
     else:
         raise ValueError('Unknown node encountered!')
 
     coll.insert_one(node_to_insert)
+    #es_node = node_to_insert
+    #del es_node['_id']
+    #pprint(es_node)
+    #res = es.index(index=es_index, doc_type='regnode', body=es_node)
+    #print res
 
     # recurse only if this node has subchildren that are labeled
     # this ensures that paragraphs are the lowest level of recursion
@@ -119,6 +136,7 @@ def get_with_descendants(coll, node_id, return_format='nested'):
     """
 
     result = coll.find_one({'node_id': node_id})
+    print node_id, result
     # dump the Mongo id, which is not serializable
     del result['_id']
     if result is None:
@@ -131,8 +149,8 @@ def get_with_descendants(coll, node_id, return_format='nested'):
     # by node_id, you'll get garbage because the wrong versions will be picked up
 
     # TODO: change regex to a plain match once I get to internet access
-    descendants = coll.find({'node_id': {'$regex': node_prefix},
-                             'left': {'$gt': result['left']},
+    descendants = coll.find(#{'node_id': {'$regex': node_prefix},
+                            {'left': {'$gt': result['left']},
                              'right': {'$lt': result['right']}}, sort=[('left', ASCENDING)])
 
     # regnodes don't have any children, but some nodes like meta and fdsys do

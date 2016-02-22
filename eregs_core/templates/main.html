@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load meta %}
 
 {% block title %}
 Main
@@ -26,17 +27,17 @@ Main
             <div class="group">
                 <div class="content-primary column-l bump">
                     <h2 class="small-header light-header">
-                        Title {{fdsys.children.0.children.0}} {{fdsys.children.1.children.0}}
+                        Title XII Banks and Banking
                     </h2>
 
                     <ul class="reg-list">
-                        {% for regulation in fdsys %}
+                        {% for regulation in preamble %}
                             <li>
-                                <a href="#">
-                                    <span class="title-num">{{regulation.children.0.children.0}}</span>
+                                <a href="{% reg_url regulation %}">
+                                    <span class="title-num">{{regulation|cfr_section}}</span>
                                     <div class="reg-sub-title">
-                                        <span class="reg-letter">Regulation {{regulation.meta.reg_letter}}</span>
-                                        <span class="reg-title">{{regulation.children.1.children.0}}</span>
+                                        <span class="reg-letter">Regulation {{regulation|reg_letter}}</span>
+                                        <!--<span class="reg-title">{{regulation.children.1.children.0}}</span>-->
                                     </div>
                                     <span class="cf-icon cf-icon-right-round"></span>
                                 </a>
