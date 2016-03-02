@@ -1,4 +1,5 @@
 from django import template
+from meta import cfr_section
 
 register = template.Library()
 

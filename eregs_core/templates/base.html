@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 
-<html lang="en" class="no-js">
+<html lang="en" class="js history fontface">
 
     {% load static %}
 
@@ -16,14 +16,12 @@
 
 
         <link rel="stylesheet" href="{% static 'regulations/css/style.css' %}">
-        <link rel="stylesheet" href="{% static 'bootstrap/dist//css/bootstrap.css' %}">
 
         <script src="{% static 'modernizr/src/Modernizr.js' %}"></script>
         <!-- our app's js -->
-        <!--<script src="{% static "regulations/js/built/regulations.js" %}"></script>-->
+        <script src="{% static "regulations/js/built/regulations.js" %}"></script>
 
     </head>
-
     <body>
         {% block body %}{% endblock %}
     </body>

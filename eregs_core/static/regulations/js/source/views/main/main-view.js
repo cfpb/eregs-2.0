@@ -134,13 +134,18 @@ var MainView = Backbone.View.extend({
             options.render = true;
         }
 
+        this.effDate = this.$el.find('section[data-page-type]').data('effective-date')
+
         options.id = id;
         options.type = this.contentType;
         options.regVersion = this.regVersion;
+        options.effDate = this.effDate
         options.regPart = this.regPart;
         options.model = this.modelmap[this.contentType];
         options.cb = this.render;
         options.cfrTitle = this.cfrTitle;
+
+        console.log(options)
 
         // diffs need some more version context
         if (this.contentType === 'diff') {

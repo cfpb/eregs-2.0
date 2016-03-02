@@ -81,13 +81,13 @@ def recursive_insert(node):
 
     if node['tag'] in ['paragraph', 'interpParagraph', 'analysisParagraph',
                        'section', 'appendix', 'tocSecEntry', 'tocAppEntry',
-                       'interpSection', 'interpretations']:
+                       'interpSection', 'interpretations', 'tableOfContents']:
         for child in node['children']:
             if 'label' not in child['attributes']:
                 node_to_insert.setdefault('children', []).append(child)
 
     # allow children for preamble and fdsys
-    if node['tag'] in ['fdsys', 'preamble', 'tableOfContents']:
+    if node['tag'] in ['fdsys', 'preamble']:
         node_to_insert['children'] = node['children']
 
     if node['tag'] in ['paragraph', 'section', 'appendix', 'appendixSection']:
@@ -136,7 +136,6 @@ def get_with_descendants(coll, node_id, return_format='nested'):
     """
 
     result = coll.find_one({'node_id': node_id})
-    print node_id, result
     # dump the Mongo id, which is not serializable
     del result['_id']
     if result is None:
@@ -149,8 +148,8 @@ def get_with_descendants(coll, node_id, return_format='nested'):
     # by node_id, you'll get garbage because the wrong versions will be picked up
 
     # TODO: change regex to a plain match once I get to internet access
-    descendants = coll.find(#{'node_id': {'$regex': node_prefix},
-                            {'left': {'$gt': result['left']},
+    descendants = coll.find({'node_id': {'$regex': node_prefix},
+                             'left': {'$gt': result['left']},
                              'right': {'$lt': result['right']}}, sort=[('left', ASCENDING)])
 
     # regnodes don't have any children, but some nodes like meta and fdsys do
@@ -266,6 +265,8 @@ def load_xml(xml_filename):
 
     output_file = os.path.join(json_root, prefix + ':part.json')
     json.dump(part_content_tree, open(output_file, 'w'), indent=4)
+    output_file = os.path.join(json_root, prefix + ':toc.json')
+    json.dump(part_toc_tree, open(output_file, 'w'), indent=4)
 
     # insert the metadata
     recursive_insert(xml_to_json(preamble, 1, prefix)[0])
@@ -305,6 +306,12 @@ def load_xml(xml_filename):
 
     # insert the toc
     recursive_insert(part_toc_tree)
+
+
+def delete_all_data():
+    """Don't be stupid. This deletes all the data."""
+    for coll in all_collections:
+        coll.delete_many({})
 
 if __name__ == '__main__':
 

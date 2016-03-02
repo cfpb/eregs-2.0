@@ -1,15 +1,14 @@
 {% load toc %}
 
-<div id="table-of-contents">
-    <ul>
-        {% for entry in toc.children %}
-            <li>
-
-                <a href="{% entry_url entry meta %}">
-                        {{ entry.children.1.children.0 }}
-                </a>
-            </li>
-        {% endfor %}
-    </ul>
-
+<div id="table-of-contents" class="toc-drawer toc-container">
+    <div class="drawer-header">
+        <h2 class="toc-type">Table of Contents</h2>
+    </div>
+    <nav id="toc" class="regulation-nav drawer-content" role="navigation">
+        <ol>
+            {% for entry in toc.children %}
+                {% include "toc_entry.html" %}
+            {% endfor %}
+        </ol>
+    </nav>
 </div>

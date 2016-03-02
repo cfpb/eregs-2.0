@@ -1,0 +1,21 @@
+{% load toc %}
+{% load meta %}
+
+<li>
+    {% if entry.tag == "tocSecEntry" or entry.tag == "tocAppEntry" %}
+        <a href="{% entry_url entry meta %}" data-section-id="{{ entry.attributes.target }}"
+                data-doc-number="{{ meta|doc_number }}" data-version="{{ meta|effective_date }}">
+            {{ entry.children.1.children.0 }}
+        </a>
+    {% elif entry.tag == "tocSubpartEntry" %}
+        <a href="#"><b>Subpart {{ entry.children.1.children.0 }} -
+        {{ entry.children.0.children.0 }}</b>
+        </a>
+        {% for node in entry.children %}
+            {% with entry=node template_name="toc_entry.html" %}
+                {% include template_name %}
+            {% endwith %}
+        {% endfor %}
+
+    {% endif %}
+</li>

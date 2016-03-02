@@ -45,6 +45,7 @@ var ChildView = Backbone.View.extend({
 
         // if the site wasn't loaded on this content
         if (this.options.render) {
+            console.log('fetching ' + this.options.id)
             this.model.get(this.options.id, cb);
         }
         else if (this.options.id) {

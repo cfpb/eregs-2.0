@@ -41,6 +41,7 @@ var TOCView = Backbone.View.extend({
     // update active classes, find new active based on the reg entity id in the anchor
     setActive: function(id) {
         var newActiveLink, subpart;
+        console.log('toc item clicked, retrieving')
 
         newActiveLink = this.$el.find('a[data-section-id=' + Helpers.findBaseSection(id) + ']');
 
@@ -67,8 +68,12 @@ var TOCView = Backbone.View.extend({
     // when a TOC link is clicked, send an event along with the href of the clicked link
     sendClickEvent: function(e) {
         e.preventDefault();
+        var clickedLink = $(e.currentTarget)
 
-        var sectionId = $(e.currentTarget).data('section-id');
+        // var sectionId = $(e.currentTarget).data('section-id');
+        var sectionId = clickedLink.data('section-id')
+        var version = clickedLink.data('version')
+        var docNumber = clickedLink.data('doc-number')
         DrawerEvents.trigger('section:open', sectionId);
         MainEvents.trigger('section:open', sectionId, {}, 'reg-section');
     },

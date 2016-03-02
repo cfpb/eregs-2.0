@@ -24,8 +24,9 @@ else {
             ':section/:version': 'loadSection'
         },
 
-        loadSection: function(section) {
+        loadSection: function(section, version) {
             var options = {id: section};
+            console.log(section + ' ' + version)
 
             // to scroll to paragraph if there is a hadh
             options.scrollToId = Backbone.history.getHash();

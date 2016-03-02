@@ -123,12 +123,15 @@ var MetaModel = Backbone.Model.extend({
             url += this.supplementalPath + '/';
         }
 
-        url += id;
+        //url += id;
 
         if (id.indexOf('/') === -1) {
-            url += '/' + Helpers.findVersion(Resources.versionElements);
+            url += Helpers.findVersion(Resources.versionElements);
+            url += '/' + Helpers.findEffDate(Resources.versionElements);
         }
+        url += '/' + id;
 
+        console.log('target url: ' + url)
         return url;
     }
 });

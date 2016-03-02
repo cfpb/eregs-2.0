@@ -1,52 +1,32 @@
 {% load marker %}
 {% load paragraph %}
-<div>
-    {% if node.tag == "section" %}
-        <h2>{{ node.children.0.children.0 }}</h2>
+{% load meta %}
+
+    {% if node.tag == "section" or node.tag == "interpSection" %}
+        <section id="{{ node.attributes.label }}" class="reg-section section-focus" tabindex="0"
+                 data-permalink-section data-base-version="{{ meta|doc_number }}"
+                 data-effective-date="{{ meta|effective_date }}" data-page-type="reg-section">
+        <h2 class="section-title" tabindex="0">{{ node.children.0.children.0 }}</h2>
+        {% with inner=node|inner_list_type %}
+            <ol {% if inner == "none" %}list-style-type="none"{% else %}type="{{ inner }}"{% endif %} >
+        {% endwith %}
     {% elif node.tag == "appendix" %}
         <h2>{{ node.children.0.children.0 }}</h2>
-    {% elif node.tag == "interpSection" %}
-        <h2>{{ node.children.0.children.0 }}</h2>
     {% elif node.tag == "paragraph" or node.tag == "interpParagraph" %}
-        {% if node.children.0.tag == "title" %}
-            <h5>{{ node.attributes.marker }} {{ node.children.0.children.0 }}</h5>
-            <p>
-            {% for child in node|paragraph_content %}
-                {% if child.tag == "ref" %}
-                    <a href="{% ref_url child meta %}">{{ child.children.0 }}</a>
-                {% elif child.tag == "def" %}
-                    {{ child.children.0 }}
-                {% elif child.tag == "graphic" %}
-                    <img src="{{ child.children.2.children.0 }}"/>
-                {% else %}
-                    {{ child }}
-                {% endif %}
-            {% endfor %}
-            </p>
-        {% else %}
-            <p>
-            {% if node.attributes.marker != "none" and node.attributes.marker != None %}
-                {{ node.attributes.marker }}
-            {% endif %}
-            {% for child in node|paragraph_content %}
-                {% if child.tag == "ref" %}
-                    <a href="{{ child.attributes.target }}">{{ child.children.0 }}</a>
-                {% elif child.tag == "def" %}
-                    <b>{{ child.children.0 }}</b>
-                {% elif child.tag == "graphic" %}
-                    <img src="{{ child.children.2.children.0 }}"/>
-                {% else %}
-                    {{ child }}
-                {% endif %}
-            {% endfor %}
-            </p>
-        {% endif %}
+        {% include "paragraph.html" %}
     {% endif %}
-    {% for child in node.children %}
-        <ul type="">
-            {% with node=child template_name="regnode.html" %}
-                {% include template_name %}
+    {% if node.tag == "paragraph" or node.tag == "interpParagraph" %}
+        {% with inner=node|inner_list_type %}
+            <ol {% if inner == "none" %}list-style-type="none"{% else %}type="{{ inner }}"{% endif %} >
+        {% endwith %}
+    {% endif %}
+    {% for child in node|block_element_children %}
+        {% with node=child template_name="regnode.html" %}
+            {% with marker=child.attributes.marker|marker_type %}
+                <li {% if marker == "none" or marker == None or marker == '' %}class="markerless"{% endif %} >{% include template_name %}</li>
             {% endwith %}
-        </ul>
+        {% endwith %}
     {% endfor %}
-</div>
+    {% if node.tag == "paragraph" or node.tag == "interpParagraph" %}</ol>{% endif %}
+    {% if node.tag == "section" or node.tag == "interpSection" %}</ol></section>{% endif %}
+

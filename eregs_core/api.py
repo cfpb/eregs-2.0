@@ -25,3 +25,13 @@ def meta_api(version=None, eff_date=None, meta_tag='preamble'):
 
     # gotta return as a dict, not a pymongo cursor
     return return_data
+
+def toc_api(version=None, eff_date=None):
+
+    if version is not None and eff_date is not None:
+        node_id = ':'.join([version, eff_date] + ['tableOfContents'])
+        data = get_with_descendants(toc, node_id)
+
+        return data
+
+    return {}

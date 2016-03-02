@@ -149,6 +149,8 @@ module.exports = {
 
     // Finds parent-most reg paragraph
     findBaseSection: function(id) {
+        console.log(id)
+
         var parts, interpIndex;
 
         if (id.indexOf('-') !== -1) {
@@ -210,6 +212,14 @@ module.exports = {
       return $(versionElements.toc).attr('data-toc-version') ||
                   $(versionElements.regLandingPage).attr('data-base-version')||
                   $(versionElements.timelineList).find('.stop-button').attr('data-version');
+                    // includes .stop-button to be sure its not
+                    // the comparison version in diff mode
+    },
+
+    findEffDate: function(versionElements) {
+      return $(versionElements.toc).attr('data-toc-version') ||
+                  $(versionElements.regLandingPage).attr('data-effective-date')||
+                  $(versionElements.timelineList).find('.stop-button').attr('data-effective-date');
                     // includes .stop-button to be sure its not
                     // the comparison version in diff mode
     },
