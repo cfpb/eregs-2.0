@@ -85,6 +85,7 @@ DATABASES = {
 
 STATICFILES_DIRS = (
     os.path.join(BASE_DIR, 'components', 'bower_components'),
+    # os.path.join(BASE_DIR, 'eregs_core', 'static')
 )
 
 BOWER_COMPONENTS_ROOT = os.path.join(BASE_DIR, 'components')

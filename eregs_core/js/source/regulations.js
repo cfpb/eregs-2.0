@@ -1,4 +1,4 @@
-// Launches app
+// Launches app adfasdfasdf
 'use strict';
 var $ = require('jquery');
 global.jQuery = require('jquery'); // make jQuery globally accessible for plugins and analytics

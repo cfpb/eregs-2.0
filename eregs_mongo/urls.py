@@ -22,7 +22,9 @@ urlpatterns = [
     # url(r'^admin/', include(admin.site.urls)),
     url(r'^$', main),
     url(r'^regulation/(?P<version>[\d]+-[\d]+)/(?P<eff_date>[\d]{4}-[\d]{2}-[\d]{2})/(?P<node>.*)$', regulation),
+    url(r'^partial/(?P<version>[\d]+-[\d]+)/(?P<eff_date>[\d]{4}-[\d]{2}-[\d]{2})/(?P<node>.*)$', regulation_partial),
     url(r'^interpretations/(?P<version>[\d]+-[\d]+)/(?P<eff_date>[\d]{4}-[\d]{2}-[\d]{2})/(?P<node>.*)$', interpretations),
     url(r'^api/regulation/(?P<version>[\d]+-[\d]+)/(?P<eff_date>[\d]{4}-[\d]{2}-[\d]{2})/(?P<node>.*)$', regulation_json),
-    url(r'^api/meta/(?P<version>[\d]+-[\d]+)/(?P<eff_date>[\d]{4}-[\d]{2}-[\d]{2})$', meta_json)
+    url(r'^api/meta/(?P<version>[\d]+-[\d]+)/(?P<eff_date>[\d]{4}-[\d]{2}-[\d]{2})$', meta_json),
+    url(r'^api/toc/(?P<version>[\d]+-[\d]+)/(?P<eff_date>[\d]{4}-[\d]{2}-[\d]{2})$', toc_json)
 ]

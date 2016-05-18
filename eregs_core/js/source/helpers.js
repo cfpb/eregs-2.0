@@ -217,6 +217,21 @@ if (!Array.prototype.indexOf) {
         return version;
     },
 
+    findEffDate: function() {
+        var version;
+
+        version = $('nav#toc').attr('data-toc-version') ||
+                  $('section[data-base-version]').attr('data-effective-date');
+
+        // includes .stop-button to be sure its not the comparison
+        // version in diff mode
+        if (!version) {
+            version = $('#timeline li.current').find('.stop-button').attr('data-effective-date');
+        }
+
+        return version;
+    },
+
     // returns newer version. findVersion will return base version
     findDiffVersion: function(currentVersion) {
         var version;
