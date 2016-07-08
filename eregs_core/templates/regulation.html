@@ -1,5 +1,4 @@
 {% extends "base.html" %}
-{% load meta %}
 {% block title %}
 Main
 {% endblock %}
@@ -9,7 +8,7 @@ Main
         {% include "regulation_header.html" %}
     {% endblock %}
 
-    <div id="menu" class="panel" data-reg-id="{{ meta|cfr_section }}" data-cfr-title-number="{{ meta|cfr_title }}">
+    <div id="menu" class="panel" data-reg-id="{{ meta.cfr_section }}" data-cfr-title-number="{{ meta.cfr_title }}">
         {% include "sidebar.html" %}
     </div>
 

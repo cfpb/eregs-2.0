@@ -14,14 +14,22 @@ def regulation(request, version, eff_date, node):
     if request.method == 'GET':
         node_id = ':'.join([version, eff_date, node])
         toc_id = ':'.join([version, eff_date, 'tableOfContents'])
-        data = get_with_descendants(regtext, node_id)
-        metadata = meta_api(version, eff_date)
-        toc_data = get_with_descendants(toc, toc_id)
+        meta_id = ':'.join([version, eff_date, 'preamble'])
 
-        if data is not None and toc_data is not None:
-            return render_to_response('regulation.html', {'toc': toc_data,
-                                                          'reg': data,
-                                                          'meta': metadata})
+        toc = TableOfContents.objects.get(node_id=toc_id)
+        meta = Preamble.objects.get(node_id=meta_id)
+        regtext = Section.objects.get(node_id=node_id)
+
+        toc.get_descendants(desc_type=ToCEntry)
+        meta.get_descendants()
+        regtext.get_descendants(desc_type=Paragraph)
+
+        # print regtext.str_as_tree()
+
+        if regtext is not None and toc is not None:
+            return render_to_response('regulation.html', {'toc': toc,
+                                                          'reg': regtext,
+                                                          'meta': meta})
 
 
 def regulation_partial(request, version, eff_date, node):
@@ -90,9 +98,14 @@ def toc_json(request, version, eff_date):
 def main(request):
 
     if request.method == 'GET':
-        preamble = meta_api(meta_tag='preamble')
-        fdsys = meta_api(meta_tag='fdsys')
-        #print preamble
-        #print fdsys
-        return render_to_response('main.html', {'preamble': preamble,
+
+        preamble = Preamble.objects.filter(tag='preamble')
+        regs_meta = []
+        for item in preamble:
+            item.get_descendants()
+            regs_meta.append(item)
+
+        fdsys = RegNode.objects.filter(tag='fdsys')
+
+        return render_to_response('main.html', {'preamble': regs_meta,
                                                 'fdsys': fdsys})

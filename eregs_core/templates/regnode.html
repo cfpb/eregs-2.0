@@ -1,13 +1,9 @@
-{% load marker %}
-{% load paragraph %}
-{% load meta %}
-
     {% if node.tag == "section" or node.tag == "interpSection" %}
         <section id="{{ node.attributes.label }}" class="reg-section section-focus" tabindex="0"
-                 data-permalink-section data-base-version="{{ meta|doc_number }}"
-                 data-effective-date="{{ meta|effective_date }}" data-page-type="reg-section">
-        <h2 class="section-title" tabindex="0">{{ node.children.0.children.0 }}</h2>
-        {% with inner=node|inner_list_type %}
+                 data-permalink-section data-base-version="{{ meta.document_number }}"
+                 data-effective-date="{{ meta.effective_date }}" data-page-type="reg-section">
+        <h2 class="section-title" tabindex="0">{{ node.subject }}</h2>
+        {% with inner=node.inner_list_type %}
             <ol {% if inner == "none" %}list-style-type="none"{% else %}type="{{ inner }}"{% endif %} >
         {% endwith %}
     {% elif node.tag == "appendix" %}
@@ -16,13 +12,13 @@
         {% include "paragraph.html" %}
     {% endif %}
     {% if node.tag == "paragraph" or node.tag == "interpParagraph" %}
-        {% with inner=node|inner_list_type %}
+        {% with inner=node.inner_list_type %}
             <ol {% if inner == "none" %}list-style-type="none"{% else %}type="{{ inner }}"{% endif %} >
         {% endwith %}
     {% endif %}
-    {% for child in node|block_element_children %}
+    {% for child in node.block_element_children %}
         {% with node=child template_name="regnode.html" %}
-            {% with marker=child.attributes.marker|marker_type %}
+            {% with marker=child.marker_type %}
                 <li {% if marker == "none" or marker == None or marker == '' %}class="markerless"{% endif %} >{% include template_name %}</li>
             {% endwith %}
         {% endwith %}

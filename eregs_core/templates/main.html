@@ -10,77 +10,80 @@ Main
         {% include "main_header.html" %}
     </header>
 
-    <div class="hero">
-        <div class="inner-wrap group">
-            <div class="primary">
-                <h2 class="hero-header">A platform to read regulations.</h2>
-                <p class="hero-text">eRegulations makes regulations easier to find, read, and understand.</p>
+    <div class="landing-content">
+        <div class="hero">
+            <div class="inner-wrap group">
+                <div class="primary">
+                    <h2 class="hero-header">A platform to read regulations.</h2>
+                    <p class="hero-text">eRegulations makes regulations easier to find, read, and understand.</p>
 
-                <p class="read-more-link"><a href="" class="go">About eRegulations</a></p>
-            </div>
-        </div> <!-- /.inner-wrap -->
-    </div> <!-- /.hero -->
+                    <p class="read-more-link"><a href="" class="go">About eRegulations</a></p>
+                </div>
+            </div> <!-- /.inner-wrap -->
+        </div> <!-- /.hero -->
 
-    <div class="landing-main" role="main">
-        <div class="inner-wrap">
+        <div class="landing-main" role="main">
+            <div class="inner-wrap">
 
-            <div class="group">
-                <div class="content-primary column-l bump">
-                    <h2 class="small-header light-header">
-                        Title XII Banks and Banking
-                    </h2>
+                <div class="group">
+                    <div class="content-primary column-l bump">
+                        <h2 class="small-header light-header">
+                            Title XII Banks and Banking
+                        </h2>
 
-                    <ul class="reg-list">
-                        {% for regulation in preamble %}
-                            <li>
-                                <a href="{% reg_url regulation %}">
-                                    <span class="title-num">{{regulation|cfr_section}}</span>
-                                    <div class="reg-sub-title">
-                                        <span class="reg-letter">Regulation {{regulation|reg_letter}}</span>
-                                        <!--<span class="reg-title">{{regulation.children.1.children.0}}</span>-->
-                                    </div>
-                                    <span class="cf-icon cf-icon-right-round"></span>
-                                </a>
+                        <ul class="reg-list">
+                            {% for regulation in preamble %}
+                                <li>
+                                    <a href="{{ regulation.reg_url }}">
+                                        <span class="title-num">{{regulation.cfr_section}}</span>
+                                        <div class="reg-sub-title">
+                                            <span class="reg-letter">Regulation {{regulation.reg_letter}}</span>
+                                            <!--<span class="reg-title">{{regulation.children.1.children.0}}</span>-->
+                                        </div>
+                                        <span class="cf-icon cf-icon-right-round"></span>
+                                    </a>
 
-                                {% for amendment in regulation.amendments %}
-                                    <div class="mini-alert important">
-                                        New amendment effective {{amendment.by_date|date:'n/j/Y'}}
-                                        <a href="" class="go">View new amendment</a>
-                                    </div>
-                                {% endfor %}
-                            </li>
-                        {% endfor %}
-                    </ul>
+                                    {% for amendment in regulation.amendments %}
+                                        <div class="mini-alert important">
+                                            New amendment effective {{amendment.by_date|date:'n/j/Y'}}
+                                            <a href="" class="go">View new amendment</a>
+                                        </div>
+                                    {% endfor %}
+                                </li>
+                            {% endfor %}
+                        </ul>
 
-                    {% block moreregulations %}
+                        {% block moreregulations %}
+                        {% endblock %}
+                    </div> <!-- /.primary -->
+
+                    {% block secondcolumn_notices %}
                     {% endblock %}
-                </div> <!-- /.primary -->
+                </div> <!-- /.group -->
 
-                {% block secondcolumn_notices %}
-                {% endblock %}
-            </div> <!-- /.group -->
+                <section class="about bump group">
+                    <h2 class="light-header">About eRegulations</h2>
+                    <div class="content-primary column-l">
 
-            <section class="about bump group">
-                <h2 class="light-header">About eRegulations</h2>
-                <div class="content-primary column-l">
+                        <p>eRegulations is a web-based tool that makes regulations easier
+                            to find, read and understand with features such as inline
+                            official interpretations, highlighted defined terms, and a
+                            revision comparison view.</p>
 
-                    <p>eRegulations is a web-based tool that makes regulations easier
-                        to find, read and understand with features such as inline
-                        official interpretations, highlighted defined terms, and a
-                        revision comparison view.</p>
+                        <p><a href="" class="go">Learn more about eRegulations&#8217; features</a></p>
+                    </div> <!-- /.primart -->
 
-                    <p><a href="" class="go">Learn more about eRegulations&#8217; features</a></p>
-                </div> <!-- /.primart -->
+                    {% block orgcontact %}
+                    {% endblock %}
 
-                {% block orgcontact %}
-                {% endblock %}
+                    {% block legal %}
+                    {% endblock %}
+                </section> <!-- /.about -->
+            </div> <!-- /.inner-wrap -->
+        </div> <!-- /.landing-main -->
+    </div>
 
-                {% block legal %}
-                {% endblock %}
-            </section> <!-- /.about -->
-        </div> <!-- /.inner-wrap -->
-    </div> <!-- /.landing-main -->
-
+    <!--
     <div id="sidebar" class="secondary-content">
         <div id="sidebar-content" class="sidebar-inner">
         <section id="definition"></section>
@@ -91,5 +94,6 @@ Main
         </section>
         </div>
     </div>
+    -->
 
 {% endblock %}

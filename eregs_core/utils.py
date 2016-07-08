@@ -46,16 +46,38 @@ def xml_to_json(root, counter, id_prefix, depth=1):
     json_node['right'] = 0
     json_node['children'] = []
     json_node['depth'] = depth
+    json_node['version'] = id_prefix
 
     if root.text is not None and root.text.strip() != '':
-        json_node['children'].append(root.text)
+        counter += 1
+        text_node = {'tag': 'regtext',
+                     'content': root.text,
+                     'left': counter,
+                     'right': counter + 1,
+                     'depth': depth + 1,
+                     'children': [],
+                     'version': id_prefix,
+                     'attributes': {}}
+        counter += 1
+        json_node['children'].append(text_node)
 
-    counter += 1
+
+    #counter += 1
     for child in root.getchildren():
         json_child, counter = xml_to_json(child, counter + 1, id_prefix, depth + 1)
         json_node['children'].append(json_child)
         if child.tail is not None and child.tail.strip() != '':
-            json_node['children'].append(child.tail)
+            counter += 1
+            text_node = {'tag': 'regtext',
+                         'content': child.tail,
+                         'left': counter,
+                         'right': counter + 1,
+                         'depth': depth + 1,
+                         'children': [],
+                         'version': id_prefix,
+                         'attributes': {}}
+            json_node['children'].append(text_node)
+            counter += 1
         counter += 1
 
     json_node['right'] = counter

@@ -1,9 +1,8 @@
-{% load paragraph %}
 {% load marker %}
 
 <a href="#{{ node.attributes.label }}"></a>
 {% if node.children.0.tag == "title" %}
-    <h5><em class="paragraph-marker">{{ node.attributes.marker }}</em> {{ node.children.0.children.0 }}</h5>
+    <h5><em class="paragraph-marker">{{ node.attributes.marker }}</em> {{ node.paragraph_title }}</h5>
     <p>
 {% else %}
     <p>
@@ -12,15 +11,15 @@
     {% endif %}
 {% endif %}
 
-{% for child in node|paragraph_content %}
+{% for child in node.paragraph_content %}
     {% if child.tag == "ref" %}
         {% include "reference.html" %}
     {% elif child.tag == "def" %}
-        <dfn class="defined-term">{{ child.children.0 }}</dfn>
+        <dfn class="defined-term">{{ child.regtext }}</dfn>
     {% elif child.tag == "graphic" %}
-        <img class="reg-image" src="{{ child.children.2.children.0 }}"/>
+        <img class="reg-image" src="{{ child.target }}"/>
     {% else %}
-        {{ child }}
+        {{ child.text }}
     {% endif %}
 {% endfor %}
 </p>

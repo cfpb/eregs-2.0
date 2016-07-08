@@ -1,12 +1,12 @@
 {% load paragraph %}
 
-{% if child.attributes.reftype == "term" %}
-    <a href="{% ref_url child meta %}" class="citation definition"
-       data-definition="{{ child.attributes.target }}">{{ child.children.0 }}</a>
-{% elif child.attributes.reftype == "internal" %}
-    <a href="{% ref_url child meta %}" class="citation internal"
-       data-section-id="{{ child.attributes.target }}">{{ child.children.0 }}</a>
-{% elif child.attributes.reftype == "external" %}
-    <a href="{% ref_url child meta %}" class="citation external"
-       data-section-id="{{ child.attributes.target }}">{{ child.children.0 }}</a>
+{% if child.reftype == "term" %}
+    <a href="{{ child.target }}" class="citation definition"
+       data-definition="{{ child.target }}">{{ child.regtext }}</a>
+{% elif child.reftype == "internal" %}
+    <a href="{{ child.target }}" class="citation internal"
+       data-section-id="{{ child.target }}">{{ child.regtext }}</a>
+{% elif child.reftype == "external" %}
+    <a href="{{ child.target }}" class="citation external"
+       data-section-id="{{ child.target }}">{{ child.regtext }}</a>
 {% endif %}
