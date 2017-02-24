@@ -88,7 +88,7 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': 'eregs',
-        'USER': 'vinokurovy',
+        'USER': 'eregs',
         'PASSWORD': '',
         'HOST': '127.0.0.1',
         'PORT': '5432'
@@ -96,7 +96,7 @@ DATABASES = {
     'replica': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': 'test_eregs',
-        'USER': 'vinokurovy',
+        'USER': 'eregs',
         'PASSWORD': '',
         'HOST': '127.0.0.1',
         'PORT': '5432',
