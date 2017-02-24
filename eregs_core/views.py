@@ -20,11 +20,16 @@ def regulation(request, version, eff_date, node):
         meta = Preamble.objects.get(node_id=meta_id)
         regtext = Section.objects.get(node_id=node_id)
 
-        toc.get_descendants(desc_type=ToCEntry)
-        meta.get_descendants()
-        regtext.get_descendants(desc_type=Paragraph)
+        split_node = node.split('-')
+        if len(split_node) >= 2 and split_node[1].isalpha():
+            pass
+
+        toc.get_descendants()
+        meta.get_descendants(auto_infer_class=False)
+        regtext.get_descendants()# (desc_type=Paragraph)
 
         # print regtext.str_as_tree()
+        print node_id
 
         if regtext is not None and toc is not None:
             return render_to_response('regulation.html', {'toc': toc,
@@ -42,6 +47,8 @@ def regulation_partial(request, version, eff_date, node):
         node_id = ':'.join([version, eff_date, node])
         data = get_with_descendants(coll, node_id)
         metadata = meta_api(version, eff_date)
+
+        print data
 
         if data is not None and metadata is not None:
             return render_to_response('regnode.html', {'node': data,
@@ -65,15 +72,16 @@ def interpretations(request, version, eff_date, node):
                                                           'reg': data,
                                                           'meta': metadata})
 
+
 def regulation_json(request, version, eff_date, node):
 
     if request.method == 'GET':
-        # print version
-        # return render(request, 'main.html')
         node_id = ':'.join([version, eff_date, node])
-        data = get_with_descendants(regtext, node_id)
-        if data is not None:
-            return JsonResponse(data)
+        reg_node = RegNode.objects.get(node_id=node_id)
+        reg_node.get_descendants()
+
+        if reg_node is not None:
+            return JsonResponse(reg_node)
         else:
             return JsonResponse({})
 
@@ -94,6 +102,7 @@ def toc_json(request, version, eff_date):
     if request.method == 'GET':
         data = toc_api(version, eff_date)
         return JsonResponse(data)
+
 
 def main(request):
 

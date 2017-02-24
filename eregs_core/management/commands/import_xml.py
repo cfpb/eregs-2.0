@@ -8,6 +8,7 @@ import json
 
 json_root = '/Users/vinokurovy/Development/eregs-2.0/json'
 
+
 class Command(BaseCommand):
 
     help = 'Import the specified RegML file into the database.'
@@ -36,7 +37,17 @@ class Command(BaseCommand):
             subpart_toc = subpart.find('{eregs}tableOfContents')
             subpart.remove(subpart_toc)
 
+        # strip interp ToC to avoid duplicate ToC nodes
+        interps = part_content.find('{eregs}interpretations')
+        interp_toc = interps.find('{eregs}tableOfContents')
+        interps.remove(interp_toc)
+
         # part_toc = part.find('{eregs}tableOfContents')
+
+        # flush the table of existing content for this reg
+        regulation = RegNode.objects.filter(version=prefix)
+        for item in regulation:
+            item.delete()
 
         reg_json = xml_to_json(xml_tree, 1, prefix)[0]
 
@@ -45,12 +56,13 @@ class Command(BaseCommand):
         output_file = os.path.join(json_root, prefix + ':reg.json')
         json.dump(reg_json, open(output_file, 'w'), indent=4)
 
+
 def recursive_insert(node):
 
     # delete anything with this node's node_id
-    if 'node_id' in node:
-        for reg_node in RegNode.objects.filter(node_id=node['node_id']):
-            reg_node.delete()
+    # if 'node_id' in node:
+    #    for reg_node in RegNode.objects.filter(node_id=node['node_id']):
+    #        reg_node.delete()
 
     # make a shallow copy of the node sans children
     node_to_insert = {}

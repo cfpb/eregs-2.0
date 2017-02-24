@@ -5,9 +5,30 @@
     </div>
     <nav id="toc" class="regulation-nav drawer-content" role="navigation">
         <ol>
-            {% for entry in toc.children %}
+            {% for entry in toc.section_entries %}
                 {% include "toc_entry.html" %}
             {% endfor %}
+            {% if toc.has_appendices %}
+                <li data-subpart-heading>
+                    <h3 class="subpart-heading">Appendices</h3>
+                </li>
+                {% for entry in toc.appendix_entries %}
+                    {% include "toc_entry.html" %}
+                {% endfor %}
+            {% endif %}
+            {% if toc.has_interps %}
+                <li data-subpart-heading>
+                    <h3 class="subpart-heading">{{ toc.supplement_title }}</h3>
+                </li>
+                {% if toc.interp_intro_entry %}
+                    {% with intro=True entry=toc.interp_intro_entry %}
+                        {% include "toc_entry.html" %}
+                    {% endwith %}
+                {% endif %}
+                {% for entry in toc.non_intro_interp_entries %}
+                    {% include "toc_entry.html" %}
+                {% endfor %}
+            {% endif %}
         </ol>
     </nav>
 </div>

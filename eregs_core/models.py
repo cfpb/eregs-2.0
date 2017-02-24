@@ -1,18 +1,10 @@
+# -*- coding: utf-8 -*-
+import re
+
 from django.db import models
 from django.contrib.postgres.fields import JSONField
 
 from itertools import product
-
-# class RegNode(Document):
-#
-#     text = StringField()
-#     title = StringField()
-#     label = StringField()
-#     node_type = StringField()
-#     marker = StringField()
-#
-#     children = ListField(ReferenceField('self'))
-#
 
 
 class RegNode(models.Model):
@@ -34,6 +26,7 @@ class RegNode(models.Model):
     def __init__(self, *args, **kwargs):
         super(RegNode, self).__init__(*args, **kwargs)
         self.children = []
+        self.interps = []
 
     # def __getitem__(self, item):
     #     """
@@ -109,7 +102,7 @@ class RegNode(models.Model):
 
         return [child for child in self.children if child.tag == tag]
 
-    def get_descendants(self, desc_type=None, return_format='nested'):
+    def get_descendants(self, desc_type=None, auto_infer_class=True, return_format='nested'):
 
         # Sometimes we'll want to instantiate nodes other than RegNodes. However,
         # only the caller knows which type of node it wants, and you can't reference
@@ -120,7 +113,7 @@ class RegNode(models.Model):
         if desc_type is None:
             desc_type = RegNode
 
-        print self.version, self.left, self.right
+        # print self.version, self.left, self.right
 
         descendants = desc_type.objects.filter(version__startswith=self.version,
                                                left__gt=self.left,
@@ -129,17 +122,28 @@ class RegNode(models.Model):
         if return_format == 'nested':
             last_node_at_depth = {self.depth: self}
             for desc in descendants:
+                if desc_type is RegNode and auto_infer_class and desc.tag in tag_to_object_mapping:
+                    desc.__class__ = tag_to_object_mapping[desc.tag]
+                # print desc, desc.attribs, desc.depth
+                # print desc, desc.depth
                 last_node_at_depth[desc.depth] = desc
                 ancestor = last_node_at_depth[desc.depth - 1]
                 ancestor.children.append(desc)
 
+    def get_interpretations(self):
+
+        interp_root = Paragraph.objects.filter(attribs__target=self.label).filter(tag='interpParagraph')
+        if len(interp_root) > 0:
+            interp_root[0].get_descendants()
+            self.interps = [interp_root[0]]
+
+        return self.interps
+
     def block_element_children(self):
         elements_with_children = ['section', 'paragraph', 'interpSection',
-                                  'interpParagraph', 'interpretations', 'appendix']
-        possible_children = ['paragraph', 'interpParagraph', 'section', 'interpSection']
+                                  'interpParagraph', 'interpretations', 'appendix', 'appendixSection']
+        possible_children = ['paragraph', 'interpParagraph', 'section', 'interpSection', 'appendixSection']
         result = []
-
-        # paths = product(elements_with_children, possible_children)
 
         if self.tag in elements_with_children:
             result = [child for child in self.children
@@ -155,7 +159,7 @@ class RegNode(models.Model):
         return marker
 
     def inner_list_type(self):
-        elements_with_inner_lists = ['section', 'interpSection', 'paragraph', 'interpParagraph']
+        elements_with_inner_lists = ['section', 'interpSection', 'paragraph', 'interpParagraph', 'appendixSection']
         if self.tag in elements_with_inner_lists:
             first_par = self.get_child('paragraph')
             first_interp_par = self.get_child('interpParagraph')
@@ -167,6 +171,10 @@ class RegNode(models.Model):
                 marker = 'none'
 
             return marker
+
+    @property
+    def is_paragraph(self):
+        return self.tag in set('paragraph', 'interpParagraph')
 
     def str_as_tree(self, depth=1):
         level_str = '-' * depth + self.tag + '\n'
@@ -220,6 +228,45 @@ class TableOfContents(RegNode):
     class Meta:
         proxy = True
 
+    @property
+    def section_entries(self):
+        return [entry for entry in self.children if entry.tag == 'tocSecEntry']
+
+    @property
+    def appendix_entries(self):
+        return [entry for entry in self.children if entry.tag == 'tocAppEntry']
+
+    @property
+    def interp_entries(self):
+        return [entry for entry in self.children if entry.tag == 'tocInterpEntry']
+
+    @property
+    def has_appendices(self):
+        return len(self.appendix_entries) > 0
+
+    @property
+    def has_interps(self):
+        return len(self.interp_entries) > 0
+
+    @property
+    def supplement_title(self):
+        supplement = [entry for entry in self.children if entry.tag == 'tocInterpEntry' and
+                        'Supplement' in entry.interp_title]
+        print supplement
+        if len(supplement) > 0:
+            return supplement[0].interp_title
+
+    @property
+    def interp_intro_entry(self):
+        intro_entry = [entry for entry in self.interp_entries if entry.interp_title == 'Introduction']
+        if len(intro_entry) > 0:
+            return intro_entry[0]
+
+    @property
+    def non_intro_interp_entries(self):
+        if self.interp_intro_entry:
+            return self.interp_entries[1:]
+
 
 class ToCEntry(RegNode):
 
@@ -235,15 +282,80 @@ class ToCEntry(RegNode):
 
     @property
     def section_subject(self):
-        return self.get_child('sectionSubject/regtext').text
+        text = self.get_child('sectionSubject/regtext').text
+        if self.tag == 'tocSecEntry':
+            prefix = '§ {}'.format(self.target().replace('-', '.')).decode('utf-8')
+            text = re.sub(prefix, '', text)
+        return text
 
     @property
     def appendix_letter(self):
-        return self.get_child('appendixLetter/regtext').text
+        if self.tag == 'tocAppEntry':
+            return self.get_child('appendixLetter/regtext').text
 
     @property
     def appendix_subject(self):
-        return self.get_child('appendixSubject/regtext').text
+        if self.tag == 'tocAppEntry':
+            return self.get_child('appendixSubject/regtext').text
+
+    @property
+    def interp_title(self):
+        if self.tag == 'tocInterpEntry':
+            return self.get_child('interpTitle/regtext').text
+
+
+class ToCSecEntry(RegNode):
+
+    class Meta:
+        proxy = True
+
+    def target(self):
+        return self.attribs['target']
+
+    @property
+    def section_number(self):
+        return self.get_child('sectionNum/regtext').text
+
+    @property
+    def section_subject(self):
+        text = self.get_child('sectionSubject/regtext').text
+        if self.tag == 'tocSecEntry':
+            prefix = '§ {}'.format(self.target().replace('-', '.')).decode('utf-8')
+            text = re.sub(prefix, '', text)
+        return text
+
+
+class ToCAppEntry(RegNode):
+
+    class Meta:
+        proxy = True
+
+    def target(self):
+        return self.attribs['target']
+
+    @property
+    def appendix_letter(self):
+        if self.tag == 'tocAppEntry':
+            return self.get_child('appendixLetter/regtext').text
+
+    @property
+    def appendix_subject(self):
+        if self.tag == 'tocAppEntry':
+            return self.get_child('appendixSubject/regtext').text
+
+
+class ToCInterpEntry(RegNode):
+
+    class Meta:
+        proxy = True
+
+    def target(self):
+        return self.attribs['target']
+
+    @property
+    def interp_title(self):
+        if self.tag == 'tocInterpEntry':
+            return self.get_child('interpTitle/regtext').text
 
 
 class Section(RegNode):
@@ -251,18 +363,24 @@ class Section(RegNode):
     class Meta:
         proxy = True
 
-    # for some reason I don't entirely understand yet having this as a property causes an attribute error
-
     def section_number(self):
-        return self.attribs['sectionNum']
+        if self.tag == 'section':
+            return self.attribs['sectionNum']
 
-    # @property
+    def appendix_letter(self):
+        if self.tag == 'appendixSection':
+            return self.attribs['appendixLetter']
+
     def label(self):
         return self.attribs['label']
 
     @property
     def subject(self):
-        return self.get_child('subject/regtext').text
+        # print 'I am', self.label(), 'with title', self.get_child('subject/title')
+        if self.tag == 'section' or self.tag == 'appendixSection':
+            return self.get_child('subject/regtext').text
+        elif self.tag == 'interpSection':
+            return self.get_child('title/regtext').text
 
     @property
     def paragraphs(self):
@@ -275,7 +393,17 @@ class Paragraph(RegNode):
         proxy = True
 
     def target(self):
-        return self.attribs['target']
+        return self.attribs.get('target', None)
+
+    def interp_target(self):
+        # for display purposes
+        if 'target' in self.attribs:
+            split_target = self.attribs['target'].split('-')
+            section = split_target[1]
+            interp_target = ''.join([section] + ['({})'.format(item) for item in split_target[2:]])
+            return interp_target
+        else:
+            return None
 
     @property
     def paragraph_content(self):
@@ -290,5 +418,64 @@ class Paragraph(RegNode):
     def regtext(self):
         return self.get_child('regtext').text
 
+
+class Reference(RegNode):
+
+    class Meta:
+        proxy = True
+
     def reftype(self):
         return self.attribs['reftype']
+
+    def target(self):
+        return self.attribs['target']
+
+    def regtext(self):
+        return self.get_child('regtext').text
+
+
+class Definition(RegNode):
+
+    class Meta:
+        proxy = True
+
+    def term(self):
+        return self.attribs['term']
+
+    def regtext(self):
+        return self.get_child('regtext').text
+
+
+class Appendix(RegNode):
+
+    class Meta:
+        proxy = True
+
+    def appendix_letter(self):
+        return self.attribs['appendixLetter']
+
+    def label(self):
+        return self.attribs['label']
+
+    @property
+    def appendix_title(self):
+        return self.get_child('appendixTitle/regtext')
+
+    @property
+    def regtext(self):
+        return self.get_child('regtext').text
+
+
+# top-level because it needs to have all the classes defined
+tag_to_object_mapping = {
+    'paragraph': Paragraph,
+    'interpParagraph': Paragraph,
+    'appendixSection': Section,
+    'interpSection': Section,
+    'section': Section,
+    'ref': Reference,
+    'def': Definition,
+    'tocSecEntry': ToCSecEntry,
+    'tocAppEntry': ToCAppEntry,
+    'tocInterpEntry': ToCInterpEntry
+}

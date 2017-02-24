@@ -1,28 +1,69 @@
-    {% if node.tag == "section" or node.tag == "interpSection" %}
-        <section id="{{ node.attributes.label }}" class="reg-section section-focus" tabindex="0"
+
+    {% if node.tag == "section" %}
+        <section id="{{ node.attribs.label }}" class="reg-section section-focus" tabindex="0"
                  data-permalink-section data-base-version="{{ meta.document_number }}"
                  data-effective-date="{{ meta.effective_date }}" data-page-type="reg-section">
         <h2 class="section-title" tabindex="0">{{ node.subject }}</h2>
         {% with inner=node.inner_list_type %}
             <ol {% if inner == "none" %}list-style-type="none"{% else %}type="{{ inner }}"{% endif %} >
         {% endwith %}
+
     {% elif node.tag == "appendix" %}
-        <h2>{{ node.children.0.children.0 }}</h2>
+        <section id="{{ node.label }}" class="appendix-section section-focus content-{{ node.label }}"
+                 data-base-version="{{ meta.document_number }}"
+                 data-page-type="appendix">
+            <h2 class="appendix-title" tabindex="0">
+                {{ node.children.0.children.0.text }}
+            </h2>
+
+    {% elif node.tag == "interpretations" %}
+        <section id="{{ node.label }}" class="supplement-section" data-base-version="{{ meta.document_number }}"
+                 data-page-type="interpretation">
+
+    {% elif node.tag == "interpSection" %}
+        <section id="{{ node.label }}" data-permalink-section>
+            <h3 tabindex="0">{{ node.subject }}</h3>
+            {% with inner=node.inner_list_type %}
+                <ol {% if inner == "none" %}list-style-type="none"{% else %}type="{{ inner }}"{% endif %} >
+            {% endwith %}
+
+    {% elif node.tag == "appendixSection" %}
+        <section id="{{ node.label }}" class="appendix-section">
+            <h3 class="appendix-heading">{{ node.subject }}</h3>
+            {% with inner=node.inner_list_type %}
+                <ol {% if inner == "none" %}list-style-type="none"{% else %}type="{{ inner }}"{% endif %} >
+            {% endwith %}
+
     {% elif node.tag == "paragraph" or node.tag == "interpParagraph" %}
         {% include "paragraph.html" %}
     {% endif %}
+
     {% if node.tag == "paragraph" or node.tag == "interpParagraph" %}
         {% with inner=node.inner_list_type %}
             <ol {% if inner == "none" %}list-style-type="none"{% else %}type="{{ inner }}"{% endif %} >
         {% endwith %}
     {% endif %}
+
     {% for child in node.block_element_children %}
+
         {% with node=child template_name="regnode.html" %}
-            {% with marker=child.marker_type %}
-                <li {% if marker == "none" or marker == None or marker == '' %}class="markerless"{% endif %} >{% include template_name %}</li>
+            {% with marker=node.marker_type %}
+                {% if not node.tag == "appendixSection" %}
+                    <li {% if marker == "none" or marker == None or marker == '' %}class="markerless"{% endif %} >
+                        {% include template_name %}</li>
+                {% else %}
+                    {% include template_name %}
+                {% endif %}
             {% endwith %}
         {% endwith %}
     {% endfor %}
-    {% if node.tag == "paragraph" or node.tag == "interpParagraph" %}</ol>{% endif %}
-    {% if node.tag == "section" or node.tag == "interpSection" %}</ol></section>{% endif %}
 
+    {% if node.tag == "paragraph" or node.tag == "interpParagraph" %} </ol>
+        {% for interp in node.get_interpretations %}
+            {% include "interpretation.html" %}
+        {% endfor %}
+    {% endif %}
+    {% if node.tag == "section" or node.tag == "interpSection" or node.tag == "appendixSection" %}
+        </ol></section>
+    {% endif %}
+    {% if node.tag == "appendix" or node.tag == "interpreations" %}</section>{% endif %}

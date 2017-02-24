@@ -53,7 +53,7 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.security.SecurityMiddleware',
 )
 
-ROOT_URLCONF = 'eregs_mongo.urls'
+ROOT_URLCONF = 'eregs.urls'
 
 TEMPLATES = [
     {
@@ -71,7 +71,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'eregs_mongo.wsgi.application'
+WSGI_APPLICATION = 'eregs.wsgi.application'
 
 
 # Database

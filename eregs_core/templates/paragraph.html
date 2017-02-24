@@ -1,6 +1,6 @@
 {% load marker %}
 
-<a href="#{{ node.attributes.label }}"></a>
+<a href="#{{ node.label }}"></a>
 {% if node.children.0.tag == "title" %}
     <h5><em class="paragraph-marker">{{ node.attributes.marker }}</em> {{ node.paragraph_title }}</h5>
     <p>
