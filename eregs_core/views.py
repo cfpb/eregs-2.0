@@ -40,19 +40,22 @@ def regulation(request, version, eff_date, node):
 def regulation_partial(request, version, eff_date, node):
 
     if request.method == 'GET':
-        if 'Interp' in node:
-            coll = interps
-        else:
-            coll = regtext
         node_id = ':'.join([version, eff_date, node])
-        data = get_with_descendants(coll, node_id)
-        metadata = meta_api(version, eff_date)
+        meta_id = ':'.join([version, eff_date, 'preamble'])
 
-        print data
+        meta = Preamble.objects.get(node_id=meta_id)
+        regtext = Section.objects.get(node_id=node_id)
 
-        if data is not None and metadata is not None:
-            return render_to_response('regnode.html', {'node': data,
-                                                       'meta': metadata})
+        split_node = node.split('-')
+        if len(split_node) >= 2 and split_node[1].isalpha():
+            pass
+
+        meta.get_descendants(auto_infer_class=False)
+        regtext.get_descendants()# (desc_type=Paragraph)
+
+        if regtext is not None and meta is not None:
+            return render_to_response('regnode.html', {'node': regtext,
+                                                       'meta': meta})
 
 
 def interpretations(request, version, eff_date, node):
