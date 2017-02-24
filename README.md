@@ -6,7 +6,7 @@ To make it go, you'll need PostgreSQL. Create a user named `eregs` and give that
 migrations (`alter user eregs superuser` should be fine for development). pip install the requirements and run the migrations.
 
 You'll need some sample data, so check the `data` directory for the initial version of Reg C, or check out the entire 
-`[regulations-xml](https://github.com/cfpb/regulations-xml)` repository. Load Reg C into the database by running
+[regulations-xml](https://github.com/cfpb/regulations-xml) repository. Load Reg C into the database by running
 
 `./manage.py import_xml path/to/2011-31712.xml`
 
