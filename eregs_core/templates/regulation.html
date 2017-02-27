@@ -22,7 +22,9 @@ Main
                 </section>
             </div>
         </main>
-        {% include "right_sidebar.html" %}
+        {% with node=reg %}
+            {% include "right_sidebar.html" %}
+        {% endwith %}
     </div>
 
 {% endblock %}

@@ -6,40 +6,16 @@ from django.contrib.postgres.fields import JSONField
 
 from itertools import product
 
+class GenericNodeMixin(object):
 
-class RegNode(models.Model):
-
-    text = models.TextField()
-    title = models.TextField()
-    node_id = models.CharField(max_length=250)
-    label = models.CharField(max_length=250)
-    node_type = models.CharField(max_length=100)
-    marker = models.CharField(max_length=25)
-    tag = models.CharField(max_length=100)
-    attribs = JSONField()
-    version = models.CharField(max_length=250)
-
-    left = models.IntegerField()
-    right = models.IntegerField()
-    depth = models.IntegerField()
+    # this mixin class provides an interface for retrieving the descendants
+    # of a node
 
     def __init__(self, *args, **kwargs):
-        super(RegNode, self).__init__(*args, **kwargs)
+        super(GenericNodeMixin, self).__init__(*args, **kwargs)
         self.children = []
         self.interps = []
-
-    # def __getitem__(self, item):
-    #     """
-    #     Implements getting the subnodes of a tree by using node tags as keys.
-    #     :param item: the key
-    #     :return: a list of all children that match the supplied tag
-    #     """
-    #     elements = []
-    #     print item
-    #     for child in self.children:
-    #         if child.tag == item:
-    #             elements.append(child)
-    #     return elements
+        self.analysis = []
 
     def get_children(self, path):
         """
@@ -130,6 +106,37 @@ class RegNode(models.Model):
                 ancestor = last_node_at_depth[desc.depth - 1]
                 ancestor.children.append(desc)
 
+
+class RegNode(models.Model, GenericNodeMixin):
+
+    text = models.TextField()
+    title = models.TextField()
+    node_id = models.CharField(max_length=250)
+    label = models.CharField(max_length=250)
+    node_type = models.CharField(max_length=100)
+    marker = models.CharField(max_length=25)
+    tag = models.CharField(max_length=100)
+    attribs = JSONField()
+    version = models.CharField(max_length=250)
+
+    left = models.IntegerField()
+    right = models.IntegerField()
+    depth = models.IntegerField()
+
+    # def __getitem__(self, item):
+    #     """
+    #     Implements getting the subnodes of a tree by using node tags as keys.
+    #     :param item: the key
+    #     :return: a list of all children that match the supplied tag
+    #     """
+    #     elements = []
+    #     print item
+    #     for child in self.children:
+    #         if child.tag == item:
+    #             elements.append(child)
+    #     return elements
+
+
     def get_interpretations(self):
 
         interp_root = Paragraph.objects.filter(attribs__target=self.label).filter(tag='interpParagraph')
@@ -138,6 +145,15 @@ class RegNode(models.Model):
             self.interps = [interp_root[0]]
 
         return self.interps
+
+    def get_analysis(self):
+
+        analysis_root = AnalysisSection.objects.filter(version=self.version, tag='analysisSection', attribs__target=self.label)
+        if len(analysis_root) > 0:
+            analysis_root[0].get_descendants()
+            self.analysis = [analysis_root[0]]
+
+        return self.analysis
 
     def block_element_children(self):
         elements_with_children = ['section', 'paragraph', 'interpSection',
@@ -174,7 +190,7 @@ class RegNode(models.Model):
 
     @property
     def is_paragraph(self):
-        return self.tag in set('paragraph', 'interpParagraph')
+        return self.tag in {'paragraph', 'interpParagraph'}
 
     def str_as_tree(self, depth=1):
         level_str = '-' * depth + self.tag + '\n'
@@ -374,6 +390,22 @@ class Section(RegNode):
     def label(self):
         return self.attribs['label']
 
+    def get_all_analyses(self):
+        if not self.children:
+            self.get_descendants()
+
+        analyses = []
+
+        def collect_analyses(node):
+            for child in node.children:
+                if child.tag in {'paragraph', 'section', 'appedixSection'}:
+                    analyses.extend(child.get_analysis())
+                    collect_analyses(child)
+
+        collect_analyses(self)
+
+        return analyses
+
     @property
     def subject(self):
         # print 'I am', self.label(), 'with title', self.get_child('subject/title')
@@ -466,6 +498,54 @@ class Appendix(RegNode):
         return self.get_child('regtext').text
 
 
+class SectionBySectionNode(models.Model, GenericNodeMixin):
+
+    text = models.TextField()
+    tag = models.CharField(max_length=100)
+    attribs = JSONField()
+    version = models.CharField(max_length=250)
+
+    left = models.IntegerField()
+    right = models.IntegerField()
+    depth = models.IntegerField()
+
+
+class AnalysisSection(RegNode):
+
+    class Meta:
+        proxy = True
+
+    def target(self):
+        return self.attribs['target']
+
+    def notice(self):
+        return self.attribs['notice']
+
+    def effective_dat(self):
+        return self.attribs['date']
+
+    def analysis_target(self):
+        split_target = self.attribs['target'].split('-')
+        section = split_target[1]
+        return ''.join([section] + ['({})'.format(item) for item in split_target[2:]])
+
+
+class AnalysisParagraph(RegNode):
+
+    class Meta:
+        proxy = True
+
+
+class Footnote(RegNode):
+
+    class Meta:
+        proxy = True
+
+    def ref(self):
+        return self.attribs['ref']
+
+
+
 # top-level because it needs to have all the classes defined
 tag_to_object_mapping = {
     'paragraph': Paragraph,
@@ -477,5 +557,6 @@ tag_to_object_mapping = {
     'def': Definition,
     'tocSecEntry': ToCSecEntry,
     'tocAppEntry': ToCAppEntry,
-    'tocInterpEntry': ToCInterpEntry
+    'tocInterpEntry': ToCInterpEntry,
+    'analysisSection': AnalysisSection
 }
