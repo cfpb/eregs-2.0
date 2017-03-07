@@ -1,9 +1,18 @@
 
     {% if node.tag == "section" %}
-        <section id="{{ node.attribs.label }}" class="reg-section section-focus" tabindex="0"
-                 data-permalink-section data-base-version="{{ meta.document_number }}"
-                 data-effective-date="{{ meta.effective_date }}" data-page-type="reg-section">
-        <h2 class="section-title" tabindex="0">{{ node.subject }}</h2>
+        {% if mode == 'reg' %}
+            <section id="{{ node.attribs.label }}" class="reg-section section-focus" tabindex="0"
+                     data-permalink-section data-base-version="{{ meta.document_number }}"
+                     data-effective-date="{{ meta.effective_date }}" data-page-type="reg-section">
+            <h2 class="section-title" tabindex="0">{{ node.subject }}</h2>
+
+        {% elif mode == 'diff' %}
+            <section id="{{ node.attribs.label }}" class="reg-section section-focus" tabindex="0"
+                     data-permalink-section data-base-version="{{ meta.document_number }}"
+                     data-newer-version="{{ node.right_version }}"
+                     data-effective-date="{{ meta.effective_date }}" data-page-type="diff">
+            <h2 class="section-title" tabindex="0">{{ node.subject_diff }}</h2>
+        {% endif %}
         {% with inner=node.inner_list_type %}
             <ol {% if inner == "none" %}list-style-type="none"{% else %}type="{{ inner }}"{% endif %} >
         {% endwith %}
@@ -22,7 +31,11 @@
 
     {% elif node.tag == "interpSection" %}
         <section id="{{ node.label }}" data-permalink-section>
-            <h3 tabindex="0">{{ node.subject }}</h3>
+            {% if node.has_diff_subject %}
+                <h3 tabindex="0">{{ node.subject_diff|safe }}</h3>
+            {% else %}
+                <h3 tabindex="0">{{ node.subject }}</h3>
+            {% endif %}
             {% with inner=node.inner_list_type %}
                 <ol {% if inner == "none" %}list-style-type="none"{% else %}type="{{ inner }}"{% endif %} >
             {% endwith %}
@@ -58,11 +71,15 @@
         {% endwith %}
     {% endfor %}
 
+
     {% if node.tag == "paragraph" or node.tag == "interpParagraph" %} </ol>
-        {% for interp in node.get_interpretations %}
-            {% include "interpretation.html" %}
-        {% endfor %}
+        {% if mode == 'reg' %}
+            {% for interp in node.get_interpretations %}
+                {% include "interpretation.html" %}
+            {% endfor %}
+        {% endif %}
     {% endif %}
+
     {% if node.tag == "section" or node.tag == "interpSection" or node.tag == "appendixSection" %}
         </ol></section>
     {% endif %}

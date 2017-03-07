@@ -8,22 +8,6 @@ from pymongo import MongoClient, ASCENDING
 from lxml import etree
 from elasticsearch import Elasticsearch
 
-from pprint import pprint
-
-client = MongoClient()
-db = client['eregs']
-regtext = db['regtext']
-interps = db['interpretations']
-toc = db['toc']
-appendices = db['appendices']
-analysis = db['analysis']
-meta = db['meta']
-
-all_collections = [regtext, interps, toc, appendices, meta]
-
-es = Elasticsearch()
-es_indices = ['regtext', 'interps', 'toc', 'appendices', 'analysis', 'meta']
-
 json_root = '/Users/vinokurovy/Development/eregs-2.0/json'
 
 
@@ -57,6 +41,7 @@ def xml_to_json(root, counter, id_prefix, depth=1):
                      'depth': depth + 1,
                      'children': [],
                      'version': id_prefix,
+                     'node_type': 'reg',
                      'attributes': {}}
         counter += 1
         json_node['children'].append(text_node)
@@ -75,6 +60,7 @@ def xml_to_json(root, counter, id_prefix, depth=1):
                          'depth': depth + 1,
                          'children': [],
                          'version': id_prefix,
+                         'node_type': 'reg',
                          'attributes': {}}
             json_node['children'].append(text_node)
             counter += 1
@@ -85,116 +71,69 @@ def xml_to_json(root, counter, id_prefix, depth=1):
     return json_node, counter
 
 
-def recursive_insert(node):
-
-    # delete anything with this node's node_id
-    if 'node_id' in node:
-        for coll in all_collections:
-            coll.delete_many({'node_id': node['node_id']})
-
-    # make a shallow copy of the node sans children
-    node_to_insert = {}
-    for key, value in node.items():
-        if key != 'children':
-            node_to_insert[key] = value
-
-    # if we're a content node, we'd better restore the children that
-    # we don't need to recurse on
-
-    if node['tag'] in ['paragraph', 'interpParagraph', 'analysisParagraph',
-                       'section', 'appendix', 'tocSecEntry', 'tocAppEntry',
-                       'interpSection', 'interpretations', 'tableOfContents']:
-        for child in node['children']:
-            if 'label' not in child['attributes']:
-                node_to_insert.setdefault('children', []).append(child)
-
-    # allow children for preamble and fdsys
-    if node['tag'] in ['fdsys', 'preamble']:
-        node_to_insert['children'] = node['children']
-
-    if node['tag'] in ['paragraph', 'section', 'appendix', 'appendixSection']:
-        coll = regtext
-        es_index = 'regtext'
-    #elif node['tag'] in ['appendix', 'appendixSection']:
-    #    coll = appendices
-    elif node['tag'] in ['interpretations', 'interpParagraph', 'interpSection']:
-        coll = interps
-        es_index = 'interps'
-    elif node['tag'] in ['analysisSection', 'analysisParagraph']:
-        coll = analysis
-        es_index = 'analysis'
-    elif node['tag'] in ['tableOfContents', 'tocSecEntry', 'tocAppEntry']:
-        coll = toc
-        es_index = 'toc'
-    elif node['tag'] in ['fdsys', 'preamble']:
-        coll = meta
-        es_index = 'meta'
-    else:
-        raise ValueError('Unknown node encountered!')
-
-    coll.insert_one(node_to_insert)
-    #es_node = node_to_insert
-    #del es_node['_id']
-    #pprint(es_node)
-    #res = es.index(index=es_index, doc_type='regnode', body=es_node)
-    #print res
-
-    # recurse only if this node has subchildren that are labeled
-    # this ensures that paragraphs are the lowest level of recursion
-    for child in node['children']:
-        if 'label' in child['attributes']:
-            recursive_insert(child)
-
-
-def get_with_descendants(coll, node_id, return_format='nested'):
+def xml_diff_to_json(root, counter, left_version, right_version, depth=1):
     """
-    Fetch a node and all of its descendants. Depending on what you need, you can get the
-    descendants in flat order as children of the initial result node, or you can get them
-    in a nested format so that the nodes are nested by depth.
-    :param coll: the collection from which to fetch
-    :param node_id: the node_id of the node to retrieve
-    :param return_format: either 'nested' or 'flat', defaults to 'nested'
-    :return: the result, plus descendants in either nested or flat format
+    :param root: the root of the lxml.etree tree
+    :param counter: the left/right node counter
+    :param id_prefix: the version string used to generate the id
+    :return: a jsonified version of the tree with left/right properties for nested set storage
     """
+    json_node = OrderedDict()
+    json_node['tag'] = root.tag.replace('{eregs}', '')
+    if root.get('label') is not None:
+        json_node['node_id'] = ':'.join([left_version, right_version, root.get('label')])
+    elif json_node['tag'] in ['tableOfContents', 'fdsys', 'preamble']:
+        json_node['node_id'] = ':'.join([left_version, right_version, json_node['tag']])
 
-    result = coll.find_one({'node_id': node_id})
-    # dump the Mongo id, which is not serializable
-    del result['_id']
-    if result is None:
-        return None
+    json_node['attributes'] = dict(root.attrib)
+    json_node['left'] = counter
+    json_node['right'] = 0
+    json_node['children'] = []
+    json_node['depth'] = depth
+    json_node['left_version'] = left_version
+    json_node['right_version'] = right_version
 
-    node_prefix = ':'.join(node_id.split(':')[0:2])
+    if root.text is not None and root.text.strip() != '':
+        counter += 1
+        text_node = {'tag': 'regtext',
+                     'content': root.text,
+                     'left': counter,
+                     'right': counter + 1,
+                     'depth': depth + 1,
+                     'children': [],
+                     'left_version': left_version,
+                     'right_version': right_version,
+                     'node_type': 'diff',
+                     'attributes': {}}
+        counter += 1
+        json_node['children'].append(text_node)
 
-    # NOTE: you HAVE TO match by node_id here because each version of the reg computes
-    # its own hierarchy and therefore its own left/right values. If you don't filter
-    # by node_id, you'll get garbage because the wrong versions will be picked up
 
-    # TODO: change regex to a plain match once I get to internet access
-    descendants = coll.find({'node_id': {'$regex': node_prefix},
-                             'left': {'$gt': result['left']},
-                             'right': {'$lt': result['right']}}, sort=[('left', ASCENDING)])
+    #counter += 1
+    for child in root.getchildren():
+        json_child, counter = xml_diff_to_json(child, counter + 1, left_version, right_version, depth + 1)
+        json_node['children'].append(json_child)
+        if child.tail is not None and child.tail.strip() != '':
+            counter += 1
+            text_node = {'tag': 'regtext',
+                         'content': child.tail,
+                         'left': counter,
+                         'right': counter + 1,
+                         'depth': depth + 1,
+                         'children': [],
+                         'left_version': left_version,
+                         'right_version': right_version,
+                         'node_type': 'diff',
+                         'attributes': {}}
+            json_node['children'].append(text_node)
+            counter += 1
+        counter += 1
 
-    # regnodes don't have any children, but some nodes like meta and fdsys do
-    if 'children' not in result:
-        result['children'] = []
+    json_node['right'] = counter
 
-    if return_format == 'nested':
-        last_node_at_depth = {result['depth']: result}
-        for desc in descendants:
-            del desc['_id']
-            last_node_at_depth[desc['depth']] = desc
-            ancestor = last_node_at_depth[desc['depth'] - 1]
-            ancestor.setdefault('children', []).append(desc)
+    return json_node, counter
 
-    elif return_format == 'flat':
-        for desc in descendants:
-            del desc['_id']
-            result['children'].append(desc)
 
-    else:
-        raise ValueError('Unknown return method!')
-
-    return result
 
 
 def get_ancestors(coll, node_id, ancestor_tag=None):
@@ -233,20 +172,13 @@ def get_ancestors(coll, node_id, ancestor_tag=None):
     return result
 
 
-def find_nodes(root, predicate, accum):
-    """
-    Find all nodes in a JSON tree that match a predicate.
-    :param root: the root of the tree
-    :param predicate: a boolean function
-    :return: the node and all of its descendants
-    """
+def extract_version(xml_tree):
 
-    if predicate(root):
-        accum.append(root)
-
-    if isinstance(root, dict) and 'children' in root:
-        for child in root['children']:
-            find_nodes(child, predicate, accum)
+    preamble = xml_tree.find('.//{eregs}preamble')
+    doc_number = preamble.find('{eregs}documentNumber').text
+    eff_date = preamble.find('{eregs}effectiveDate').text
+    version = ':'.join([doc_number, eff_date])
+    return version
 
 
 def load_xml(xml_filename):
@@ -330,12 +262,34 @@ def load_xml(xml_filename):
     recursive_insert(part_toc_tree)
 
 
-def delete_all_data():
-    """Don't be stupid. This deletes all the data."""
-    for coll in all_collections:
-        coll.delete_many({})
+def xml_node_text(node, include_children=True):
+    """
+    Extract the raw text from an XML element.
 
-if __name__ == '__main__':
+    :param node: the XML element, usually ``<content>``.
+    :type node: :class:`etree.Element`
+    :param include_children: whether or not to get the text of the children as well.
+    :type include_children: :class:`bool` - optional, default = True
 
-    xml_file = sys.argv[1]
-    load_xml(xml_file)
+    :return: a string of the text of the node without any markup.
+    :rtype: :class:`str`
+    """
+
+    if node.text:
+        node_text = node.text
+    else:
+        node_text = ''
+
+    if include_children:
+        for child in node.getchildren():
+            if child.text:
+                node_text += child.text
+            if child.tail:
+                node_text += child.tail
+
+    else:
+        for child in node.getchildren():
+            if child.tail:
+                node_text += child.tail.strip()
+
+    return node_text

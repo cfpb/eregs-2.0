@@ -1,10 +1,16 @@
 # -*- coding: utf-8 -*-
 import re
+import json
+import difflib
 
+from hashlib import sha256
+from utils import xml_node_text
+from diffs import merge_text_diff
 from django.db import models
 from django.contrib.postgres.fields import JSONField
 
 from itertools import product
+
 
 class GenericNodeMixin(object):
 
@@ -78,6 +84,15 @@ class GenericNodeMixin(object):
 
         return [child for child in self.children if child.tag == tag]
 
+    def node_text(self):
+        text = ''
+        for child in self.children:
+            if child.get_child('regtext') is not None:
+                text += child.get_child('regtext').text
+            elif child.tag == 'regtext':
+                text += child.text
+        return text
+
     def get_descendants(self, desc_type=None, auto_infer_class=True, return_format='nested'):
 
         # Sometimes we'll want to instantiate nodes other than RegNodes. However,
@@ -91,14 +106,22 @@ class GenericNodeMixin(object):
 
         # print self.version, self.left, self.right
 
-        descendants = desc_type.objects.filter(version__startswith=self.version,
-                                               left__gt=self.left,
-                                               right__lt=self.right).order_by('left')
+        if isinstance(self, DiffNode):
+            descendants = desc_type.objects.filter(left_version=self.left_version,
+                                                   right_version=self.right_version,
+                                                   left__gt=self.left,
+                                                   right__lt=self.right).order_by('left')
+        elif isinstance(self, RegNode):
+            descendants = desc_type.objects.filter(version__startswith=self.version,
+                                                   left__gt=self.left,
+                                                   right__lt=self.right).order_by('left')
+
 
         if return_format == 'nested':
             last_node_at_depth = {self.depth: self}
             for desc in descendants:
-                if desc_type is RegNode and auto_infer_class and desc.tag in tag_to_object_mapping:
+                if (desc_type is RegNode or desc_type is DiffNode) \
+                        and auto_infer_class and desc.tag in tag_to_object_mapping:
                     desc.__class__ = tag_to_object_mapping[desc.tag]
                 # print desc, desc.attribs, desc.depth
                 # print desc, desc.depth
@@ -123,6 +146,10 @@ class RegNode(models.Model, GenericNodeMixin):
     right = models.IntegerField()
     depth = models.IntegerField()
 
+    def __init__(self, *args, **kwargs):
+        super(RegNode, self).__init__(*args, **kwargs)
+        self.merkle_hash = ''
+
     # def __getitem__(self, item):
     #     """
     #     Implements getting the subnodes of a tree by using node tags as keys.
@@ -139,7 +166,7 @@ class RegNode(models.Model, GenericNodeMixin):
 
     def get_interpretations(self):
 
-        interp_root = Paragraph.objects.filter(attribs__target=self.label).filter(tag='interpParagraph')
+        interp_root = Paragraph.objects.filter(version=self.version, attribs__target=self.label, tag='interpParagraph')
         if len(interp_root) > 0:
             interp_root[0].get_descendants()
             self.interps = [interp_root[0]]
@@ -196,6 +223,25 @@ class RegNode(models.Model, GenericNodeMixin):
         level_str = '-' * depth + self.tag + '\n'
         child_str = '\n'.join([child.str_as_tree(depth=depth+1) for child in self.children])
         return (level_str + child_str).replace('\n\n', '\n')
+
+    def compute_merkle_hash(self):
+        if self.children:
+            child_hash = ''.join([child.merkle_hash() for child in self.children])
+            if self.tag == 'regtext':
+                self_hash = sha256(self.text.encode('utf-8') + child_hash).hexdigest()
+            else:
+                self_hash = sha256(self.tag + str(self.label) + json.dumps(self.attribs) + child_hash).hexdigest()
+        else:
+            if self.tag == 'regtext':
+                self_hash = sha256(self.text.encode('utf-8')).hexdigest()
+            else:
+                self_hash = sha256(self.tag + str(self.label) + json.dumps(self.attribs)).hexdigest()
+
+        self.merkle_hash = self_hash
+        return self_hash
+
+    def __str__(self):
+        return '{}: {}'.format(self.tag, self.node_id)
 
 
 class Preamble(RegNode):
@@ -412,11 +458,57 @@ class Section(RegNode):
         if self.tag == 'section' or self.tag == 'appendixSection':
             return self.get_child('subject/regtext').text
         elif self.tag == 'interpSection':
-            return self.get_child('title/regtext').text
+            title = self.get_child('title/regtext')
+            if title:
+                return title.text
 
     @property
     def paragraphs(self):
         return self.get_children('paragraph')
+
+    @property
+    def left_subject(self):
+        l = None
+        if self.tag == 'section' or self.tag == 'appendixSection':
+            l = self.get_child('leftSubject/regtext')
+        elif self.tag == 'interpSection':
+            l = self.get_child('leftTitle/regtext')
+        if l:
+            return l.text
+        else:
+            return ''
+
+    @property
+    def right_subject(self):
+        r = None
+        if self.tag == 'section' or self.tag == 'appendixSection':
+            r = self.get_child('rightSubject/regtext')
+        elif self.tag == 'interpSection':
+            r = self.get_child('rightTitle/regtext')
+        if r:
+            return r.text
+        else:
+            return ''
+
+    def action(self):
+        return self.attribs.get('action', None)
+
+    @property
+    def has_diff_subject(self):
+        return self.left_subject is not None and self.right_subject is not None
+
+    @property
+    def subject_diff(self):
+        print 'label', self.label
+        if self.has_diff_subject:
+            #print self.label, 'has diff title'
+            left_text = self.left_subject
+            right_text = self.right_subject
+            diff = difflib.ndiff(left_text, right_text)
+            #print 'left:', left_text, 'right:', right_text
+            text = merge_text_diff(diff)
+            print text
+            return text
 
 
 class Paragraph(RegNode):
@@ -438,6 +530,14 @@ class Paragraph(RegNode):
             return None
 
     @property
+    def has_content(self):
+        return self.get_child('content') is not None
+
+    @property
+    def has_diff_content(self):
+        return self.get_child('leftContent') is not None and self.get_child('rightContent') is not None
+
+    @property
     def paragraph_content(self):
         content = self.get_child('content')
         return content.children
@@ -449,6 +549,57 @@ class Paragraph(RegNode):
     @property
     def regtext(self):
         return self.get_child('regtext').text
+
+    @property
+    def left_content(self):
+        lc = self.get_child('leftContent')
+        if lc:
+            return lc.children
+
+    @property
+    def right_content(self):
+        rc = self.get_child('rightContent')
+        if rc:
+            return rc.children
+
+    @property
+    def left_title(self):
+        l = self.get_child('leftTitle')
+        if l:
+            return l.get_child('regtext').text or ''
+
+    @property
+    def right_title(self):
+        r = self.get_child('rightTitle')
+        if r:
+            return r.get_child('regtext').text or ''
+
+    @property
+    def has_diff_title(self):
+        return self.get_child('leftTitle') is not None and self.get_child('rightTitle') is not None
+
+    @property
+    def content_diff(self):
+        if self.has_diff_content:
+            left_text = self.get_child('leftContent').node_text()
+            right_text = self.get_child('rightContent').node_text()
+            diff = difflib.ndiff(left_text, right_text)
+            text = merge_text_diff(diff)
+            return text
+
+    @property
+    def title_diff(self):
+        if self.has_diff_title:
+            print self.label, 'has diff title'
+            left_text = self.left_title
+            right_text = self.right_title
+            diff = difflib.ndiff(left_text, right_text)
+            print 'left:', left_text, 'right:', right_text
+            text = merge_text_diff(diff)
+            return text
+
+    def action(self):
+        return self.attribs.get('action', None)
 
 
 class Reference(RegNode):
@@ -498,16 +649,16 @@ class Appendix(RegNode):
         return self.get_child('regtext').text
 
 
-class SectionBySectionNode(models.Model, GenericNodeMixin):
-
-    text = models.TextField()
-    tag = models.CharField(max_length=100)
-    attribs = JSONField()
-    version = models.CharField(max_length=250)
-
-    left = models.IntegerField()
-    right = models.IntegerField()
-    depth = models.IntegerField()
+# class SectionBySectionNode(models.Model, GenericNodeMixin):
+#
+#     text = models.TextField()
+#     tag = models.CharField(max_length=100)
+#     attribs = JSONField()
+#     version = models.CharField(max_length=250)
+#
+#     left = models.IntegerField()
+#     right = models.IntegerField()
+#     depth = models.IntegerField()
 
 
 class AnalysisSection(RegNode):
@@ -544,6 +695,11 @@ class Footnote(RegNode):
     def ref(self):
         return self.attribs['ref']
 
+
+class DiffNode(RegNode):
+
+    left_version = models.CharField(max_length=250)
+    right_version = models.CharField(max_length=250)
 
 
 # top-level because it needs to have all the classes defined
