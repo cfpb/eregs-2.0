@@ -106,21 +106,6 @@ DATABASES = {
     }
 }
 
-STATICFILES_DIRS = (
-    os.path.join(BASE_DIR, 'components', 'bower_components'),
-    # os.path.join(BASE_DIR, 'eregs_core', 'static')
-)
-
-BOWER_COMPONENTS_ROOT = os.path.join(BASE_DIR, 'components')
-
-BOWER_INSTALLED_APPS = (
-    'jquery',
-    'underscore',
-    'bootstrap',
-    'jquery-ui',
-    'fontawesome',
-    'backbone',
-)
 
 # Internationalization
 # https://docs.djangoproject.com/en/1.8/topics/i18n/
