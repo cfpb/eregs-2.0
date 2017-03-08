@@ -6,8 +6,6 @@ from lxml import etree
 import os
 import json
 
-json_root = '/Users/vinokurovy/Development/eregs-2.0/json'
-
 
 class Command(BaseCommand):
 
@@ -52,9 +50,6 @@ class Command(BaseCommand):
         reg_json = xml_to_json(xml_tree, 1, prefix)[0]
 
         recursive_insert(reg_json)
-
-        output_file = os.path.join(json_root, prefix + ':reg.json')
-        json.dump(reg_json, open(output_file, 'w'), indent=4)
 
 
 def recursive_insert(node):
