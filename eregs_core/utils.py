@@ -1,12 +1,8 @@
 import json
 import os
-import sys
-import pdb
 
 from collections import OrderedDict
-from pymongo import MongoClient, ASCENDING
 from lxml import etree
-from elasticsearch import Elasticsearch
 
 json_root = '/Users/vinokurovy/Development/eregs-2.0/json'
 
