@@ -9,6 +9,7 @@ from api import *
 
 import json
 
+from dateutil import parser as dt_parser
 
 def regulation(request, version, eff_date, node):
 
@@ -60,8 +61,6 @@ def regulation_partial(request, version, eff_date, node):
                                                        'meta': meta})
             result = '<section id="content-wrapper" class="reg-text">' + result + '</section>'
             return HttpResponse(result)
-            #return render_to_response('regnode.html', {'node': regtext,
-            #                                           'meta': meta})
 
 
 def diff(request, left_version, left_eff_date, right_version, right_eff_date, node):
@@ -92,15 +91,51 @@ def diff(request, left_version, left_eff_date, right_version, right_eff_date, no
                                                           'mode': 'diff',
                                                           'meta': meta})
 
+
+def regulation_main(request, part_number):
+
+    if request.method == 'GET':
+
+        regulations = [r for r in RegNode.objects.filter(label=part_number) if len(r.version.split(':')) == 2]
+        regulations = sorted(regulations, key=lambda x: x.version.split(':')[1], reverse=True)
+
+        most_recent_reg = regulations[0]
+        toc_id = most_recent_reg.version + ':tableOfContents'
+        meta_id = most_recent_reg.version + ':preamble'
+
+        toc = TableOfContents.objects.get(node_id=toc_id)
+        meta = Preamble.objects.get(node_id=meta_id)
+
+        toc.get_descendants()
+        meta.get_descendants(auto_infer_class=False)
+
+        landing_page = 'landing_pages/reg_{}.html'.format(meta.cfr_section)
+        landing_page_sidebar = 'landing_pages/reg_{}_sidebar.html'.format(meta.cfr_section)
+
+        if toc is not None and meta is not None:
+            return render_to_response('regulation.html', {'toc': toc,
+                                                          'meta': meta,
+                                                          'mode': 'landing',
+                                                          'landing_page': landing_page,
+                                                          'landing_page_sidebar': landing_page_sidebar})
+
+
 def main(request):
 
     if request.method == 'GET':
 
-        preamble = Preamble.objects.filter(tag='preamble')
+        # meta = Preamble.objects.filter(tag='preamble')
+        meta = [r for r in Preamble.objects.filter(tag='preamble') if len(r.version.split(':')) == 2]
+        meta = sorted(meta, key=lambda x: x.version.split(':')[1], reverse=True)
+
         regs_meta = []
-        for item in preamble:
-            item.get_descendants()
-            regs_meta.append(item)
+        reg_parts = set()
+
+        for item in meta:
+            item.get_descendants(auto_infer_class=False)
+            if item.reg_letter not in reg_parts:
+                regs_meta.append(item)
+                reg_parts.add(item.reg_letter)
 
         fdsys = RegNode.objects.filter(tag='fdsys')
 

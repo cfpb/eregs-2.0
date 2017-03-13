@@ -16,15 +16,26 @@ Main
         <main role="main">
             <div id="content-body" class="main-content">
                 <section id="content-wrapper" class="reg-text">
-                    {% with node=reg %}
-                        {% include "regnode.html" %}
-                    {% endwith %}
+                    {% if mode == "reg" %}
+                        {% with node=reg %}
+                            {% include "regnode.html" %}
+                        {% endwith %}
+                    {% elif mode == "landing" %}
+                        <section data-base-version="{{ meta.version }}" class="landing"
+                                 data-page-type="landing-page" data-reg-part="{{ meta.cfr_section }}">
+                            {% include landing_page %}
+                        </section>
+                    {% endif %}
                 </section>
             </div>
         </main>
-        {% with node=reg %}
-            {% include "right_sidebar.html" %}
-        {% endwith %}
+        {% if mode == "reg" %}
+            {% with node=reg %}
+                {% include "right_sidebar.html" %}
+            {% endwith %}
+        {% elif mode == "landing" %}
+            {% include landing_page_sidebar %}
+        {% endif %}
     </div>
 
 {% endblock %}

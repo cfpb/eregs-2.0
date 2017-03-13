@@ -34,7 +34,7 @@ Main
                         <ul class="reg-list">
                             {% for regulation in preamble %}
                                 <li>
-                                    <a href="{{ regulation.reg_url }}">
+                                    <a href="/{{ regulation.cfr_section }}">
                                         <span class="title-num">{{regulation.cfr_section}}</span>
                                         <div class="reg-sub-title">
                                             <span class="reg-letter">Regulation {{regulation.reg_letter}}</span>
