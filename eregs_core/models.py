@@ -129,6 +129,26 @@ class GenericNodeMixin(object):
                 ancestor = last_node_at_depth[desc.depth - 1]
                 ancestor.children.append(desc)
 
+    def get_ancestors(self, auto_infer_class=True):
+
+        if isinstance(self, DiffNode):
+            ancestors = DiffNode.objects.filter(left_version=self.left_version,
+                                                right_version=self.right_version,
+                                                left__lte=self.left,
+                                                right__gte=self.right).order_by('left')
+        elif isinstance(self, RegNode):
+            ancestors = RegNode.objects.filter(left__lte=self.left,
+                                               right__gte=self.right,
+                                               version=self.version).order_by('left')
+        else:
+            ancestors = []
+
+        if auto_infer_class:
+            for ancestor in ancestors:
+                ancestor.__class__ = tag_to_object_mapping[ancestor.tag]
+
+        return ancestors
+
 
 class RegNode(models.Model, GenericNodeMixin):
 
@@ -239,6 +259,11 @@ class RegNode(models.Model, GenericNodeMixin):
 
         self.merkle_hash = self_hash
         return self_hash
+
+    def node_url(self):
+        if self.tag == 'paragraph' or self.tag == 'interpParagraph':
+            split_version = self.version.split(':')
+            return '/regulation/{}/{}/{}'.format(split_version[0], split_version[1], self.label)
 
     def __str__(self):
         return '{}: {}'.format(self.tag, self.node_id)
@@ -495,7 +520,7 @@ class Section(RegNode):
 
     @property
     def has_diff_subject(self):
-        return self.left_subject is not None and self.right_subject is not None
+        return self.left_subject != '' and self.right_subject != ''
 
     @property
     def subject_diff(self):
@@ -615,6 +640,27 @@ class Reference(RegNode):
 
     def regtext(self):
         return self.get_child('regtext').text
+
+    def target_url(self):
+        if self.reftype() == 'internal':
+            split_version = self.version.split(':')
+            split_target = self.target().split('-')
+            target = None
+            if 'Interp' in split_target:
+                if len(split_target) == 2:
+                    target = self.target()
+                elif len(split_target) > 2:
+                    target = split_target[0] + '-Interp#' + self.target()
+            else:
+                if len(split_target) == 2:
+                    target = self.target()
+                elif len(split_target) > 2:
+                    target = split_target[0] + '-' + split_target[1] + '#' + self.target()
+            if not target:
+                raise ValueError('Invalid target {}!'.format(self.target()))
+            return '/regulation/{}/{}/{}'.format(split_version[0], split_version[1], target)
+        else:
+            return self.target()
 
 
 class Definition(RegNode):

@@ -19,7 +19,7 @@
 
     {% elif node.tag == "appendix" %}
         <section id="{{ node.label }}" class="appendix-section section-focus content-{{ node.label }}"
-                 data-base-version="{{ meta.document_number }}"
+                 data-base-version="{{ meta.document_number }}" data-effective-date="{{ meta.effective_date }}"
                  data-page-type="appendix">
             <h2 class="appendix-title" tabindex="0">
                 {{ node.children.0.children.0.text }}
@@ -27,7 +27,7 @@
 
     {% elif node.tag == "interpretations" %}
         <section id="{{ node.label }}" class="supplement-section" data-base-version="{{ meta.document_number }}"
-                 data-page-type="interpretation">
+                 data-page-type="interpretation" data-effective-date="{{ meta.effective_date }}">
 
     {% elif node.tag == "interpSection" %}
         <section id="{{ node.label }}" data-permalink-section>
@@ -62,7 +62,8 @@
         {% with node=child template_name="regnode.html" %}
             {% with marker=node.marker_type %}
                 {% if not node.tag == "appendixSection" %}
-                    <li {% if marker == "none" or marker == None or marker == '' %}class="markerless"{% endif %} >
+                    <li {% if marker == "none" or marker == None or marker == '' %}class="markerless"{% endif %}
+                            id="{{ node.label }}">
                         {% include template_name %}</li>
                 {% else %}
                     {% include template_name %}

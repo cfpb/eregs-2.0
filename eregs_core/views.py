@@ -58,6 +58,7 @@ def regulation_partial(request, version, eff_date, node):
 
         if regtext is not None and meta is not None:
             result = render_to_string('regnode.html', {'node': regtext,
+                                                       'mode': 'reg',
                                                        'meta': meta})
             result = '<section id="content-wrapper" class="reg-text">' + result + '</section>'
             return HttpResponse(result)
