@@ -62,7 +62,8 @@
         {% with node=child template_name="regnode.html" %}
             {% with marker=node.marker_type %}
                 {% if not node.tag == "appendixSection" %}
-                    <li {% if marker == "none" or marker == None or marker == '' %}class="markerless"{% endif %} >
+                    <li {% if marker == "none" or marker == None or marker == '' %}class="markerless"{% endif %}
+                            id="{{ node.label }}">
                         {% include template_name %}</li>
                 {% else %}
                     {% include template_name %}
