@@ -57,9 +57,11 @@ def regulation_partial(request, version, eff_date, node):
         regtext.get_descendants()
 
         if regtext is not None and meta is not None:
-            return render_to_response('regnode.html', {'node': regtext,
+            result = render_to_string('regnode.html', {'node': regtext,
                                                        'mode': 'reg',
                                                        'meta': meta})
+            result = '<section id="content-wrapper" class="reg-text">' + result + '</section>'
+            return HttpResponse(result)
 
 
 def diff(request, left_version, left_eff_date, right_version, right_eff_date, node):
