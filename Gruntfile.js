@@ -156,7 +156,7 @@ module.exports = function(grunt) {
     watch: {
       js: {
         files: ['Gruntfile.js', '<%= env.frontEndPath %>/js/source/**/*.js'],
-        tasks: ['eslint','browserify:dev']
+        tasks: ['browserify:dev']
       },
       css: {
         files: ['<%= env.frontEndPath %>/css/less/**/*.less'],
