@@ -3,7 +3,9 @@
     <div class="drawer-header">
         <h2 class="toc-type">Table of Contents</h2>
     </div>
-    <nav id="toc" class="regulation-nav drawer-content" role="navigation">
+    <nav id="toc" class="regulation-nav drawer-content" role="navigation"
+         data-toc-version="{{ meta.document_number }}"
+         data-effective-date="{{ meta.effective_date }}">
         <ol>
             {% for entry in toc.section_entries %}
                 {% include "toc_entry.html" %}
