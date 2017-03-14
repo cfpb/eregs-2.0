@@ -217,7 +217,7 @@ module.exports = {
     },
 
     findEffDate: function(versionElements) {
-      return $(versionElements.toc).attr('data-toc-version') ||
+      return $(versionElements.toc).attr('data-effective-date') ||
                   $(versionElements.regLandingPage).attr('data-effective-date')||
                   $(versionElements.timelineList).find('.stop-button').attr('data-effective-date');
                     // includes .stop-button to be sure its not
