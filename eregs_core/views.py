@@ -22,10 +22,6 @@ def regulation(request, version, eff_date, node):
         meta = Preamble.objects.get(node_id=meta_id)
         regtext = Section.objects.get(node_id=node_id)
 
-        split_node = node.split('-')
-        if len(split_node) >= 2 and split_node[1].isalpha():
-            pass
-
         toc.get_descendants()
         meta.get_descendants(auto_infer_class=False)
         regtext.get_descendants()# (desc_type=Paragraph)
@@ -49,10 +45,6 @@ def regulation_partial(request, version, eff_date, node):
         meta = Preamble.objects.get(node_id=meta_id)
         regtext = Section.objects.get(node_id=node_id)
 
-        split_node = node.split('-')
-        if len(split_node) >= 2 and split_node[1].isalpha():
-            pass
-
         meta.get_descendants(auto_infer_class=False)
         regtext.get_descendants()
 
@@ -62,6 +54,22 @@ def regulation_partial(request, version, eff_date, node):
             result = '<section id="content-wrapper" class="reg-text">' + result + '</section>'
             return HttpResponse(result)
 
+
+def sidebar_partial(request, version, eff_date, node):
+
+    if request.method == 'GET':
+        node_id = ':'.join([version, eff_date, node])
+        meta_id = ':'.join([version, eff_date, 'preamble'])
+
+        meta = Preamble.objects.get(node_id=meta_id)
+        regtext = Section.objects.get(node_id=node_id)
+
+        meta.get_descendants(auto_infer_class=False)
+        regtext.get_descendants()
+
+        if regtext is not None:
+            return render_to_response('right_sidebar.html', {'node': regtext,
+                                                             'mode': 'reg'})
 
 def diff(request, left_version, left_eff_date, right_version, right_eff_date, node):
 
@@ -73,10 +81,6 @@ def diff(request, left_version, left_eff_date, right_version, right_eff_date, no
         toc = TableOfContents.objects.get(node_id=toc_id)
         meta = Preamble.objects.get(node_id=meta_id)
         regtext = Section.objects.get(node_id=node_id)
-
-        split_node = node.split('-')
-        if len(split_node) >= 2 and split_node[1].isalpha():
-            pass
 
         toc.get_descendants(desc_type=DiffNode)
         meta.get_descendants(desc_type=DiffNode)
