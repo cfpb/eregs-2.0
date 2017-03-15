@@ -120,7 +120,7 @@ var MetaModel = Backbone.Model.extend({
         }
 
         if (typeof this.supplementalPath !== 'undefined') {
-            url += this.supplementalPath + '/';
+            url =  '/' + this.supplementalPath + '/';
         }
 
         //url += id;
