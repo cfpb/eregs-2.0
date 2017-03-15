@@ -4,8 +4,8 @@
     <a href="{{ child.target }}" class="citation definition"
        data-definition="{{ child.target }}">{{ child.regtext }}</a>
 {% elif child.reftype == "internal" %}
-    <a href="{{ child.target }}" class="citation internal"
-       data-section-id="{{ child.target }}">{{ child.regtext }}</a>
+    <a href="{{ child.target_url }}" class="citation internal"
+       data-section-id="{{ child.target}}">{{ child.regtext }}</a>
 {% elif child.reftype == "external" %}
     <a href="{{ child.target }}" class="citation external"
        data-section-id="{{ child.target }}">{{ child.regtext }}</a>
