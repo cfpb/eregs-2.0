@@ -8,8 +8,10 @@ from utils import *
 from api import *
 
 import json
+import time
 
 from dateutil import parser as dt_parser
+
 
 def regulation(request, version, eff_date, node):
 
@@ -18,6 +20,7 @@ def regulation(request, version, eff_date, node):
         toc_id = ':'.join([version, eff_date, 'tableOfContents'])
         meta_id = ':'.join([version, eff_date, 'preamble'])
 
+        t0 = time.time()
         toc = TableOfContents.objects.get(node_id=toc_id)
         meta = Preamble.objects.get(node_id=meta_id)
         regtext = Section.objects.get(node_id=node_id)
@@ -25,7 +28,8 @@ def regulation(request, version, eff_date, node):
         toc.get_descendants()
         meta.get_descendants(auto_infer_class=False)
         regtext.get_descendants()# (desc_type=Paragraph)
-
+        t1 = time.time()
+        print 'Database query took {}'.format(t1 - t0)
         # print regtext.str_as_tree()
         print node_id
 
@@ -42,17 +46,24 @@ def regulation_partial(request, version, eff_date, node):
         node_id = ':'.join([version, eff_date, node])
         meta_id = ':'.join([version, eff_date, 'preamble'])
 
+        t0 = time.time()
+
         meta = Preamble.objects.get(node_id=meta_id)
         regtext = Section.objects.get(node_id=node_id)
 
         meta.get_descendants(auto_infer_class=False)
         regtext.get_descendants()
+        t1 = time.time()
+        print 'Database query took {}'.format(t1 - t0)
 
         if regtext is not None and meta is not None:
+            t2 = time.time()
             result = render_to_string('regnode.html', {'node': regtext,
                                                        'mode': 'reg',
                                                        'meta': meta})
             result = '<section id="content-wrapper" class="reg-text">' + result + '</section>'
+            t3 = time.time()
+            print 'Template rendering took {}'.format(t3 - t2)
             return HttpResponse(result)
 
 
