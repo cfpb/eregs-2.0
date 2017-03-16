@@ -1,2 +1,7 @@
 *.*~
 *.pyc
+
+# Front-End #
+#############
+node_modules/
+static/
