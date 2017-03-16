@@ -657,7 +657,9 @@ class Reference(RegNode):
                 elif len(split_target) > 2:
                     target = split_target[0] + '-' + split_target[1] + '#' + self.target()
             if not target:
-                raise ValueError('Invalid target {}!'.format(self.target()))
+                # we don't want to die if this happens, but we should definitely log the error
+                print 'Invalid target {} at text {}! '.format(str(self.target()), self.regtext())
+                # raise ValueError('Invalid target {}!'.format(self.target()))
             return '/regulation/{}/{}/{}'.format(split_version[0], split_version[1], target)
         else:
             return self.target()
