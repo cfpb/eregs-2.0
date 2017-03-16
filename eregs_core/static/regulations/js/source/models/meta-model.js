@@ -120,12 +120,7 @@ var MetaModel = Backbone.Model.extend({
         }
 
         if (typeof this.supplementalPath !== 'undefined') {
-            if (this.supplementalPath == 'sidebar') {
-                url = '/sidebar_partial/'
-            }
-            else {
-                url += this.supplementalPath + '/';
-            }
+            url += this.supplementalPath + '/';
         }
 
         //url += id;
