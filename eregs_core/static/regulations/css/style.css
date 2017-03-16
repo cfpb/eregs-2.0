@@ -628,7 +628,7 @@ table {
 */
 .cf-icon__border {
   padding: .2em .25em .15em;
-  border: solid 0.08em #eeeeee;
+  border: solid 0.08em #eee;
   border-radius: .1em;
 }
 .cf-icon__rotate-90 {
@@ -2356,7 +2356,7 @@ mixins.less contains any mixins or variables to be used throughout the LESS file
   height: 1em;
   margin: 0 auto;
   content: "\e112";
-  color: #0072ce;
+  color: #0072CE;
   text-align: center;
   font-size: 1.375em;
   margin-top: 2em;
@@ -2541,7 +2541,7 @@ ol[type="no-marker"] {
  ========================================================================== */
 a:link,
 a:visited {
-  color: #0072ce;
+  color: #0072CE;
   text-decoration: none;
   border: none;
   -webkit-transition: .1s;
@@ -2581,7 +2581,7 @@ a:visited {
 }
 .phone:link,
 .phone:visited {
-  color: #0072ce;
+  color: #0072CE;
 }
 .phone:before {
   font-family: 'CFPB Minicons';
@@ -2653,19 +2653,19 @@ a:visited {
 .definition:visited {
   color: #101820;
   text-decoration: none;
-  border-bottom: 1px solid #d1d3d5;
+  border-bottom: 1px solid #D1D3D5;
 }
 .definition:hover,
 .definition:active {
-  border-bottom: 1px solid #b8babd;
-  background-color: #e6e7e9;
+  border-bottom: 1px solid #B8BABD;
+  background-color: #E6E7E9;
 }
 .definition.active {
-  background-color: #e6e7e9;
+  background-color: #E6E7E9;
 }
 .inline-interpretation .definition:link,
 .inline-interpretation .definition:visited {
-  border-bottom: 1px solid #b8babd;
+  border-bottom: 1px solid #B8BABD;
 }
 /* button styles */
 .btn {
@@ -2962,7 +2962,7 @@ th,
 td {
   padding: 15px;
   line-height: 20px;
-  border: 1px solid #9a9da1;
+  border: 1px solid #9A9DA1;
 }
 th {
   font-family: "Avenir Next Demi", Arial, sans-serif;
@@ -2986,7 +2986,7 @@ pre {
   margin: 0 auto;
   max-width: 600px;
   padding: 10px;
-  background-color: #f7f8f9;
+  background-color: #F7F8F9;
   overflow-x: scroll;
   word-wrap: normal;
   white-space: pre;
@@ -3149,7 +3149,7 @@ Secondary Content
   .secondary-content {
     position: fixed;
     overflow-y: auto;
-    border-left: 1px solid #d1d3d5;
+    border-left: 1px solid #D1D3D5;
     top: 94px;
     right: 0px;
     bottom: 0;
@@ -3223,9 +3223,9 @@ TOC Header Navigation
   left: 0;
   width: 240px;
   height: 34px;
-  border-right: 2px solid #b8babd;
-  border-bottom: 1px solid #b8babd;
-  background-color: #f7f8f9;
+  border-right: 2px solid #B8BABD;
+  border-bottom: 1px solid #B8BABD;
+  background-color: #F7F8F9;
 }
 .header-main {
   /* TODO: closely matches main content layout - should unify into single class*/
@@ -3373,8 +3373,8 @@ Regulation Drawer
 Universal drawer styles
 --------------------- */
 .panel {
-  background-color: #f7f8f9;
-  border-right: 2px solid #b8babd;
+  background-color: #F7F8F9;
+  border-right: 2px solid #B8BABD;
   font-family: "Avenir Next Demi", Arial, sans-serif;
   font-weight: 600;
   font-style: normal;
@@ -3384,7 +3384,7 @@ Universal drawer styles
 }
 .toc-head a:hover,
 .toc-head a:active {
-  background-color: #d1d3d5;
+  background-color: #D1D3D5;
 }
 /*
 Drawer Behavior
@@ -3405,14 +3405,14 @@ Panel Header
   width: 240px;
   height: 40px;
   line-height: 40px;
-  background-color: #f7f8f9;
-  border-right: 2px solid #b8babd;
+  background-color: #F7F8F9;
+  border-right: 2px solid #B8BABD;
   z-index: 100;
-  border-bottom: 1px solid #b8babd;
+  border-bottom: 1px solid #B8BABD;
   padding: 0 15px;
 }
 .drawer-header h2 {
-  color: #43484e;
+  color: #43484E;
   font-size: .875em;
   /* 12px / (26px * .875em) */
   font-family: "Avenir Next Demi", Arial, sans-serif;
@@ -3425,13 +3425,13 @@ Drawer Links
 ============ */
 .toc-head a:link,
 .toc-head a:visited {
-  color: #797d81;
+  color: #797D81;
   text-decoration: none;
 }
 .toc-head a:hover,
 .toc-head a:active {
-  background-color: #d1d3d5;
-  border-bottom: 1px solid #b8babd;
+  background-color: #D1D3D5;
+  border-bottom: 1px solid #B8BABD;
 }
 /*
 Panel Slide Button
@@ -3455,7 +3455,7 @@ html.no-fontface .panel-slide {
   color: transparent;
 }
 .close .panel-slide {
-  border-bottom: 1px solid #b8babd;
+  border-bottom: 1px solid #B8BABD;
 }
 .lt-ie8 .close .panel-slide,
 html.no-fontface .close .panel-slide {
@@ -3490,13 +3490,13 @@ currently these are TOC, History, and Search
   margin: 0;
   width: 56px;
   text-align: center;
-  border-right: 1px solid #b8babd;
+  border-right: 1px solid #B8BABD;
   vertical-align: center;
   /* Fall back to PNG images for drawer icons when @font-face isn't supported */
 }
 .toc-nav-link.current {
-  background-color: #d1d3d5;
-  border-bottom: 1px solid #b8babd;
+  background-color: #D1D3D5;
+  border-bottom: 1px solid #B8BABD;
 }
 .close .toc-nav-link {
   display: block;
@@ -3518,11 +3518,11 @@ html.no-fontface .toc-nav-link .cf-icon-history {
   background: url(../img/history.png) center center no-repeat;
 }
 .close .toc-nav-link.current {
-  background-color: #f7f8f9;
+  background-color: #F7F8F9;
   border-bottom: none;
 }
 .close .toc-nav-link:hover {
-  background-color: #d1d3d5;
+  background-color: #D1D3D5;
   border-bottom: none;
 }
 /* align the drawer toggle list*/
@@ -3537,7 +3537,7 @@ html.no-fontface .toc-nav-link .cf-icon-history {
   position: absolute;
   width: 40px;
   top: 33px;
-  border-top: 1px solid #b8babd;
+  border-top: 1px solid #B8BABD;
   right: 0;
   left: 198px;
 }
@@ -3546,12 +3546,12 @@ html.no-fontface .toc-nav-link .cf-icon-history {
   zoom: 1;
   *display: inline;
   margin-left: -4px;
-  border-right: 1px solid #b8babd;
+  border-right: 1px solid #B8BABD;
 }
 .close .drawer-toggles li {
   margin-left: 0;
   display: list-item;
-  border-bottom: 1px solid #b8babd;
+  border-bottom: 1px solid #B8BABD;
   border-right: none;
 }
 /*
@@ -3631,14 +3631,14 @@ This contains all of the styles specific to the TOC
 .regulation-nav a:link,
 .regulation-nav a:visited {
   color: #101820;
-  border-bottom: 1px solid #d1d3d5;
+  border-bottom: 1px solid #D1D3D5;
   text-decoration: none;
 }
 .regulation-nav a:hover,
 .regulation-nav a:active,
 .regulation-nav .current {
   color: #101820;
-  background-color: #dbedd4;
+  background-color: #DBEDD4;
 }
 .regulation-nav .modified a,
 .regulation-nav .modified a:link,
@@ -3646,14 +3646,14 @@ This contains all of the styles specific to the TOC
 .regulation-nav .added a,
 .regulation-nav .added a:link,
 .regulation-nav .added a:visited {
-  border-right: 8px solid #addc91;
+  border-right: 8px solid #ADDC91;
 }
 .regulation-nav .deleted a,
 .regulation-nav .deleted a:link,
 .regulation-nav .deleted a:visited {
-  border-right: 8px solid #d96a4f;
+  border-right: 8px solid #D96A4F;
   text-decoration: line-through;
-  color: #9a9da1;
+  color: #9A9DA1;
 }
 /* Highlight the History tab in diff view */
 .active-tab a:link,
@@ -3666,11 +3666,11 @@ This contains all of the styles specific to the TOC
   margin: 0;
   padding: 10px 15px;
   display: block;
-  color: #43484e;
+  color: #43484E;
   background-color: #F8F8F8;
   font-size: 1em;
-  border-bottom: 1px solid #d1d3d5;
-  border-top: 1px solid #d1d3d5;
+  border-bottom: 1px solid #D1D3D5;
+  border-top: 1px solid #D1D3D5;
   text-transform: uppercase;
 }
 .subpart-subhead {
@@ -3704,13 +3704,13 @@ This contains all of the styles specific to the history
   font-family: "Avenir Next", Arial, sans-serif;
   font-weight: normal;
   font-style: normal;
-  color: #797d81;
+  color: #797D81;
 }
 .history-drawer .version-list {
-  border-top: 1px solid #d1d3d5;
+  border-top: 1px solid #D1D3D5;
 }
 .history-drawer .status-list {
-  border-bottom: 1px solid #d1d3d5;
+  border-bottom: 1px solid #D1D3D5;
 }
 .history-drawer .version-link {
   display: block;
@@ -3722,14 +3722,14 @@ This contains all of the styles specific to the history
 }
 .history-drawer .current .version-link {
   padding: 10px 15px 0px 15px;
-  background: #dbedd4;
+  background: #DBEDD4;
 }
 .history-drawer .current .timeline-content-wrap {
-  background: #dbedd4;
+  background: #DBEDD4;
 }
 .history-drawer .current .rule-list {
   display: block;
-  background: #dbedd4;
+  background: #DBEDD4;
 }
 .history-drawer .version-link,
 .history-drawer .version-link:link,
@@ -3743,7 +3743,7 @@ This contains all of the styles specific to the history
 .history-drawer .version-link:target,
 .history-drawer .current {
   color: #101820;
-  background: #dbedd4;
+  background: #DBEDD4;
   display: block;
 }
 .history-drawer h3 {
@@ -3758,14 +3758,14 @@ This contains all of the styles specific to the history
   padding: 0;
   font-size: 0.875em;
   text-transform: uppercase;
-  color: #797d81;
+  color: #797D81;
 }
 .history-drawer h5 {
   margin: 0;
   padding: 0;
   font-size: 0.875em;
   text-transform: uppercase;
-  color: #797d81;
+  color: #797D81;
 }
 .history-drawer .final-rule {
   margin: 10px 15px 0 15px;
@@ -3773,10 +3773,10 @@ This contains all of the styles specific to the history
 .history-drawer .compare-title {
   margin: 10px 15px 0 15px;
   padding-top: 15px;
-  border-top: 1px dashed #d1d3d5;
+  border-top: 1px dashed #D1D3D5;
 }
 .history-drawer .rule-status {
-  color: #797d81;
+  color: #797D81;
   text-transform: lowercase;
   font-family: "Avenir Next", Arial, sans-serif;
   font-weight: normal;
@@ -3828,9 +3828,9 @@ This contains all of the styles specific to the history
   margin: 15px;
   background-color: #fff;
   line-height: 32px;
-  border-top: 1px solid #d1d3d5;
-  border-bottom: 1px solid #d1d3d5;
-  border-left: 1px solid #d1d3d5;
+  border-top: 1px solid #D1D3D5;
+  border-bottom: 1px solid #D1D3D5;
+  border-left: 1px solid #D1D3D5;
 }
 .js input[type=text] {
   border: none;
@@ -3854,7 +3854,7 @@ This contains all of the styles specific to the history
 /*IE8 refuses to apply the link hovers*/
 .lt-ie9 #history li:hover,
 .lt-ie9 #history li.current {
-  background-color: #dbedd4;
+  background-color: #DBEDD4;
 }
 /* when ie7 users do visit, the drawer header won't stick out */
 .lt-ie8 .drawer-header .toc-type {
@@ -3866,7 +3866,7 @@ This contains all of the styles specific to the history
   -webkit-border-radius: 3px;
   border-radius: 3px;
   margin: 15px;
-  background-color: #d12124;
+  background-color: #D12124;
   padding: 10px;
   text-align: center;
 }
@@ -3877,7 +3877,7 @@ This contains all of the styles specific to the history
 .stop-button:hover,
 .stop-button:active,
 .stop-button:focus {
-  background-color: #e9a193;
+  background-color: #E9A193;
   color: #101820;
 }
 /*
@@ -3893,7 +3893,7 @@ This contains all of the styles specific to the search
   padding-top: 40px;
 }
 .search-drawer h4 {
-  color: #797d81;
+  color: #797D81;
   font-family: "Avenir Next", Arial, sans-serif;
   font-weight: normal;
   font-style: normal;
@@ -3901,11 +3901,11 @@ This contains all of the styles specific to the search
   margin-bottom: 0.5em;
 }
 .search-drawer .version-search {
-  border-bottom: 2px solid #b8babd;
+  border-bottom: 2px solid #B8BABD;
   padding: 0 15px 20px 15px;
 }
 .search-drawer .search-box {
-  border-bottom: 1px solid #b8babd;
+  border-bottom: 1px solid #B8BABD;
   padding: 20px 15px;
 }
 .search-drawer input[type=text] {
@@ -3922,13 +3922,13 @@ This contains all of the styles specific to the search
 .search-box input[type=text] {
   padding: 0 10px;
   text-align: left;
-  border-top: 1px solid #d1d3d5;
+  border-top: 1px solid #D1D3D5;
   border-right: none;
-  border-bottom: 1px solid #d1d3d5;
-  border-left: 1px solid #d1d3d5;
+  border-bottom: 1px solid #D1D3D5;
+  border-left: 1px solid #D1D3D5;
 }
 .inline-interpretation {
-  background-color: #f7f8f9;
+  background-color: #F7F8F9;
   padding: 0.125em .625em;
   margin-bottom: 1em;
   margin-left: -20px;
@@ -3942,11 +3942,11 @@ This contains all of the styles specific to the search
   /* reset padding used to accomodate permalink marker in main content */
 }
 .inline-interpretation:hover {
-  background-color: #e6e7e9;
+  background-color: #E6E7E9;
   cursor: pointer;
 }
 .inline-interpretation.open {
-  background-color: #e6e7e9;
+  background-color: #E6E7E9;
   cursor: auto;
 }
 .inline-interpretation .inline-interp-header h4 {
@@ -3962,7 +3962,7 @@ This contains all of the styles specific to the search
   background: url(../img/interpretation.png) no-repeat 0 3px;
 }
 .inline-interpretation .expand-button {
-  color: #0072ce;
+  color: #0072CE;
   font-family: "Avenir Next Demi", Arial, sans-serif;
   font-weight: 600;
   font-style: normal;
@@ -4076,7 +4076,7 @@ This contains all of the styles specific to the search
 }
 .appendix-note:hover {
   cursor: default;
-  background-color: #f7f8f9;
+  background-color: #F7F8F9;
 }
 /*
 Small screens
@@ -4106,7 +4106,7 @@ Small screens
  ========================================================================== */
 .reg-header {
   width: 100%;
-  color: #5c6065;
+  color: #5C6065;
   font-family: "Avenir Next", Arial, sans-serif;
   font-weight: normal;
   font-style: normal;
@@ -4122,7 +4122,7 @@ Small screens
   margin-top: 0;
 }
 .main-head {
-  border-bottom: 3px solid #797d81;
+  border-bottom: 3px solid #797D81;
   background: #fff;
   position: fixed;
   top: 0;
@@ -4173,32 +4173,32 @@ Small screens
     font-weight: normal;
     font-style: normal;
     padding: 0 12px;
-    color: #b8babd;
+    color: #B8BABD;
   }
 }
 .title a:link,
 .title a:visited {
   border-bottom: none;
-  color: #5c6065;
+  color: #5C6065;
   text-decoration: none;
 }
 .title a:hover,
 .title a:active {
-  color: #0072ce;
+  color: #0072CE;
 }
 .sub-head {
   position: fixed;
   top: 60px;
   min-width: 100%;
-  background: #e6e7e9;
+  background: #E6E7E9;
   color: #101820;
   line-height: 34px;
   height: 2.125em;
-  border-bottom: 1px solid #b8babd;
+  border-bottom: 1px solid #B8BABD;
   z-index: 200;
 }
 .sub-head .main {
-  border-right: 1px solid #b8babd;
+  border-right: 1px solid #B8BABD;
 }
 #content-header {
   padding-left: 60px;
@@ -4218,7 +4218,7 @@ Small screens
   font-family: "Avenir Next", Arial, sans-serif;
   font-weight: normal;
   font-style: normal;
-  color: #797d81;
+  color: #797D81;
   display: inline-block;
   margin: 0 10px;
 }
@@ -4263,12 +4263,12 @@ Application Nav
 }
 .app-nav a:link,
 .app-nav a:visited {
-  color: #797d81;
+  color: #797D81;
 }
 .app-nav a:hover,
 .app-nav a:active,
 .app-nav a:focus {
-  color: #0072ce;
+  color: #0072CE;
 }
 /*
 mid-sized (tablet) screens
@@ -4356,11 +4356,11 @@ tiny screens
     position: fixed;
     top: 60px;
     width: 100%;
-    background: #f7f8f9;
+    background: #F7F8F9;
     z-index: 999999;
   }
   .app-nav-list-item {
-    border-bottom: 1px solid #797d81;
+    border-bottom: 1px solid #797D81;
     z-index: 999999;
   }
   .app-nav-list-item a {
@@ -4383,7 +4383,7 @@ tiny screens
   .mobile-nav-trigger:active,
   .mobile-nav-trigger:focus,
   .mobile-nav-trigger.open {
-    background-color: #f7f8f9;
+    background-color: #F7F8F9;
   }
   .title {
     width: 90%;
@@ -4455,7 +4455,7 @@ Global Footer
   font-family: "Avenir Next", Arial, sans-serif;
   font-weight: normal;
   font-style: normal;
-  color: #797d81;
+  color: #797D81;
 }
 .application-footer abbr[title] {
   border-bottom: none;
@@ -4473,7 +4473,7 @@ Landing Page Footer
 .landing-footer {
   margin: 3em 0;
   padding-top: 2em;
-  border-top: 2px solid #b8babd;
+  border-top: 2px solid #B8BABD;
   font-family: "Avenir Next", Arial, sans-serif;
   font-weight: normal;
   font-style: normal;
@@ -4521,7 +4521,7 @@ Next/Previous Links
 }
 /* styles for both the next and previous blocks */
 .next-prev {
-  border-top: 2px solid #b8babd;
+  border-top: 2px solid #B8BABD;
   width: 45%;
   font-family: "Avenir Next Demi", Arial, sans-serif;
   font-weight: 600;
@@ -4531,7 +4531,7 @@ Next/Previous Links
   font-family: "Avenir Next", Arial, sans-serif;
   font-weight: normal;
   font-style: normal;
-  color: #797d81;
+  color: #797D81;
   text-align: center;
 }
 .previous {
@@ -4567,7 +4567,7 @@ Link Styles
 }
 .next-prev-link:link,
 .next-prev-link:visited {
-  color: #0072ce;
+  color: #0072CE;
   text-decoration: none;
 }
 /*
@@ -4668,24 +4668,24 @@ Sidebar Expandables
   margin: 0;
   text-transform: uppercase;
   letter-spacing: 1px;
-  color: #43484e;
+  color: #43484E;
   font-family: "Avenir Next Demi", Arial, sans-serif;
   font-weight: 600;
   font-style: normal;
 }
 .secondary-content h4.important {
-  color: #d12124;
+  color: #D12124;
 }
 .secondary-content h4 h5 {
   margin: 0;
 }
 .secondary-content .expandable {
   cursor: pointer;
-  background-color: #f7f8f9;
+  background-color: #F7F8F9;
   width: 100%;
 }
 .secondary-content .expandable.has-content {
-  background-color: #ffecd1;
+  background-color: #FFECD1;
 }
 .secondary-content .expandable h4 {
   display: inline-block;
@@ -4704,7 +4704,7 @@ Sidebar Expandables
   line-height: 1;
   -webkit-font-smoothing: antialiased;
   content: "\e109";
-  color: #0072ce;
+  color: #0072CE;
 }
 .secondary-content header.open a:before {
   font-family: 'CFPB Minicons';
@@ -4714,10 +4714,10 @@ Sidebar Expandables
   line-height: 1;
   -webkit-font-smoothing: antialiased;
   content: "\e111";
-  color: #0072ce;
+  color: #0072CE;
 }
 .secondary-content .sidebar-subsection {
-  border-bottom: 1px solid #d7d2cb;
+  border-bottom: 1px solid #D7D2CB;
   padding-bottom: 28px;
   padding-top: 28px;
 }
@@ -4734,10 +4734,10 @@ Sidebar Headers
 */
 .sidebar-header {
   *zoom: 1;
-  background-color: #f7f8f9;
+  background-color: #F7F8F9;
 }
 .sidebar-header h4 {
-  color: #797d81;
+  color: #797D81;
   padding: .5em 0 .5em .9375em;
   font-family: "Avenir Next Demi", Arial, sans-serif;
   font-weight: 600;
@@ -4754,16 +4754,16 @@ Sidebar Headers
   width: 13px;
 }
 .sidebar-header.spinner {
-  background: #f7f8f9 url(../img/blue_spinner.gif) no-repeat center right;
+  background: #F7F8F9 url(../img/blue_spinner.gif) no-repeat center right;
   background-position-x: 92%;
 }
 @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
   .sidebar-header .close-button {
-    background: #f7f8f9 url(../img/close@2x.png) no-repeat 0 0;
+    background: #F7F8F9 url(../img/close@2x.png) no-repeat 0 0;
     background-size: 13px 13px;
   }
   .sidebar-header.spinner {
-    background: #f7f8f9 url(../img/blue_spinner@2x.gif) no-repeat center right;
+    background: #F7F8F9 url(../img/blue_spinner@2x.gif) no-repeat center right;
     background-position-x: 92%;
     background-size: 19px 19px;
   }
@@ -4775,7 +4775,7 @@ Regs Meta contains the sub-content meta data found in the sidebar
 */
 .expand-drawer,
 .expandable {
-  border-bottom: 1px solid #d1d3d5;
+  border-bottom: 1px solid #D1D3D5;
 }
 .regs-meta h4 {
   padding: .5em 1em;
@@ -4795,7 +4795,7 @@ Regs Meta contains the sub-content meta data found in the sidebar
 }
 .regs-meta .sxs-list {
   margin-top: 12px;
-  border-top: 1px solid #d7d2cb;
+  border-top: 1px solid #D7D2CB;
 }
 .regs-meta .chunk {
   padding: 1em;
@@ -4811,7 +4811,7 @@ Regs Meta contains the sub-content meta data found in the sidebar
   font-weight: 600;
   font-style: normal;
   color: #101820;
-  border-bottom: 1px solid #d1d3d5;
+  border-bottom: 1px solid #D1D3D5;
   padding: .5em;
   text-decoration: none;
 }
@@ -4820,23 +4820,23 @@ Regs Meta contains the sub-content meta data found in the sidebar
   float: right;
   font-size: 0.875em;
   line-height: 2;
-  color: #797d81;
+  color: #797D81;
 }
 .regs-meta .chunk .sidebar-full:link:hover,
 .regs-meta .chunk .sidebar-full:visited:hover,
 .regs-meta .chunk .sidebar-full:link:active,
 .regs-meta .chunk .sidebar-full:visited:active {
   text-decoration: none;
-  color: #0072ce;
+  color: #0072CE;
 }
 .regs-meta .chunk .sidebar-full:link:hover .cf-icon-right,
 .regs-meta .chunk .sidebar-full:visited:hover .cf-icon-right,
 .regs-meta .chunk .sidebar-full:link:active .cf-icon-right,
 .regs-meta .chunk .sidebar-full:visited:active .cf-icon-right {
-  color: #0072ce;
+  color: #0072CE;
 }
 .lt-ie9 .regs-meta .chunk li:first-child a:link {
-  border-top: 1px solid #d1d3d5;
+  border-top: 1px solid #D1D3D5;
 }
 /*
 Definitions
@@ -4845,7 +4845,7 @@ When open definitions appear in the right sidebar
 */
 .sidebar-inner .open-definition,
 .spinner {
-  border-bottom: 1px solid #d1d3d5;
+  border-bottom: 1px solid #D1D3D5;
 }
 .open-definition ol,
 .active-term {
@@ -4854,7 +4854,7 @@ When open definitions appear in the right sidebar
   font-style: normal;
 }
 .open-definition .sidebar-header {
-  border-bottom: 1px solid #d1d3d5;
+  border-bottom: 1px solid #D1D3D5;
 }
 .open-definition .close-button {
   cursor: pointer;
@@ -4876,7 +4876,7 @@ When open definitions appear in the right sidebar
   clear: left;
 }
 .open-definition .open-definition {
-  border-bottom: 1px solid #b8babd;
+  border-bottom: 1px solid #B8BABD;
 }
 .open-definition .definition-text,
 .open-definition .definition-warning {
@@ -4892,11 +4892,11 @@ When open definitions appear in the right sidebar
 .open-definition .definition-warning.inactive a.continue-link.internal,
 .open-definition .definition-text.inactive a.citation.definition,
 .open-definition .definition-warning.inactive a.citation.definition {
-  color: #9a9da1;
+  color: #9A9DA1;
 }
 .open-definition .definition-warning {
-  color: #d12124;
-  border-bottom: 1px solid #d1d3d5;
+  color: #D12124;
+  border-bottom: 1px solid #D1D3D5;
   margin: 0 1em;
   padding: 1em 0 0 0;
 }
@@ -4913,7 +4913,7 @@ When open definitions appear in the right sidebar
 .open-definition .msg {
   width: 85%;
   float: left;
-  border-bottom: 1px solid #d1d3d5;
+  border-bottom: 1px solid #D1D3D5;
   padding-bottom: 1em;
 }
 .open-definition .update-definition {
@@ -4951,18 +4951,18 @@ Styles for the UI help slide down
 }
 .help-list li {
   margin-top: 15px;
-  color: #43484e;
+  color: #43484E;
 }
 .help-list .cf-icon-right {
   margin-top: -4px;
 }
 .help-list .modified {
-  border-right: 8px solid #addc91;
+  border-right: 8px solid #ADDC91;
 }
 .help-list .deleted {
-  border-right: 8px solid #d96a4f;
+  border-right: 8px solid #D96A4F;
   text-decoration: line-through;
-  color: #9a9da1;
+  color: #9A9DA1;
 }
 .help-list {
   margin-bottom: 15px;
@@ -4977,7 +4977,7 @@ Styles for the UI help slide down
   padding: 10px;
   margin-right: 15px;
   border-radius: 4px;
-  background-color: #f7f8f9;
+  background-color: #F7F8F9;
   text-align: center;
   vertical-align: middle;
 }
@@ -4992,12 +4992,12 @@ Styles for the UI help slide down
 }
 .sample-menu {
   display: block;
-  background: #f7f8f9;
+  background: #F7F8F9;
   padding: 15px;
-  border-bottom: 1px solid #b8babd;
+  border-bottom: 1px solid #B8BABD;
 }
 .sample-menu:first-child {
-  border-top: 1px solid #b8babd;
+  border-top: 1px solid #B8BABD;
 }
 /*
 Small screens
@@ -5029,7 +5029,7 @@ Small screens
     margin-right: 25px;
   }
   #sxs-list {
-    border-top: 1px solid #d7d2cb;
+    border-top: 1px solid #D7D2CB;
   }
   /*
     Definitions
@@ -5044,8 +5044,8 @@ Small screens
     min-width: 100%;
     min-height: 200px;
     padding: 0 20px 80px 50px;
-    background: #f7f8f9;
-    border-top: 2px solid #d1d3d5;
+    background: #F7F8F9;
+    border-top: 2px solid #D1D3D5;
     z-index: 200;
     overflow-y: scroll;
   }
@@ -5060,7 +5060,7 @@ Small screens
     padding-bottom: 160px;
   }
   .sidebar-header {
-    background-color: #f7f8f9;
+    background-color: #F7F8F9;
   }
 }
 @media only screen and (max-width: 860px) {
@@ -5133,7 +5133,7 @@ SxS window
   height: 1em;
   margin: 0 auto;
   content: "\e112";
-  color: #0072ce;
+  color: #0072CE;
   text-align: center;
   font-size: 1.375em;
   margin-top: 2em;
@@ -5146,8 +5146,8 @@ SxS header
   top: 60px;
   width: 100%;
   height: 2.125em;
-  background-color: #ffecd1;
-  border-bottom: 1px solid #fbcd92;
+  background-color: #FFECD1;
+  border-bottom: 1px solid #FBCD92;
   z-index: 100;
 }
 .sxs-header h2 {
@@ -5177,15 +5177,15 @@ Back link
   display: inline-block;
   padding: 0 15px;
   min-width: 5em;
-  background-color: #f7f8f9;
-  color: #797d81;
-  border-right: 2px solid #b8babd;
+  background-color: #F7F8F9;
+  color: #797D81;
+  border-right: 2px solid #B8BABD;
   text-decoration: none;
   height: 34px;
   line-height: 34px;
   /* match height of the .sxs-header - 1px */
   vertical-align: top;
-  border-bottom: 1px solid #fbcd92;
+  border-bottom: 1px solid #FBCD92;
 }
 .sxs-back-button .cf-icon-left,
 .sxs-back-button:link .cf-icon-left,
@@ -5194,7 +5194,7 @@ Back link
 }
 .sxs-back-button:hover,
 .sxs-back-button:active {
-  color: #0072ce;
+  color: #0072CE;
 }
 /*
 SxS content wrapper
@@ -5248,7 +5248,7 @@ Metadata info for the SxS Analysis
 .sxs-metadata h3,
 .sxs-metadata h4 {
   margin-bottom: 0;
-  color: #797d81;
+  color: #797D81;
   font-family: "Avenir Next Demi", Arial, sans-serif;
   font-weight: 600;
   font-style: normal;
@@ -5280,19 +5280,19 @@ Footnotes
 */
 .footnote-title {
   margin-top: 2em;
-  color: #797d81;
+  color: #797D81;
 }
 .footnotes {
   margin: 0;
   padding: 0;
   margin-top: 1em;
-  border-top: 1px solid #b8babd;
+  border-top: 1px solid #B8BABD;
   /* pad an inner wrapper because padding on the li causes the header offset to be ignored */
 }
 .footnotes li {
   margin: 0;
   padding: 0;
-  border-bottom: 1px solid #b8babd;
+  border-bottom: 1px solid #B8BABD;
 }
 .footnotes p {
   margin: 0 4em 0 2.5em;
@@ -5317,7 +5317,7 @@ Footnotes
   border-bottom: none;
 }
 .footnotes .highlight .footnote-inner {
-  background-color: #f7f8f9;
+  background-color: #F7F8F9;
 }
 /*
 Small screens
@@ -5359,7 +5359,7 @@ h2.search-term {
   margin-bottom: 0;
 }
 p.search-version {
-  color: #797d81;
+  color: #797D81;
   text-transform: uppercase;
   font-family: "Avenir Next Demi", Arial, sans-serif;
   font-weight: 600;
@@ -5399,12 +5399,12 @@ p.search-version {
   font-family: "Avenir Next Demi", Arial, sans-serif;
   font-weight: 600;
   font-style: normal;
-  color: #0072ce;
+  color: #0072CE;
   text-decoration: none;
 }
 .search-nav a:hover,
 .search-nav a:active {
-  border-bottom: 1px solid #0072ce;
+  border-bottom: 1px solid #0072CE;
 }
 .search-nav .next {
   padding: 0 15px 0 0;
@@ -5431,7 +5431,7 @@ input[type=text] {
 button {
   height: 32px;
   margin: 0;
-  background-color: #0072ce;
+  background-color: #0072CE;
   color: #fff;
   border: none;
   vertical-align: bottom;
@@ -5442,11 +5442,11 @@ button {
 }
 button:hover,
 button:active {
-  background-color: #328ed8;
+  background-color: #328ED8;
 }
 textarea:focus,
 input:focus {
-  border: 1px solid #0072ce;
+  border: 1px solid #0072CE;
 }
 /*
 Selects
@@ -5457,7 +5457,7 @@ Selects
   /* this hides the select's drop button */
   position: relative;
   background: white url('../img/select.png') no-repeat bottom right;
-  border: solid 1px #d1d3d5;
+  border: solid 1px #D1D3D5;
   height: 32px;
 }
 @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
@@ -5475,7 +5475,7 @@ select {
   box-shadow: none;
   padding: 0 10px;
   /* add padding to the select, not the div */
-  color: #797d81;
+  color: #797D81;
   height: 32px;
 }
 .lt-ie9 select {
@@ -5487,20 +5487,20 @@ select {
  diffs.less defines the visual appearance of regulations additions and deletions
  */
 del {
-  color: #b8babd;
+  color: #B8BABD;
   text-decoration: line-through;
 }
 del img {
-  border: 2px solid #e9a193;
+  border: 2px solid #E9A193;
   opacity: .7;
 }
 ins {
-  background-color: #dbedd4;
+  background-color: #DBEDD4;
   text-decoration: none;
   font-style: italic;
 }
 ins .key-term {
-  background-color: #dbedd4;
+  background-color: #DBEDD4;
   text-decoration: none;
   font-family: "Avenir Next Demi Italic", Arial, sans-serif;
   font-weight: 600;
@@ -5513,7 +5513,7 @@ ins .key-term {
   font-style: italic;
 }
 ins img {
-  border: 2px solid #dbedd4;
+  border: 2px solid #DBEDD4;
 }
 h2 ins,
 h3 ins,
@@ -5523,7 +5523,7 @@ h4 ins {
   font-style: italic;
 }
 .expand-button {
-  color: #0072ce;
+  color: #0072CE;
   font-family: "Avenir Next Demi", Arial, sans-serif;
   font-weight: 600;
   font-style: normal;
@@ -5597,7 +5597,7 @@ reg-landing.less contains styles specific to the regulation landing page
   padding-top: 2em;
   height: 1px;
   display: block;
-  border-bottom: 1px solid #d1d3d5;
+  border-bottom: 1px solid #D1D3D5;
   content: '';
 }
 .landing .landing-contact-info {
@@ -5709,7 +5709,7 @@ Small screens
   }
   .secondary-content .landing-sidebar .alert {
     margin-top: 0;
-    border-top: 1px solid #d1d3d5;
+    border-top: 1px solid #D1D3D5;
   }
 }
 /*
@@ -5733,12 +5733,12 @@ Small screens
  the hero is the large graphic/information area
  */
 .hero {
-  background-color: #addc91;
+  background-color: #ADDC91;
   overflow: hidden;
   font-family: "Avenir Next", Arial, sans-serif;
   font-weight: normal;
   font-style: normal;
-  border-bottom: 1px solid #d1d3d5;
+  border-bottom: 1px solid #D1D3D5;
 }
 .hero .inner-wrap {
   background: url(../img/hero.png) 96% -100% no-repeat;
@@ -5780,12 +5780,12 @@ Small screens
   margin: 0;
   padding: 0;
   margin-top: 1em;
-  border-top: 1px solid #d1d3d5;
+  border-top: 1px solid #D1D3D5;
 }
 .reg-list li {
   display: block;
   margin: 0;
-  border-bottom: 1px solid #d1d3d5;
+  border-bottom: 1px solid #D1D3D5;
 }
 .reg-list a {
   display: table;
@@ -5800,7 +5800,7 @@ Small screens
 .reg-list a:hover,
 .reg-list a:active,
 .reg-list a:focus {
-  background-color: #f7f8f9;
+  background-color: #F7F8F9;
 }
 .reg-list .title-num {
   margin: 0;
@@ -5827,7 +5827,7 @@ Small screens
   display: block;
   float: right;
   line-height: 60px;
-  color: #0072ce;
+  color: #0072CE;
   font-size: 1.25em;
 }
 .reg-list .mini-alert {
@@ -5835,7 +5835,7 @@ Small screens
   margin-left: 100px;
   margin-bottom: 0.5em;
   padding: 0.5em 15px 0 0;
-  border-top: 1px solid #d1d3d5;
+  border-top: 1px solid #D1D3D5;
   font-size: 0.875em;
   clear: both;
   overflow: auto;
@@ -5966,8 +5966,8 @@ hero
 ------------------
 */
 .title-hero {
-  background-color: #addc91;
-  border-bottom: 1px solid #d1d3d5;
+  background-color: #ADDC91;
+  border-bottom: 1px solid #D1D3D5;
 }
 .title-hero h2 {
   font-size: 34px;
@@ -5978,7 +5978,7 @@ hero
   font-style: normal;
 }
 .about-section {
-  border-bottom: 1px solid #b8babd;
+  border-bottom: 1px solid #B8BABD;
   padding-bottom: 1em;
 }
 .about-section:last-child {
@@ -6016,7 +6016,7 @@ dev well
   height: 100px;
   margin-right: 16px;
   font-size: 1.5em;
-  color: #797d81;
+  color: #797D81;
 }
 /*
 snazzy ordered lists
@@ -6038,7 +6038,7 @@ snazzy ordered lists
 .about-ol > li:before {
   content: counter(li);
   counter-increment: li;
-  background: #2cb34a;
+  background: #2CB34A;
   color: #fff;
   font-size: 12px;
   position: absolute;
@@ -6066,8 +6066,8 @@ custom styles
   line-height: 46px;
   border-radius: 4px;
   text-align: center;
-  background: #f7f8f9;
-  color: #9a9da1;
+  background: #F7F8F9;
+  color: #9A9DA1;
   font-size: 22px;
 }
 @media only screen and (min-width: 780px) {
@@ -6089,14 +6089,14 @@ custom styles
   line-height: 1;
   -webkit-font-smoothing: antialiased;
   content: "\e642";
-  color: #2cb34a;
+  color: #2CB34A;
   margin-left: -32px;
   padding-right: 12px;
   font-size: 18px;
 }
 .small-disclaimer {
   display: block;
-  color: #9a9da1;
+  color: #9A9DA1;
   line-height: 1.4;
 }
 /*
@@ -6172,7 +6172,7 @@ error.less contains styles for the generic 404, history 404, and 500 pages
 .error .cf-icon-table-of-contents,
 .error .cf-icon-history,
 .error .cf-icon-search {
-  color: #797d81;
+  color: #797D81;
   margin-right: 10px;
 }
 .error .cf-icon-history,
@@ -6273,13 +6273,13 @@ but we want to hide them in the wayfinding header.
   height: 1em;
   margin: 0 auto;
   content: "\e112";
-  color: #0072ce;
+  color: #0072CE;
   text-align: center;
   font-size: 1.375em;
   margin-top: 2em;
 }
 .important {
-  color: #d12124;
+  color: #D12124;
 }
 .alert {
   background-color: #F6D9D3;
@@ -6297,7 +6297,7 @@ but we want to hide them in the wayfinding header.
 }
 .well {
   padding: 1em 1.25em;
-  background: #e6e7e9;
+  background: #E6E7E9;
 }
 .bump {
   margin-top: 2em;
@@ -6327,8 +6327,8 @@ but we want to hide them in the wayfinding header.
   font-family: "Avenir Next", Arial, sans-serif;
   font-weight: normal;
   font-style: normal;
-  color: #d12124;
-  border-bottom: 1px solid #d1d3d5;
+  color: #D12124;
+  border-bottom: 1px solid #D1D3D5;
   font-size: .9em;
   padding: 1em 0;
   line-height: 1.6em;
@@ -6336,20 +6336,20 @@ but we want to hide them in the wayfinding header.
 .icon-warning {
   float: left;
   margin: .25em .5em 0 0;
-  color: #d12124;
+  color: #D12124;
 }
 /* credit */
 #modal {
   font-family: "Avenir Next Demi", Arial, sans-serif;
   font-weight: 600;
   font-style: normal;
-  color: #797d81;
+  color: #797D81;
   width: 400px;
   height: 400px;
   position: fixed;
   z-index: 9999;
   background: #f1f2f2 url('../../eregsip/kbg.png');
-  border: 4px solid #9a9da1;
+  border: 4px solid #9A9DA1;
   padding: 20px 40px;
 }
 #modal ul {
@@ -6402,7 +6402,7 @@ img.reg-image {
   margin-left: auto;
   margin-right: auto;
   display: block;
-  border: 1px solid #d1d3d5;
+  border: 1px solid #D1D3D5;
 }
 .block-image {
   display: block;
@@ -6480,7 +6480,7 @@ Import no-js.less and print.less at the end, since they override other rules
   background: none;
 }
 .no-js .inline-interpretation {
-  background-color: #e6e7e9;
+  background-color: #E6E7E9;
   pointer-events: none;
   cursor: default;
 }
@@ -6642,8 +6642,8 @@ Import no-js.less and print.less at the end, since they override other rules
  Inline Interpretations & Definitions
  ========================================================================== */
   .inline-interpretation {
-    background: #f7f8f9;
-    border: 1px solid #f7f8f9;
+    background: #F7F8F9;
+    border: 1px solid #F7F8F9;
   }
   .js .inline-interpretation .hidden {
     display: block !important;
@@ -6661,7 +6661,7 @@ Import no-js.less and print.less at the end, since they override other rules
     position: relative;
     padding: 0;
     margin: 10px;
-    border: 1px solid #d7d2cb;
+    border: 1px solid #D7D2CB;
   }
   .open-definition .sidebar-header {
     display: none;
