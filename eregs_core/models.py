@@ -474,6 +474,7 @@ class Section(RegNode):
                     collect_analyses(child)
 
         collect_analyses(self)
+        self.analysis = analyses
 
         return analyses
 
@@ -740,8 +741,11 @@ class AnalysisSection(RegNode):
     def notice(self):
         return self.attribs['notice']
 
-    def effective_dat(self):
+    def effective_date(self):
         return self.attribs['date']
+
+    def section_title(self):
+        return self.get_child('title/regtext').text
 
     def analysis_target(self):
         split_target = self.attribs['target'].split('-')
@@ -763,6 +767,9 @@ class Footnote(RegNode):
     def ref(self):
         return self.attribs['ref']
 
+    def foonote_text(self):
+        return self.get_child('regtext').text
+
 
 class DiffNode(RegNode):
 
@@ -782,5 +789,7 @@ tag_to_object_mapping = {
     'tocSecEntry': ToCSecEntry,
     'tocAppEntry': ToCAppEntry,
     'tocInterpEntry': ToCInterpEntry,
-    'analysisSection': AnalysisSection
+    'analysisSection': AnalysisSection,
+    'analysisParagraph': AnalysisParagraph,
+    'footnote': Footnote
 }
