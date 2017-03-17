@@ -83,6 +83,17 @@ def sidebar_partial(request, version, eff_date, node):
             return render_to_response('right_sidebar.html', {'node': regtext,
                                                              'mode': 'reg'})
 
+def definition_partial(request, version, eff_date, node):
+
+    if request.method == 'GET':
+        node_id = ':'.join([version, eff_date, node])
+        regtext = Paragraph.objects.get(node_id=node_id)
+        regtext.get_descendants()
+
+        if regtext is not None:
+            return render_to_response('definition.html', {'node': regtext,
+                                                          'mode': 'reg'})
+
 def diff(request, left_version, left_eff_date, right_version, right_eff_date, node):
 
     if request.method == 'GET':
