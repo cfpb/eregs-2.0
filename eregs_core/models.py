@@ -626,6 +626,26 @@ class Paragraph(RegNode):
     def action(self):
         return self.attribs.get('action', None)
 
+    def marked_up_content(self):
+        content = self.get_child('content')
+        text = ''
+        for child in content.children:
+            if child.tag == 'regtext':
+                text += child.text
+            elif child.tag == 'def':
+                text += '<dfn class="defined-term">{}</dfn>'.format(child.regtext())
+            elif child.tag == 'ref':
+                text += '<a href="{}" class="citation definition" data-definition="{}"' \
+                        ' data-defined-term="{}" data-gtm-ignore-"true">{}</a>'.format(child.target_url(),
+                                                                                       child.target(),
+                                                                                       child.regtext(),
+                                                                                       child.regtext())
+        return text
+
+    def formatted_label(self):
+        label = self.label.split('-')
+        return label[0] + '.' + label[1] + ''.join(['({})'.format(item) for item in label[2:]])
+
 
 class Reference(RegNode):
 
@@ -642,7 +662,7 @@ class Reference(RegNode):
         return self.get_child('regtext').text
 
     def target_url(self):
-        if self.reftype() == 'internal':
+        if self.reftype() == 'internal' or self.reftype() == 'term':
             split_version = self.version.split(':')
             split_target = self.target().split('-')
             target = None
