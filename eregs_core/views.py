@@ -94,6 +94,28 @@ def definition_partial(request, version, eff_date, node):
             return render_to_response('definition.html', {'node': regtext,
                                                           'mode': 'reg'})
 
+
+def sxs_partial(request, version, eff_date, node):
+
+    if request.method == 'GET':
+        node_id = ':'.join([version, eff_date, node])
+        meta_id = ':'.join([version, eff_date, 'preamble'])
+
+        meta = Preamble.objects.get(node_id=meta_id)
+        regtext = Section.objects.get(node_id=node_id)
+
+        meta.get_descendants(auto_infer_class=False)
+        regtext.get_analysis()
+
+        footnotes = [elem for child in regtext.analysis[0].children if child.tag == 'analysisParagraph'
+                     for elem in child.children if elem.tag == 'footnote']
+
+        if regtext is not None:
+            return render_to_response('sxs.html', {'node': regtext,
+                                                   'footnotes': footnotes,
+                                                   'mode': 'reg'})
+
+
 def diff(request, left_version, left_eff_date, right_version, right_eff_date, node):
 
     if request.method == 'GET':
