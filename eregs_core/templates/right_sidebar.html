@@ -19,8 +19,9 @@
                             <ul class="sxs-list">
                             {% for analysis in analyses %}
                                 <li>
-                                    <a class="sidebar-full sxs-link" href="#" data-sxs-paragraph-id="{{ analysis.target }}"
-                                            data-doc-number="" data-gtm_ignore="true">
+                                    <a class="sidebar-full sxs-link" href="{{ analysis.target_url }}"
+                                       data-sxs-paragraph-id="{{ analysis.target }}"
+                                            data-doc-number="{{ meta.document_number }}" data-gtm_ignore="true">
                                         § {{ analysis.analysis_target }}<span class="cf-icon cf-icon-right"></span>
                                     </a>
                                 </li>
