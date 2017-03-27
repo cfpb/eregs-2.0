@@ -677,11 +677,14 @@ class Reference(RegNode):
                     target = self.target()
                 elif len(split_target) > 2:
                     target = split_target[0] + '-' + split_target[1] + '#' + self.target()
-            if not target:
+            try:
+                url = '/regulation/{}/{}/{}'.format(split_version[0], split_version[1], target)
+                return url
+            except Exception:
                 # we don't want to die if this happens, but we should definitely log the error
                 print 'Invalid target {} at text {}! '.format(str(self.target()), self.regtext())
-                # raise ValueError('Invalid target {}!'.format(self.target()))
-            return '/regulation/{}/{}/{}'.format(split_version[0], split_version[1], target)
+                return ''
+
         else:
             return self.target()
 
@@ -752,6 +755,9 @@ class AnalysisSection(RegNode):
         section = split_target[1]
         return ''.join([section] + ['({})'.format(item) for item in split_target[2:]])
 
+    def target_url(self):
+        return '/partial/sxs/{}/{}/{}'.format(self.version.split(':')[0], self.version.split(':')[1], self.target())
+
 
 class AnalysisParagraph(RegNode):
 
@@ -767,7 +773,7 @@ class Footnote(RegNode):
     def ref(self):
         return self.attribs['ref']
 
-    def foonote_text(self):
+    def footnote_text(self):
         return self.get_child('regtext').text
 
 

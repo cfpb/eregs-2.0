@@ -32,15 +32,19 @@ var SxSListView = SidebarListView.extend({
     openSxS: function(e) {
         e.preventDefault();
 
+        console.log('opening sxs')
+
         var $sxsLink = $(e.target),
             id = $sxsLink.data('sxs-paragraph-id'),
             docNumber = $sxsLink.data('doc-number'),
-            version = $('section[data-base-version]').data('base-version');
+            version = $('section[data-effective-date]').data('effective-date');
+
+        console.log('paragraph id: ', id);
 
         BreakawayEvents.trigger('sxs:open', {
             'regParagraph': id,
             'docNumber': docNumber,
-            'fromVersion': version
+            'regVersion': version
         });
 
         GAEvents.trigger('sxs:open', {

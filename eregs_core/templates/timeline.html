@@ -1,0 +1,29 @@
+<div id="timeline" class="history-drawer toc-container">
+    <div class="drawer-header">
+        <h2 class="toc-type">Regulation Timeline</h2>
+    </div>
+    <!-- /.drawer-header -->
+    <div class="drawer-content">
+        <p class="effective-label">Find the regulation effective on this date:</p>
+
+        <div class="form-wrap group">
+            <form action="#" method="GET" class="date-input">
+                <input type="text" name="month" class="month-input" maxlength="2" value="03">
+                / <input type="text" name="day" class="day-input" maxlength="2" value="19">
+                / <input type="text" name="year" class="year-input" maxlength="4" value="2017">
+                <button type="submit" class="find-button">Find</button>
+            </form>
+        </div>
+        <!--./date-form-->
+        <ul class="version-list" id="history-toc-list">
+            {% for reg in timeline %}
+                <li class="status-list" data-base-version="{{ reg.version }}">
+                    <a href="/{{ reg.reg_url }}" class="version-link" data-version="{{ reg.version }}"
+                            id="link-{{ reg.version }}">
+                        <span class="version-date">{{ reg.effective_date }}</span>
+                    </a>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>

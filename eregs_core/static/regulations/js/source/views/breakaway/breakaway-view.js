@@ -18,7 +18,10 @@ var BreakawayView = Backbone.View.extend({
     },
 
     openSxS: function(context) {
-        context.url = context.regParagraph + '/' + context.docNumber + '?from_version=' + context.fromVersion;
+        // context.url = context.regParagraph + '/' + context.docNumber + '?from_version=' + context.fromVersion;
+        console.log('context: ', context);
+        context.url = context.docNumber + '/' + context.regVersion + '/' + context.regParagraph;
+        console.log('sxs url: ', context.url);
 
         this.childViews.sxs = new SxS(context);
 

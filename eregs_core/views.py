@@ -20,24 +20,28 @@ def regulation(request, version, eff_date, node):
         toc_id = ':'.join([version, eff_date, 'tableOfContents'])
         meta_id = ':'.join([version, eff_date, 'preamble'])
 
-        t0 = time.time()
         toc = TableOfContents.objects.get(node_id=toc_id)
         meta = Preamble.objects.get(node_id=meta_id)
         regtext = Section.objects.get(node_id=node_id)
 
         toc.get_descendants()
         meta.get_descendants(auto_infer_class=False)
-        regtext.get_descendants()# (desc_type=Paragraph)
-        t1 = time.time()
-        print 'Database query took {}'.format(t1 - t0)
-        # print regtext.str_as_tree()
-        print node_id
+        regtext.get_descendants()
+
+        regulations = [r for r in RegNode.objects.filter(label=meta.cfr_section) if len(r.version.split(':')) == 2]
+        regulations = sorted(regulations, key=lambda x: x.version.split(':')[1], reverse=True)
+        timeline = [preamble for reg in regulations for preamble in Preamble.objects.filter(node_id=reg.version + ':preamble') ]
+        for t in timeline:
+            t.get_descendants(auto_infer_class=False)
+
+        print [t.effective_date for t in timeline]
 
         if regtext is not None and toc is not None:
             return render_to_response('regulation.html', {'toc': toc,
                                                           'reg': regtext,
                                                           'mode': 'reg',
-                                                          'meta': meta})
+                                                          'meta': meta,
+                                                          'timeline': timeline})
 
 
 def regulation_partial(request, version, eff_date, node):
@@ -130,9 +134,6 @@ def diff(request, left_version, left_eff_date, right_version, right_eff_date, no
         toc.get_descendants(desc_type=DiffNode)
         meta.get_descendants(desc_type=DiffNode)
         regtext.get_descendants(desc_type=DiffNode)
-
-        # print regtext.str_as_tree()
-        print node_id
 
         if regtext is not None and toc is not None:
             return render_to_response('regulation.html', {'toc': toc,

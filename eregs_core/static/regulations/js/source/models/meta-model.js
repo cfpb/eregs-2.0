@@ -124,12 +124,20 @@ var MetaModel = Backbone.Model.extend({
         }
 
         //url += id;
+        console.log('url stub: ', url)
 
         if (id.indexOf('/') === -1) {
             url += Helpers.findVersion(Resources.versionElements);
             url += '/' + Helpers.findEffDate(Resources.versionElements);
         }
-        url += '/' + id;
+        console.log('id: ', id);
+        console.log('version: ', Helpers.findVersion(Resources.versionElements));
+        console.log('eff date: ', Helpers.findEffDate(Resources.versionElements));
+        if (url.endsWith('/')) {
+            url += id;
+        } else {
+            url += '/' + id;
+        }
 
         console.log('target url: ' + url)
         return url;

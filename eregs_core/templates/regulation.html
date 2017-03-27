@@ -16,7 +16,7 @@ Main
         <main role="main">
             <div id="content-body" class="main-content">
                 <section id="content-wrapper" class="reg-text">
-                    {% if mode == "reg" %}
+                    {% if mode == "reg" or mode == "diff" %}
                         {% with node=reg %}
                             {% include "regnode.html" %}
                         {% endwith %}
@@ -37,5 +37,6 @@ Main
             {% include landing_page_sidebar %}
         {% endif %}
     </div>
+
 
 {% endblock %}
