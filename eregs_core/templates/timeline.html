@@ -1,3 +1,4 @@
+{% load formatting %}
 <div id="timeline" class="history-drawer toc-container">
     <div class="drawer-header">
         <h2 class="toc-type">Regulation Timeline</h2>
@@ -16,12 +17,45 @@
         </div>
         <!--./date-form-->
         <ul class="version-list" id="history-toc-list">
-            {% for reg in timeline %}
-                <li class="status-list" data-base-version="{{ reg.version }}">
-                    <a href="/{{ reg.reg_url }}" class="version-link" data-version="{{ reg.version }}"
-                            id="link-{{ reg.version }}">
-                        <span class="version-date">{{ reg.effective_date }}</span>
+            {% for preamble, fdsys in timeline %}
+
+                <li class="status-list {% if preamble.version == meta.version %}current{% endif %}"
+                    data-base-version="{{ preamble.version }}">
+                    <a href="/{{ preamble.reg_url }}" class="version-link" data-version="{{ preamble.version }}"
+                            id="link-{{ preamble.version }}">
+                        <span class="version-date">{{ preamble.effective_date|effective_date }}</span>
                     </a>
+                    <div class="timeline-content-wrap">
+                        <h5 class="final-rule">Final Rule</h5>
+                        <ul class="rule-list">
+                            <li>
+                                <a class="fr-notice external"
+                                   href="https://www.federalregister.gov/a/{{ preamble.document_number }}"
+                                   aria-label="Link opens in new window" target="_blank">
+                                    Published {{ fdsys.date|effective_date }}</a>
+                            </li>
+                        </ul>
+                        <div class="diff-selector group">
+                            <h4 class="compare-title">Compare this with</h4>
+                            <div class="select-content">
+                                <form action="/diff_redirect/{{ preamble.document_number }}/{{ preamble.effective_date }}"
+                                      method="GET">
+                                    <select name="new_version" onchange="this.form.submit()">
+                                        <option value="default" disabled="disabled" selected="selected">
+                                            regulation effective
+                                        </option>
+                                        {% for other_preamble, other_fdsys in timeline %}
+                                            {% if preamble.version != other_preamble.version %}
+                                                <option value="{{ other_preamble.version }}">
+                                                    {{ other_preamble.effective_date|effective_date }}
+                                                </option>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </select>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
                 </li>
             {% endfor %}
         </ul>

@@ -31,7 +31,9 @@ Main
         </main>
         {% if mode == "reg" %}
             {% with node=reg %}
+
                 {% include "right_sidebar.html" %}
+
             {% endwith %}
         {% elif mode == "landing" %}
             {% include landing_page_sidebar %}
