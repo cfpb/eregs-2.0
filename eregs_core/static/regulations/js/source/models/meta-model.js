@@ -113,31 +113,27 @@ var MetaModel = Backbone.Model.extend({
             urlPrefix = window.APP_PREFIX;
 
         if (urlPrefix) {
-            url = urlPrefix + 'partial/';
+            url = urlPrefix + 'partial';
         }
         else {
-            url = '/partial/';
+            url = '/partial';
         }
 
         if (typeof this.supplementalPath !== 'undefined') {
-            url += this.supplementalPath + '/';
+            url += '/' + this.supplementalPath;
         }
 
-        //url += id;
         console.log('url stub: ', url)
 
         if (id.indexOf('/') === -1) {
-            url += Helpers.findVersion(Resources.versionElements);
+            url += '/' + Helpers.findVersion(Resources.versionElements);
             url += '/' + Helpers.findEffDate(Resources.versionElements);
         }
         console.log('id: ', id);
         console.log('version: ', Helpers.findVersion(Resources.versionElements));
         console.log('eff date: ', Helpers.findEffDate(Resources.versionElements));
-        if (url.endsWith('/')) {
-            url += id;
-        } else {
-            url += '/' + id;
-        }
+
+        url += '/' + id;
 
         console.log('target url: ' + url)
         return url;

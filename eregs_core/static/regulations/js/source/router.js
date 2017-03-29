@@ -18,15 +18,14 @@ if (typeof window.history.pushState === 'undefined') {
 else {
     RegsRouter = Backbone.Router.extend({
         routes: {
-            'sxs/:section/:version': 'loadSxS',
+            'sxs/:version/:effectiveDate/:node': 'loadSxS',
             'search/:reg': 'loadSearchResults',
             'diff/:section/:baseVersion/:newerVersion': 'loadDiffSection',
-            ':section/:version': 'loadSection'
+            'regulation/:version/:date/:node': 'loadSection'
         },
 
-        loadSection: function(section, version) {
-            var options = {id: section};
-            console.log(section + ' ' + version)
+        loadSection: function(version, date, node) {
+            var options = {id: node};
 
             // to scroll to paragraph if there is a hadh
             options.scrollToId = Backbone.history.getHash();
@@ -34,7 +33,7 @@ else {
             // ask the view not to route, its not needed
             options.noRoute = true;
 
-            MainEvents.trigger('section:open', section, options, 'reg-section');
+            MainEvents.trigger('section:open', node, options, 'reg-section');
         },
 
         loadDiffSection: function(section, baseVersion, newerVersion, params) {
