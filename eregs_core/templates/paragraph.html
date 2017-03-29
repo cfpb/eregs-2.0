@@ -1,3 +1,5 @@
+{% load formatting %}
+
 {% if node.children.0.tag == "title" %}
     <h5><em class="paragraph-marker">{{ node.attributes.marker }}</em>
         {% if node.has_diff_title %}
