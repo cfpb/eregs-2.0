@@ -10,20 +10,16 @@
         {% for child in node.analysis.0.children %}
             {% if child.tag == "title" %}
                 <h3>{{ node.analysis.0.section_title }}</h3>
-            {% else %}
-                <p>
-                    {% for element in child.children %}
-                        {% if element.tag == 'regtext' %}
-                            {{ element.text }}
-                        {% elif element.tag == 'footnote' %}
-                            <sup>
-                                <a id="footnote-jump-{{ element.ref }}"
-                                    class="footnote-jump-link standard"
-                                    href="#footnote-{{ element.ref }}">{{ element.ref }}</a>
-                            </sup>
-                        {% endif %}
-                    {% endfor %}
-                </p>
+            {% elif child.tag == 'analysisSection' %}
+                {% with section=child %}
+                    {% include 'analysis_section.html' %}
+                {% endwith %}
+            {% elif child.tag == 'analysisParagraph' %}
+                {% with paragraph=child %}
+                    <p>
+                        {% include 'analysis_paragraph.html' %}
+                    </p>
+                {% endwith %}
             {% endif %}
         {% endfor %}
 

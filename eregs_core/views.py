@@ -1,6 +1,6 @@
 from django.shortcuts import render, render_to_response
 from django.template.loader import render_to_string
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 from django.views.decorators.csrf import csrf_exempt
 
 from models import *
@@ -30,11 +30,24 @@ def regulation(request, version, eff_date, node):
 
         regulations = [r for r in RegNode.objects.filter(label=meta.cfr_section) if len(r.version.split(':')) == 2]
         regulations = sorted(regulations, key=lambda x: x.version.split(':')[1], reverse=True)
-        timeline = [preamble for reg in regulations for preamble in Preamble.objects.filter(node_id=reg.version + ':preamble') ]
-        for t in timeline:
-            t.get_descendants(auto_infer_class=False)
+        timeline = []
 
-        print [t.effective_date for t in timeline]
+        for reg in regulations:
+            preamble = Preamble.objects.filter(node_id=reg.version + ':preamble').order_by('version')
+            fdsys = Fdsys.objects.filter(node_id=reg.version + ':fdsys').order_by('version')
+            for pre, fd in zip(preamble, fdsys):
+                pre.get_descendants(auto_infer_class=False)
+                fd.get_descendants(auto_infer_class=False)
+                timeline.append((pre, fd))
+
+
+        #timeline = [preamble for reg in regulations
+        #            for preamble in Preamble.objects.filter(node_id=reg.version + ':preamble')]
+
+        #for t in timeline:
+        #    t.get_descendants(auto_infer_class=False)
+
+        #print [t.effective_date for t in timeline]
 
         if regtext is not None and toc is not None:
             return render_to_response('regulation.html', {'toc': toc,
@@ -85,7 +98,8 @@ def sidebar_partial(request, version, eff_date, node):
 
         if regtext is not None:
             return render_to_response('right_sidebar.html', {'node': regtext,
-                                                             'mode': 'reg'})
+                                                             'mode': 'reg',
+                                                             'meta': meta})
 
 def definition_partial(request, version, eff_date, node):
 
@@ -120,6 +134,20 @@ def sxs_partial(request, version, eff_date, node):
                                                    'mode': 'reg'})
 
 
+def diff_redirect(request, left_version, left_eff_date):
+
+    if request.method == 'GET':
+        new_version = request.GET['new_version'].split(':')
+        print left_version, left_eff_date
+        sections = Section.objects.filter(version=left_version + ':' + left_eff_date,
+                                          tag='section').exclude(label='').order_by('label')
+        first_section = sections[0]
+        print first_section
+        return HttpResponseRedirect('/diff/{}/{}/{}/{}/{}'.format(
+            left_version, left_eff_date, new_version[0], new_version[1], first_section.label
+        ))
+
+
 def diff(request, left_version, left_eff_date, right_version, right_eff_date, node):
 
     if request.method == 'GET':
@@ -127,13 +155,17 @@ def diff(request, left_version, left_eff_date, right_version, right_eff_date, no
         toc_id = ':'.join([left_version, left_eff_date, right_version, right_eff_date, 'tableOfContents'])
         meta_id = ':'.join([left_version, left_eff_date, right_version, right_eff_date, 'preamble'])
 
-        toc = TableOfContents.objects.get(node_id=toc_id)
-        meta = Preamble.objects.get(node_id=meta_id)
-        regtext = Section.objects.get(node_id=node_id)
+        toc = DiffNode.objects.get(node_id=toc_id)
+        meta = DiffNode.objects.get(node_id=meta_id)
+        regtext = DiffNode.objects.get(node_id=node_id)
 
         toc.get_descendants(desc_type=DiffNode)
         meta.get_descendants(desc_type=DiffNode)
         regtext.get_descendants(desc_type=DiffNode)
+
+        toc.__class__ = TableOfContents
+        meta.__class__ = DiffPreamble
+        regtext.__class__ = Section
 
         if regtext is not None and toc is not None:
             return render_to_response('regulation.html', {'toc': toc,

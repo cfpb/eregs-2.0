@@ -1,6 +1,6 @@
 <li>
     {% if entry.tag == "tocSecEntry" or entry.tag == "tocAppEntry" or entry.tag == "tocInterpEntry" %}
-        {% if mode == 'reg' %}
+        {% if mode == 'reg' or mode == 'landing' %}
             <a href="/regulation/{{ meta.document_number }}/{{ meta.effective_date }}/{{ entry.target }}"
                 data-section-id="{{ entry.target }}" id="nav-{{ entry.target }}"
                 data-doc-number="{{ meta.document_number }}" data-version="{{ meta.effective_date }}">

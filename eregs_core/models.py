@@ -310,6 +310,35 @@ class Preamble(RegNode):
         return link
 
 
+class Fdsys(RegNode):
+
+    class Meta:
+        proxy = True
+
+    @property
+    def cfr_title(self):
+        return self.get_child('cfrTitleNum/regtext').text
+
+    @property
+    def cfr_title_text(self):
+        return self.get_child('cfrTitleText/regtext').text
+
+    @property
+    def volume(self):
+        return self.get_child('volume/regtext').text
+
+    @property
+    def date(self):
+        return self.get_child('date/regtext').text
+
+    @property
+    def original_date(self):
+        return self.get_child('originalDate/regtext').text
+
+    @property
+    def part_title(self):
+        return self.get_child('title/regtext').text
+
 class TableOfContents(RegNode):
 
     class Meta:
@@ -781,6 +810,28 @@ class DiffNode(RegNode):
 
     left_version = models.CharField(max_length=250)
     right_version = models.CharField(max_length=250)
+
+
+class DiffPreamble(Preamble, RegNode):
+
+    class Meta:
+        proxy = True
+
+    @property
+    def left_document_number(self):
+        return self.left_version.split(':')[0]
+
+    @property
+    def left_effective_date(self):
+        return self.left_version.split(':')[1]
+
+    @property
+    def right_document_number(self):
+        return self.right_version.split(':')[0]
+
+    @property
+    def right_effective_date(self):
+        return self.right_version.split(':')[1]
 
 
 # top-level because it needs to have all the classes defined
