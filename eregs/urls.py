@@ -23,6 +23,7 @@ urlpatterns = [
     url(r'^$', main),
     url(r'^(?P<part_number>[\d]{4})', regulation_main),
     url(r'^regulation/(?P<version>[\d]+-[\d]+)/(?P<eff_date>[\d]{4}-[\d]{2}-[\d]{2})/(?P<node>.*)$', regulation),
+    url(r'^diff_redirect/(?P<left_version>[\d]+-[\d]+)/(?P<left_eff_date>[\d]{4}-[\d]{2}-[\d]{2})/', diff_redirect),
     url(r'^diff/(?P<left_version>[\d]+-[\d]+)/(?P<left_eff_date>[\d]{4}-[\d]{2}-[\d]{2})/'
         r'(?P<right_version>[\d]+-[\d]+)/(?P<right_eff_date>[\d]{4}-[\d]{2}-[\d]{2})/(?P<node>.*)$', diff),
     url(r'^partial/(?P<version>[\d]+-[\d]+)/(?P<eff_date>[\d]{4}-[\d]{2}-[\d]{2})/(?P<node>.*)$', regulation_partial),
