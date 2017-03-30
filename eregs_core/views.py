@@ -50,24 +50,17 @@ def regulation_partial(request, version, eff_date, node):
         node_id = ':'.join([version, eff_date, node])
         meta_id = ':'.join([version, eff_date, 'preamble'])
 
-        t0 = time.time()
-
         meta = Preamble.objects.get(node_id=meta_id)
         regtext = Section.objects.get(node_id=node_id)
 
         meta.get_descendants(auto_infer_class=False)
         regtext.get_descendants()
-        t1 = time.time()
-        print 'Database query took {}'.format(t1 - t0)
 
         if regtext is not None and meta is not None:
-            t2 = time.time()
             result = render_to_string('regnode.html', {'node': regtext,
                                                        'mode': 'reg',
                                                        'meta': meta})
             result = '<section id="content-wrapper" class="reg-text">' + result + '</section>'
-            t3 = time.time()
-            print 'Template rendering took {}'.format(t3 - t2)
             return HttpResponse(result)
 
 
