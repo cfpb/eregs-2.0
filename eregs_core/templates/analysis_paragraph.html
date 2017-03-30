@@ -1,0 +1,11 @@
+{% for element in paragraph.children %}
+    {% if element.tag == 'regtext' %}
+        {{ element.text }}
+    {% elif element.tag == 'footnote' %}
+        <sup>
+            <a id="footnote-jump-{{ element.ref }}"
+                class="footnote-jump-link standard"
+                href="#footnote-{{ element.ref }}">{{ element.ref }}</a>
+        </sup>
+    {% endif %}
+{% endfor %}
