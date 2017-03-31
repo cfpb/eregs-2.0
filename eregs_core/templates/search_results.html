@@ -1,26 +1,28 @@
-<section data-page-type="search-results" data-base-version="{{ version }}">
-    <h2 class="search-term">Searching for "{{ search_term }}"</h2>
-    <p></p>
-    <ul class="result-list">
-        {% for result, text in results %}
-            <li>
-                <h3>
-                    <a href="{{ result.node_url }}" class="internal" data-linked-section=""
-                       data-linked-version="{{ version }}">{{ result.label }}</a>
-                </h3>
-                {% with node=result %}
-                    {% include 'paragraph.html' %}
-                {% endwith %}
-            </li>
-        {% endfor %}
-    </ul>
-</section>
-<footer class="search-nav">
-    {% if prev_page %}
-        <a class="previous" href="/partial/search/?q={{ search_term }}&version={{ version }}&page={{ prev_page }}"><span class="cf-icon cf-icon-left"></span>Previous 10 Results</a>
-    {% endif %}
-    {% if next_page %}
-        <a class="next" href="/partial/search/?q={{ search_term }}&version={{ version }}&page={{ next_page }}"><span class="cf-icon cf-icon-right"></span>Next 10 Results</a>
-    {% endif %}
-    <div class="pager">Page {{ page }} of {{ total_pages }}</div>
-</footer>
+<div id="content-wrapper" class="search-results">
+    <section data-page-type="search-results" data-base-version="{{ version }}">
+        <h2 class="search-term">Searching for "{{ search_term }}"</h2>
+        <p></p>
+        <ul class="result-list">
+            {% for result, text in results %}
+                <li>
+                    <h3>
+                        <a href="{{ result.node_url }}" class="internal" data-linked-section=""
+                           data-linked-version="{{ version }}">{{ result.label }}</a>
+                    </h3>
+                    {% with node=result %}
+                        {% include 'paragraph.html' %}
+                    {% endwith %}
+                </li>
+            {% endfor %}
+        </ul>
+    </section>
+    <footer class="search-nav">
+        {% if prev_page %}
+            <a class="previous" href="/partial/search/?q={{ search_term }}&version={{ version }}&page={{ prev_page }}"><span class="cf-icon cf-icon-left"></span>Previous 10 Results</a>
+        {% endif %}
+        {% if next_page %}
+            <a class="next" href="/partial/search/?q={{ search_term }}&version={{ version }}&page={{ next_page }}"><span class="cf-icon cf-icon-right"></span>Next 10 Results</a>
+        {% endif %}
+        <div class="pager">Page {{ page }} of {{ total_pages }}</div>
+    </footer>
+</div>
