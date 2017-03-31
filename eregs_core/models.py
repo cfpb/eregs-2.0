@@ -145,7 +145,8 @@ class GenericNodeMixin(object):
 
         if auto_infer_class:
             for ancestor in ancestors:
-                ancestor.__class__ = tag_to_object_mapping[ancestor.tag]
+                if ancestor.tag in tag_to_object_mapping:
+                    ancestor.__class__ = tag_to_object_mapping[ancestor.tag]
 
         return ancestors
 

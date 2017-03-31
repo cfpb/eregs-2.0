@@ -47,8 +47,8 @@ var SearchResultsView = ChildView.extend({
     },
 
     assembleSearchURL: function(options) {
-        var url = options.regPart;
-        url += '?q=' + options.query;
+        //var url = options.regPart;
+        var url = '?q=' + options.query;
         url += '&version=' + options.regVersion;
 
         if (typeof options.page !== 'undefined') {
