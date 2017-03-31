@@ -169,7 +169,7 @@ def diff(request, left_version, left_eff_date, right_version, right_eff_date, no
                                                           'meta': meta})
 
 
-def search(request):
+def search_partial(request):
 
     if request.method == 'GET':
 
