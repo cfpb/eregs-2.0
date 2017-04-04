@@ -1,7 +1,9 @@
 from django.shortcuts import render, render_to_response
 from django.template.loader import render_to_string
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, Http404
 from django.views.decorators.csrf import csrf_exempt
+
+from haystack.query import SearchQuerySet
 
 from models import *
 from utils import *
@@ -166,6 +168,52 @@ def diff(request, left_version, left_eff_date, right_version, right_eff_date, no
                                                           'mode': 'diff',
                                                           'meta': meta})
 
+
+def search_partial(request):
+
+    if request.method == 'GET':
+
+        print request.GET
+        q = request.GET['q']
+        version = request.GET['version']
+        page = int(request.GET.get('page', 1)) - 1
+
+        results = SearchQuerySet().filter(content=q, version=version)
+        view_results = results[page * 10: page * 10 + 10]
+
+        result_nodes = []
+        for r in view_results:
+            ancestors = r.object.get_ancestors()[::-1]
+            for ancestor in ancestors:
+                if ancestor.tag in ['paragraph', 'interpParagraph']:
+                    ancestor.get_descendants()
+                    result_nodes.append((ancestor, r.text))
+                    break
+
+        page +=1
+
+        if page == 1:
+            prev_page = None
+        else:
+            prev_page = page - 1
+
+        rem = len(results) % 10
+        total_pages = len(results) // 10 + rem // 10
+
+        if page >= total_pages:
+            next_page = None
+        else:
+            next_page = page + 1
+
+        print prev_page, page, next_page
+
+        return render_to_response('search_results.html', {'results': result_nodes,
+                                                          'search_term': q,
+                                                          'version': version,
+                                                          'total_pages': total_pages,
+                                                          'page': page,
+                                                          'prev_page': prev_page,
+                                                          'next_page': next_page})
 
 def regulation_main(request, part_number):
 

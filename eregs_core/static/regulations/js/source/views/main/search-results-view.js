@@ -21,7 +21,7 @@ var SearchResultsView = ChildView.extend({
         // the TOC may link to a different reg version than this.options.resultsRegVersion
         // because the user can select a different version to pull search results from
         this.resultsRegVersion = this.options.regVersion;
-        this.page = parseInt(this.options.page, 10) || 0;
+        this.page = parseInt(this.options.page, 10) || 1;
         this.title = 'Search of ' + this.options.regPart + ' for ' + this.query + ' | eRegulations';
 
         // if the browser doesn't support pushState, don't
@@ -47,8 +47,8 @@ var SearchResultsView = ChildView.extend({
     },
 
     assembleSearchURL: function(options) {
-        var url = options.regPart;
-        url += '?q=' + options.query;
+        //var url = options.regPart;
+        var url = '?q=' + options.query;
         url += '&version=' + options.regVersion;
 
         if (typeof options.page !== 'undefined') {
@@ -80,7 +80,7 @@ var SearchResultsView = ChildView.extend({
         var page = $(e.target).hasClass('previous') ? this.page - 1 : this.page + 1,
             config = {
                 query: this.query,
-                regVersion: this.resultsRegVersion,
+                searchVersion: this.resultsRegVersion,
                 page: page
             };
 
