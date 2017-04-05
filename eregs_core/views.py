@@ -232,12 +232,23 @@ def regulation_main(request, part_number):
         toc.get_descendants()
         meta.get_descendants(auto_infer_class=False)
 
+        timeline = []
+
+        for reg in regulations:
+            preamble = Preamble.objects.filter(node_id=reg.version + ':preamble').order_by('version')
+            fdsys = Fdsys.objects.filter(node_id=reg.version + ':fdsys').order_by('version')
+            for pre, fd in zip(preamble, fdsys):
+                pre.get_descendants(auto_infer_class=False)
+                fd.get_descendants(auto_infer_class=False)
+                timeline.append((pre, fd))
+
         landing_page = 'landing_pages/reg_{}.html'.format(meta.cfr_section)
         landing_page_sidebar = 'landing_pages/reg_{}_sidebar.html'.format(meta.cfr_section)
 
         if toc is not None and meta is not None:
             return render_to_response('regulation.html', {'toc': toc,
                                                           'meta': meta,
+                                                          'timeline': timeline,
                                                           'mode': 'landing',
                                                           'landing_page': landing_page,
                                                           'landing_page_sidebar': landing_page_sidebar})
