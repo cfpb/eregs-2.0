@@ -7,7 +7,12 @@ from hashlib import sha256
 from utils import xml_node_text
 from diffs import merge_text_diff
 from django.db import models
-from django.contrib.postgres.fields import JSONField
+
+# if we're using postgres, we need to import JSONField from here
+# from django.contrib.postgres.fields import JSONField
+
+# but if we're using mysql, import it from here
+from django_mysql.models import JSONField
 
 from itertools import product
 
@@ -170,20 +175,6 @@ class RegNode(models.Model, GenericNodeMixin):
     def __init__(self, *args, **kwargs):
         super(RegNode, self).__init__(*args, **kwargs)
         self.merkle_hash = ''
-
-    # def __getitem__(self, item):
-    #     """
-    #     Implements getting the subnodes of a tree by using node tags as keys.
-    #     :param item: the key
-    #     :return: a list of all children that match the supplied tag
-    #     """
-    #     elements = []
-    #     print item
-    #     for child in self.children:
-    #         if child.tag == item:
-    #             elements.append(child)
-    #     return elements
-
 
     def get_interpretations(self):
 
@@ -557,11 +548,9 @@ class Section(RegNode):
     def subject_diff(self):
         print 'label', self.label
         if self.has_diff_subject:
-            #print self.label, 'has diff title'
             left_text = self.left_subject
             right_text = self.right_subject
             diff = difflib.ndiff(left_text, right_text)
-            #print 'left:', left_text, 'right:', right_text
             text = merge_text_diff(diff)
             print text
             return text
@@ -749,18 +738,6 @@ class Appendix(RegNode):
     @property
     def regtext(self):
         return self.get_child('regtext').text
-
-
-# class SectionBySectionNode(models.Model, GenericNodeMixin):
-#
-#     text = models.TextField()
-#     tag = models.CharField(max_length=100)
-#     attribs = JSONField()
-#     version = models.CharField(max_length=250)
-#
-#     left = models.IntegerField()
-#     right = models.IntegerField()
-#     depth = models.IntegerField()
 
 
 class AnalysisSection(RegNode):

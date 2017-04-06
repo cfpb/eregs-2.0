@@ -8,7 +8,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('eregs_core', '0004_remove_regnode_content'),
+        ('eregs_core', '0002_regnode_node_id'),
     ]
 
     operations = [
