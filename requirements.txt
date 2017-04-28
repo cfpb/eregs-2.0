@@ -1,5 +1,0 @@
-django
-psycopg2
-lxml
-django-haystack
-django-mysql
