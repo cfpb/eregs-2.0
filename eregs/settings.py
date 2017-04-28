@@ -28,6 +28,9 @@ DEBUG = True
 ALLOWED_HOSTS = []
 
 
+from local_settings import *
+
+
 # Application definition
 
 INSTALLED_APPS = (

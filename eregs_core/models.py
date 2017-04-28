@@ -331,6 +331,7 @@ class Fdsys(RegNode):
     def part_title(self):
         return self.get_child('title/regtext').text
 
+
 class TableOfContents(RegNode):
 
     class Meta:
@@ -501,7 +502,6 @@ class Section(RegNode):
 
     @property
     def subject(self):
-        # print 'I am', self.label(), 'with title', self.get_child('subject/title')
         if self.tag == 'section' or self.tag == 'appendixSection':
             return self.get_child('subject/regtext').text
         elif self.tag == 'interpSection':
@@ -564,6 +564,7 @@ class Paragraph(RegNode):
     def target(self):
         return self.attribs.get('target', None)
 
+    @property
     def interp_target(self):
         # for display purposes
         if 'target' in self.attribs:
