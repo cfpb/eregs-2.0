@@ -3,3 +3,4 @@ psycopg2
 lxml
 django-haystack
 django-mysql
+git+https://github.com/PyMySQL/mysqlclient-python.git@master
