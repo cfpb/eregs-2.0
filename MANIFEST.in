@@ -1,0 +1,4 @@
+include AUTHORS CHANGELOG.md README.md INSTALL.md LICENCE
+recursive-include eregs *.py *.html *.js
+recursive-include eregs_core *.py *.html *.js
+recursive-include docs/*
