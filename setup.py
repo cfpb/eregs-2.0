@@ -11,4 +11,5 @@ setup(
     license='MIT',
     description='The new version of eRegs.',
     include_package_data=True,
+    frontend_build_script='setup.sh'
 )
