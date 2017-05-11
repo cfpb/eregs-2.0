@@ -30,17 +30,20 @@ def regulation(request, version, eff_date, node):
         meta.get_descendants(auto_infer_class=False)
         regtext.get_descendants()
 
-        regulations = [r for r in RegNode.objects.filter(label=meta.cfr_section) if len(r.version.split(':')) == 2]
+        versions = Version.objects.exclude(version=None)
+        regulations = [r for r in RegNode.objects.filter(label=meta.cfr_section, reg_version__in=versions).select_related('reg_version')]
         regulations = sorted(regulations, key=lambda x: x.version.split(':')[1], reverse=True)
         timeline = []
 
-        for reg in regulations:
-            preamble = Preamble.objects.filter(node_id=reg.version + ':preamble').order_by('version')
-            fdsys = Fdsys.objects.filter(node_id=reg.version + ':fdsys').order_by('version')
-            for pre, fd in zip(preamble, fdsys):
-                pre.get_descendants(auto_infer_class=False)
-                fd.get_descendants(auto_infer_class=False)
-                timeline.append((pre, fd))
+        preambles = Preamble.objects.filter(node_id__in=[reg.version + ':preamble' for reg in regulations]).\
+            select_related('reg_version').order_by('reg_version')
+        fdsys = Fdsys.objects.filter(node_id__in=[reg.version + ':fdsys' for reg in regulations]).\
+            select_related('reg_version').order_by('reg_version')
+
+        for pre, fd in zip(preambles, fdsys):
+            pre.get_descendants(auto_infer_class=False)
+            fd.get_descendants(auto_infer_class=False)
+            timeline.append((pre, fd))
 
 
         #timeline = [preamble for reg in regulations
@@ -134,7 +137,8 @@ def diff_redirect(request, left_version, left_eff_date):
     if request.method == 'GET':
         new_version = request.GET['new_version'].split(':')
         print left_version, left_eff_date
-        sections = Section.objects.filter(version=left_version + ':' + left_eff_date,
+        version = Version.objects.get(left_version + ':' + left_eff_date)
+        sections = Section.objects.filter(reg_version=version,
                                           tag='section').exclude(label='').order_by('label')
         first_section = sections[0]
         print first_section
@@ -175,10 +179,10 @@ def search_partial(request):
 
         print request.GET
         q = request.GET['q']
-        version = request.GET['version']
+        version = Version.objects.get(request.GET['version'])
         page = int(request.GET.get('page', 1)) - 1
 
-        results = SearchQuerySet().filter(content=q, version=version)
+        results = SearchQuerySet().filter(content=q, reg_version=version)
         view_results = results[page * 10: page * 10 + 10]
 
         result_nodes = []
@@ -215,11 +219,15 @@ def search_partial(request):
                                                           'prev_page': prev_page,
                                                           'next_page': next_page})
 
+
 def regulation_main(request, part_number):
 
     if request.method == 'GET':
 
-        regulations = [r for r in RegNode.objects.filter(label=part_number) if len(r.version.split(':')) == 2]
+        non_blank_versions = Version.objects.exclude(version=None)
+        regulations = [r for r in RegNode.objects.filter(label=part_number, reg_version__in=non_blank_versions)]
+        for r in regulations:
+            print r.reg_version.id, r.reg_version
         regulations = sorted(regulations, key=lambda x: x.version.split(':')[1], reverse=True)
 
         most_recent_reg = regulations[0]
@@ -235,8 +243,8 @@ def regulation_main(request, part_number):
         timeline = []
 
         for reg in regulations:
-            preamble = Preamble.objects.filter(node_id=reg.version + ':preamble').order_by('version')
-            fdsys = Fdsys.objects.filter(node_id=reg.version + ':fdsys').order_by('version')
+            preamble = Preamble.objects.filter(node_id=reg.version + ':preamble').order_by('reg_version')
+            fdsys = Fdsys.objects.filter(node_id=reg.version + ':fdsys').order_by('reg_version')
             for pre, fd in zip(preamble, fdsys):
                 pre.get_descendants(auto_infer_class=False)
                 fd.get_descendants(auto_infer_class=False)
@@ -259,7 +267,8 @@ def main(request):
     if request.method == 'GET':
 
         # meta = Preamble.objects.filter(tag='preamble')
-        meta = [r for r in Preamble.objects.filter(tag='preamble') if len(r.version.split(':')) == 2]
+        reg_versions = Version.objects.exclude(version=None)
+        meta = [r for r in Preamble.objects.filter(tag='preamble', reg_version__in=reg_versions)]
         meta = sorted(meta, key=lambda x: x.version.split(':')[1], reverse=True)
 
         regs_meta = []

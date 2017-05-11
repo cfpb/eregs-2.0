@@ -103,36 +103,20 @@ def diff_files(left_filename, right_filename, output_file='diff.xml'):
             current_parent = current_parent.getparent()
         top_level_right_labels.add(last_label)
 
-
-    print 'only right labels:', only_right_labels
-    print 'top level right labels:', top_level_right_labels
-    print 'only left labels:', only_left_labels
-
     for label in top_level_right_labels:
-
         element = right_tree.find('.//*[@label="{}"]'.format(label))
-        # print 'element {} was added:'.format(label)
-        # print etree.tostring(element, pretty_print=True)
         common_ancestor, prev_sibling = left_tree_ancestor(left_tree, element)
-        #print 'the ancestor in the left tree is', common_ancestor.get('label'), 'to be inserted after', prev_sibling.get('label')
-        #element.attrib['action'] = 'added'
         set_descendants_property(element, 'action', 'added')
         if prev_sibling is not None:
             prev_sibling.addnext(deepcopy(element))
-            #print 'adding {} after {}'.format(element.get('label'), prev_sibling.get('label'))
         else:
             common_ancestor.append(deepcopy(element))
 
     for label in only_left_labels:
-
         element = left_tree.find('.//*[@label="{}"]'.format(label))
-        #print 'element {} was deleted:'.format(label)
-        #element.attrib['action'] = 'deleted'
         set_descendants_property(element, 'action', 'deleted')
-        # print etree.tostring(element, pretty_print=True)
 
     for label in common_labels:
-        # print 'analyzing common label', label
         left_element = left_tree.find('.//*[@label="{}"]'.format(label))
         right_element = right_tree.find('.//*[@label="{}"]'.format(label))
         assert (left_element.tag == right_element.tag)
@@ -144,10 +128,9 @@ def diff_files(left_filename, right_filename, output_file='diff.xml'):
             right_subject = right_subject_el.text.strip()
 
             if left_subject != right_subject:
-                #print 'section {} subject has changed from\n {}\n to\n {}'.format(label, left_subject, right_subject)
-                left_subject.tag = '{eregs}leftSubject'
-                right_subject.tag = '{eregs}rightSubject'
-                left_subject.addnext(right_subject)
+                left_subject_el.tag = '{eregs}leftSubject'
+                right_subject_el.tag = '{eregs}rightSubject'
+                left_subject_el.addnext(right_subject_el)
                 left_element.attrib['action'] = 'modified'
 
         elif left_element.tag == '{eregs}interpSection':
@@ -163,7 +146,6 @@ def diff_files(left_filename, right_filename, output_file='diff.xml'):
                 right_title = ''
 
             if left_title != right_title:
-                #print 'section {} title has changed from\n {}\n to\n {}'.format(label, left_title, right_title)
                 if left_title_el is not None and right_title_el is not None:
                     left_title_el.tag = '{eregs}leftTitle'
                     right_title_el.tag = '{eregs}rightTitle'
@@ -183,7 +165,6 @@ def diff_files(left_filename, right_filename, output_file='diff.xml'):
                 right_title = ''
 
             if left_title != right_title:
-                #print 'paragraph {} title has changed from\n {}\n to\n {}'.format(label, left_title, right_title)
                 if left_title_el is not None and right_title_el is not None:
                     left_title_el.tag = '{eregs}leftTitle'
                     right_title_el.tag = '{eregs}rightTitle'
@@ -195,14 +176,11 @@ def diff_files(left_filename, right_filename, output_file='diff.xml'):
             right_content = right_element.find('{eregs}content')
             right_text = xml_node_text(right_content).strip()
             if left_text != right_text:
-                # print 'paragraph {} text has changed from\n {}\n to \n {}'.format(label, left_text, right_text)
                 left_content.tag = '{eregs}leftContent'
                 right_content.tag = '{eregs}rightContent'
                 left_content.addnext(deepcopy(right_content))
                 left_element.attrib['action'] = 'modified'
 
-    #with open(output_file, 'w') as f:
-    #    f.write(etree.tostring(left_tree, pretty_print=True))
     return left_tree, extract_version(left_tree), extract_version(right_tree)
 
 
@@ -222,9 +200,12 @@ def left_tree_ancestor(left_tree, right_node):
     while not common_ancestor and not stop:
         right_node_parent = current_right.getparent()
         left_ancestor = left_tree.find('.//*[@label="{}"]'.format(right_node_parent.get('label')))
+
         if left_ancestor:
             stop = True
             common_ancestor = left_ancestor
+        else:
+            current_right = right_node_parent
 
     stop = False
 

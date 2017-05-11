@@ -17,6 +17,21 @@ from django_mysql.models import JSONField
 from itertools import product
 
 
+class Version(models.Model):
+
+    version = models.CharField(max_length=250, null=True)
+    left_version = models.CharField(max_length=250, null=True)
+    right_version = models.CharField(max_length=250, null=True)
+
+    def __str__(self):
+        if self.version is not None:
+            return self.version
+        elif self.version is None and self.left_version is not None and self.right_version is not None:
+            return self.left_version + ':' + self.right_version
+        else:
+            return ''
+
+
 class GenericNodeMixin(object):
 
     # this mixin class provides an interface for retrieving the descendants
@@ -112,18 +127,19 @@ class GenericNodeMixin(object):
         # print self.version, self.left, self.right
 
         if isinstance(self, DiffNode):
-            descendants = desc_type.objects.filter(left_version=self.left_version,
-                                                   right_version=self.right_version,
+            descendants = desc_type.objects.filter(#left_version=self.left_version,
+                                                   #right_version=self.right_version,
+                                                   reg_version=self.reg_version,
                                                    left__gt=self.left,
                                                    right__lt=self.right).order_by('left')
         elif isinstance(self, RegNode):
-            descendants = desc_type.objects.filter(version__startswith=self.version,
+            descendants = desc_type.objects.filter(reg_version=self.reg_version,
                                                    left__gt=self.left,
-                                                   right__lt=self.right).order_by('left')
-
+                                                   right__lt=self.right).select_related('reg_version').order_by('left')
 
         if return_format == 'nested':
             last_node_at_depth = {self.depth: self}
+            # print 'number of descendants of {}: '.format(self.node_id), len(descendants)
             for desc in descendants:
                 if (desc_type is RegNode or desc_type is DiffNode) \
                         and auto_infer_class and desc.tag in tag_to_object_mapping:
@@ -137,14 +153,16 @@ class GenericNodeMixin(object):
     def get_ancestors(self, auto_infer_class=True):
 
         if isinstance(self, DiffNode):
-            ancestors = DiffNode.objects.filter(left_version=self.left_version,
-                                                right_version=self.right_version,
+            ancestors = DiffNode.objects.filter(#left_version=self.left_version,
+                                                #right_version=self.right_version,
+                                                reg_version=self.reg_version,
                                                 left__lte=self.left,
                                                 right__gte=self.right).order_by('left')
         elif isinstance(self, RegNode):
             ancestors = RegNode.objects.filter(left__lte=self.left,
                                                right__gte=self.right,
-                                               version=self.version).order_by('left')
+                                               reg_version=self.reg_version).\
+                select_related('reg_version').order_by('left')
         else:
             ancestors = []
 
@@ -166,7 +184,8 @@ class RegNode(models.Model, GenericNodeMixin):
     marker = models.CharField(max_length=25)
     tag = models.CharField(max_length=100)
     attribs = JSONField()
-    version = models.CharField(max_length=250)
+    #version = models.CharField(max_length=250)
+    reg_version = models.ForeignKey(Version)
 
     left = models.IntegerField()
     right = models.IntegerField()
@@ -178,7 +197,7 @@ class RegNode(models.Model, GenericNodeMixin):
 
     def get_interpretations(self):
 
-        interp_root = Paragraph.objects.filter(version=self.version, attribs__target=self.label, tag='interpParagraph')
+        interp_root = Paragraph.objects.filter(reg_version=self.reg_version, attribs__target=self.label, tag='interpParagraph')
         if len(interp_root) > 0:
             interp_root[0].get_descendants()
             self.interps = [interp_root[0]]
@@ -187,7 +206,8 @@ class RegNode(models.Model, GenericNodeMixin):
 
     def get_analysis(self):
 
-        analysis_root = AnalysisSection.objects.filter(version=self.version, tag='analysisSection', attribs__target=self.label)
+        analysis_root = AnalysisSection.objects.filter(reg_version=self.reg_version, tag='analysisSection',
+                                                       attribs__target=self.label).select_related('reg_version')
         if len(analysis_root) > 0:
             analysis_root[0].get_descendants()
             self.analysis = [analysis_root[0]]
@@ -205,6 +225,13 @@ class RegNode(models.Model, GenericNodeMixin):
                       if child.tag in possible_children]
 
         return result
+
+    @property
+    def version(self):
+        if self.reg_version.version is not None:
+            return self.reg_version.version
+        else:
+            return ''
 
     @property
     def marker_type(self):
@@ -786,8 +813,22 @@ class Footnote(RegNode):
 
 class DiffNode(RegNode):
 
-    left_version = models.CharField(max_length=250)
-    right_version = models.CharField(max_length=250)
+    # left_version = models.CharField(max_length=250)
+    # right_version = models.CharField(max_length=250)
+
+    @property
+    def left_version(self):
+        if self.reg_version.left_version is not None:
+            return self.reg_version.left_version
+        else:
+            return ''
+
+    @property
+    def right_version(self):
+        if self.reg_version.right_version is not None:
+            return self.reg_version.right_version
+        else:
+            return ''
 
 
 class DiffPreamble(Preamble, RegNode):

@@ -3,4 +3,6 @@ psycopg2
 lxml
 django-haystack
 django-mysql
+django-extensions
+python-dateutil
 git+https://github.com/PyMySQL/mysqlclient-python.git@master

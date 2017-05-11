@@ -1,5 +1,6 @@
 from django.core.management.base import BaseCommand, CommandError
-from eregs_core.models import RegNode
+from django.core.exceptions import ObjectDoesNotExist
+from eregs_core.models import RegNode, Version
 from eregs_core.utils import xml_to_json
 from lxml import etree
 
@@ -13,6 +14,7 @@ class Command(BaseCommand):
 
     def add_arguments(self, parser):
         parser.add_argument('regml_file', nargs='?')
+        parser.add_argument('mode', nargs='?', default='reg')
 
     def handle(self, *args, **options):
         xml_filename = options['regml_file']
@@ -43,21 +45,22 @@ class Command(BaseCommand):
         # part_toc = part.find('{eregs}tableOfContents')
 
         # flush the table of existing content for this reg
-        regulation = RegNode.objects.filter(version=prefix)
-        for item in regulation:
-            item.delete()
+        try:
+            version = Version.objects.get(version=prefix)
+            regulation = RegNode.objects.filter(version=version)
+            regulation.delete()
+            version.delete()
+        except ObjectDoesNotExist:
+            pass
 
+        new_version = Version(version=prefix)
+        new_version.save()
         reg_json = xml_to_json(xml_tree, 1, prefix)[0]
 
-        recursive_insert(reg_json)
+        recursive_insert(reg_json, new_version)
 
 
-def recursive_insert(node):
-
-    # delete anything with this node's node_id
-    # if 'node_id' in node:
-    #    for reg_node in RegNode.objects.filter(node_id=node['node_id']):
-    #        reg_node.delete()
+def recursive_insert(node, version):
 
     # make a shallow copy of the node sans children
     node_to_insert = {}
@@ -88,7 +91,8 @@ def recursive_insert(node):
     new_node.right = node['right']
     new_node.left = node['left']
     new_node.depth = node['depth']
-    new_node.version = node['version']
+    new_node.version = version
+
     if node['tag'] == 'regtext':
         new_node.text = node['content']
 
@@ -98,5 +102,5 @@ def recursive_insert(node):
     # this ensures that paragraphs are the lowest level of recursion
     for child in node['children']:
         if type(child) is not str:
-            recursive_insert(child)
+            recursive_insert(child, version)
 

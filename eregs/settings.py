@@ -85,7 +85,11 @@ DATABASES = {
         'USER': 'eregs',
         'PASSWORD': 'eregs',
         'HOST': 'localhost',
-        'PORT': '3307'
+        'PORT': '3307',
+        'OPTIONS': {
+            # Tell MySQLdb to connect with 'utf8mb4' character set
+            'charset': 'utf8mb4',
+        },
     },
     'replica': {
         'ENGINE': 'django.db.backends.mysql',
@@ -96,7 +100,11 @@ DATABASES = {
         'PORT': '3307',
         'TEST': {
             'MIRROR': 'default'
-        }
+        },
+        'OPTIONS': {
+            # Tell MySQLdb to connect with 'utf8mb4' character set
+            'charset': 'utf8mb4',
+        },
     }
 }
 
