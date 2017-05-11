@@ -118,7 +118,7 @@ def recursive_insert(node, version):
     new_node.right = node['right']
     new_node.left = node['left']
     new_node.depth = node['depth']
-    new_node.version = version
+    new_node.reg_version = version
     #new_node.left_version = node['left_version']
     #new_node.right_version = node['right_version']
     if node['tag'] == 'regtext':
