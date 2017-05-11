@@ -23,6 +23,9 @@ class Version(models.Model):
     left_version = models.CharField(max_length=250, null=True)
     right_version = models.CharField(max_length=250, null=True)
 
+    class Meta:
+        indexes = [models.Index(fields=['version', 'left_version', 'right_version'])]
+
     def __str__(self):
         if self.version is not None:
             return self.version
@@ -190,6 +193,15 @@ class RegNode(models.Model, GenericNodeMixin):
     left = models.IntegerField()
     right = models.IntegerField()
     depth = models.IntegerField()
+
+    class Meta:
+        indexes = [
+            models.Index(fields=['node_id']),
+            models.Index(fields=['label']),
+            models.Index(fields=['tag']),
+            models.Index(fields=['left']),
+            models.Index(fields=['right'])
+        ]
 
     def __init__(self, *args, **kwargs):
         super(RegNode, self).__init__(*args, **kwargs)
