@@ -66,8 +66,7 @@ class Command(BaseCommand):
 
         try:
             version = Version.objects.get(left_version=left_version, right_version=right_version)
-            regulation = DiffNode.objects.filter(left_version=version.left_version,
-                                                 right_version=version.right_version)
+            regulation = DiffNode.objects.filter(reg_version=version)
             regulation.delete()
             version.delete()
 
