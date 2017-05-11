@@ -47,7 +47,7 @@ class Command(BaseCommand):
         # flush the table of existing content for this reg
         try:
             version = Version.objects.get(version=prefix)
-            regulation = RegNode.objects.filter(version=version)
+            regulation = RegNode.objects.filter(reg_version=version)
             regulation.delete()
             version.delete()
         except ObjectDoesNotExist:
@@ -91,7 +91,7 @@ def recursive_insert(node, version):
     new_node.right = node['right']
     new_node.left = node['left']
     new_node.depth = node['depth']
-    new_node.version = version
+    new_node.reg_version = version
 
     if node['tag'] == 'regtext':
         new_node.text = node['content']
