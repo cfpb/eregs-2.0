@@ -1,5 +1,6 @@
 {
     "testUrl": "http://localhost:8000",
-    "frontEndPath": "eregs_core/static/regulations",
+    "frontEndSourcePath": "eregs_core/static/regulations",
+    "frontEndPath": "static/regulations",
     "testPath": "regulations/uitests"
 }

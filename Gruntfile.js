@@ -85,7 +85,8 @@ module.exports = function(grunt) {
     browserify: {
       dev: {
         files: {
-          '<%= env.frontEndPath %>/js/built/regulations.js': ['<%= env.frontEndPath %>/js/source/regulations.js','<%= env.frontEndPath %>/js/source/regulations.js']
+          '<%= env.frontEndPath %>/js/built/regulations.js': ['<%= env.frontEndSourcePath %>/js/source/regulations.js',
+              '<%= env.frontEndSourcePath %>/js/source/regulations.js']
         },
         options: {
           browserifyOptions: {
@@ -95,7 +96,7 @@ module.exports = function(grunt) {
       },
       dist: {
         files: {
-          '<%= env.frontEndPath %>/js/built/regulations.js': ['<%= env.frontEndPath %>/js/source/regulations.js']
+          '<%= env.frontEndPath %>/js/built/regulations.js': ['<%= env.frontEndSourcePath %>/js/source/regulations.js']
         },
         options: {
           browserifyOptions: {
