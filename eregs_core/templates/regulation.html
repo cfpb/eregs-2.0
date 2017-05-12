@@ -22,8 +22,8 @@ Main
                         {% endwith %}
                     {% elif mode == "landing" %}
                         <section data-base-version="{{ meta.version }}" class="landing"
-                                 data-page-type="landing-page" data-reg-part="{{ meta.cfr_section }}
-                                 data-effective-date={{ meta.effective_date }}">
+                                 data-page-type="landing-page" data-reg-part="{{ meta.cfr_section }}"
+                                 data-effective-date="{{ meta.effective_date }}">
                             {% include landing_page %}
                         </section>
                     {% endif %}
