@@ -19,7 +19,8 @@
             {% endif %}
             {% if toc.has_interps %}
                 <li data-subpart-heading>
-                    <h3 class="subpart-heading">{{ toc.supplement_title }}</h3>
+                    <h3 class="subpart-heading">SUPPLEMENT I TO PART {{ meta.cfr_section }} -
+                    <span class="subpart-subhead">Staff Commentary</span></h3>
                 </li>
                 {% if toc.interp_intro_entry %}
                     {% with intro=True entry=toc.interp_intro_entry %}

@@ -291,11 +291,6 @@ class RegNode(models.Model, GenericNodeMixin):
         self.merkle_hash = self_hash
         return self_hash
 
-    def node_url(self):
-        if self.tag == 'paragraph' or self.tag == 'interpParagraph':
-            split_version = self.version.split(':')
-            return '/regulation/{}/{}/{}'.format(split_version[0], split_version[1], self.label)
-
     def __str__(self):
         return '{}: {}'.format(self.tag, self.node_id)
 
@@ -370,6 +365,7 @@ class Fdsys(RegNode):
     def part_title(self):
         return self.get_child('title/regtext').text
 
+
 class TableOfContents(RegNode):
 
     class Meta:
@@ -399,7 +395,6 @@ class TableOfContents(RegNode):
     def supplement_title(self):
         supplement = [entry for entry in self.children if entry.tag == 'tocInterpEntry' and
                         'Supplement' in entry.interp_title]
-        print supplement
         if len(supplement) > 0:
             return supplement[0].interp_title
 
@@ -490,6 +485,15 @@ class ToCAppEntry(RegNode):
         if self.tag == 'tocAppEntry':
             return self.get_child('appendixSubject/regtext').text
 
+    @property
+    def formatted_subject(self):
+        if self.tag == 'tocAppEntry':
+            split_subject = self.get_child('appendixSubject/regtext').text.split('—')
+            if len(split_subject) == 2:
+                return split_subject[1]
+            else:
+                return self.get_child('appendixSubject/regtext').text
+
 
 class ToCInterpEntry(RegNode):
 
@@ -503,6 +507,19 @@ class ToCInterpEntry(RegNode):
     def interp_title(self):
         if self.tag == 'tocInterpEntry':
             return self.get_child('interpTitle/regtext').text
+
+    @property
+    def interp_for(self):
+        target = self.target()
+        if 'Subpart' in target:
+            split_target = target.split('-')
+            return split_target[1] + ' ' + split_target[2]
+        elif 'Introduction' in self.interp_title:
+            return 'Introduction'
+        elif 'Appendices' in self.interp_title:
+            return 'Appendices'
+        else:
+            return 'Regulation Text'
 
 
 class Section(RegNode):
@@ -520,6 +537,10 @@ class Section(RegNode):
 
     def label(self):
         return self.attribs['label']
+
+    def node_url(self):
+        split_version = self.version.split(':')
+        return '/regulation/{}/{}/{}'.format(split_version[0], split_version[1], self.label)
 
     def get_all_analyses(self):
         if not self.children:
@@ -585,13 +606,11 @@ class Section(RegNode):
 
     @property
     def subject_diff(self):
-        print 'label', self.label
         if self.has_diff_subject:
             left_text = self.left_subject
             right_text = self.right_subject
             diff = difflib.ndiff(left_text, right_text)
             text = merge_text_diff(diff)
-            print text
             return text
 
 
@@ -612,6 +631,40 @@ class Paragraph(RegNode):
             return interp_target
         else:
             return None
+
+    def ancestor_section(self):
+        ancestors = self.get_ancestors()
+        for ancestor in ancestors[::-1]:
+            if ancestor.tag in {'section', 'appendixSection', 'interpSection'}:
+                return ancestor
+        return None
+
+    def node_url(self):
+        split_version = self.version.split(':')
+        ancestor_section = self.ancestor_section()
+        if len(split_version) >= 2:
+            return '/regulation/{}/{}/{}#{}'.format(split_version[0], split_version[1],
+                                                    ancestor_section.label, self.label)
+        else:
+            return ''
+
+    def pretty_label(self):
+
+        split_label = self.label.split('-')
+        part = split_label[0]
+        section = split_label[1]
+        if 'Interp' in split_label:
+            root = '{}.{}'.format(part, section)
+            interp_index = split_label.index('Interp')
+            root += ''.join(['({})'.format(item) for item in split_label[2:interp_index]]) + '-'
+            root += '.'.join([item for item in split_label[interp_index + 1:]])
+            return 'Comment for ' + root
+        elif section.isnumeric():
+            return part + '.' + ''.join([section] + ['({})'.format(item) for item in split_label[2:]])
+        elif section.isalpha():
+            return ''.join(['Appendix {}-'.format(section)] + ['({})'.format(item) for item in split_label[2:]])
+        else:
+            return self.label
 
     @property
     def has_content(self):
@@ -694,11 +747,15 @@ class Paragraph(RegNode):
             elif child.tag == 'def':
                 text += '<dfn class="defined-term">{}</dfn>'.format(child.regtext())
             elif child.tag == 'ref':
-                text += '<a href="{}" class="citation definition" data-definition="{}"' \
-                        ' data-defined-term="{}" data-gtm-ignore-"true">{}</a>'.format(child.target_url(),
-                                                                                       child.target(),
-                                                                                       child.regtext(),
-                                                                                       child.regtext())
+                if child.reftype() == 'term':
+                    text += '<a href="{}" class="citation definition" data-definition="{}"' \
+                            ' data-defined-term="{}" data-gtm-ignore-"true">{}</a>'.format(child.target_url(),
+                                                                                           child.target(),
+                                                                                           child.regtext(),
+                                                                                           child.regtext())
+                elif child.reftype() == 'internal':
+                    text += '<a href="{}" class="citation internal" ' \
+                            ' data-section-id="{}">{}</a>'.format(child.target_url(), child.target(), child.regtext())
         return text
 
     def formatted_label(self):

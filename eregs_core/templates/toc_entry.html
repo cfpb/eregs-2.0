@@ -1,6 +1,6 @@
 <li>
     {% if entry.tag == "tocSecEntry" or entry.tag == "tocAppEntry" or entry.tag == "tocInterpEntry" %}
-        {% if mode == 'reg' or mode == 'landing' %}
+        {% if mode == 'reg' or mode == 'landing' or mode == 'search' %}
             <a href="/regulation/{{ meta.document_number }}/{{ meta.effective_date }}/{{ entry.target }}"
                 data-section-id="{{ entry.target }}" id="nav-{{ entry.target }}"
                 data-doc-number="{{ meta.document_number }}" data-version="{{ meta.effective_date }}">
@@ -9,20 +9,19 @@
                 data-section-id="{{ entry.target }}" id="nav-{{ entry.target }}"
                 data-doc-number="{{ meta.left_document_number }}" data-version="{{ meta.left_effective_date }}">
         {% endif %}
-
             {% if entry.tag == "tocSecEntry" %}
                 <span class="toc-section-marker">
                     § {{ meta.cfr_section }}.{{ entry.section_number }}
                 </span> {{ entry.section_subject }}
             {% elif entry.tag == "tocAppEntry" %}
                 <span class="toc-section-marker">
-                    § {{ meta.cfr_section }}.{{ entry.appendix_letter }}
-                </span> {{ entry.appendix_subject }}
+                    Appendix {{ entry.appendix_letter }} to Part {{ meta.cfr_section }}
+                </span> {{ entry.formatted_subject }}
             {% elif entry.tag == "tocInterpEntry" %}
                 <span class="toc-interp-heading">
                 {% if intro %}Interpretations{% else %}Interpretations for{% endif %}
                 </span>
-                <span class="toc-section-marker">{{ entry.interp_title }}</span>
+                <span class="toc-section-marker">{{ entry.interp_for }}</span>
             {% endif %}
         </a>
     {% elif entry.tag == "tocSubpartEntry" %}

@@ -26,6 +26,8 @@ Main
                                  data-effective-date="{{ meta.effective_date }}">
                             {% include landing_page %}
                         </section>
+                    {% elif mode == "search" %}
+                        {% include "search_results.html" %}
                     {% endif %}
                 </section>
             </div>

@@ -2,6 +2,7 @@ from django.shortcuts import render, render_to_response
 from django.template.loader import render_to_string
 from django.http import HttpResponse, HttpResponseRedirect, Http404
 from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.cache import never_cache
 
 from haystack.query import SearchQuerySet
 
@@ -44,15 +45,6 @@ def regulation(request, version, eff_date, node):
             pre.get_descendants(auto_infer_class=False)
             fd.get_descendants(auto_infer_class=False)
             timeline.append((pre, fd))
-
-
-        #timeline = [preamble for reg in regulations
-        #            for preamble in Preamble.objects.filter(node_id=reg.version + ':preamble')]
-
-        #for t in timeline:
-        #    t.get_descendants(auto_infer_class=False)
-
-        #print [t.effective_date for t in timeline]
 
         if regtext is not None and toc is not None:
             return render_to_response('regulation.html', {'toc': toc,
@@ -98,6 +90,7 @@ def sidebar_partial(request, version, eff_date, node):
             return render_to_response('right_sidebar.html', {'node': regtext,
                                                              'mode': 'reg',
                                                              'meta': meta})
+
 
 def definition_partial(request, version, eff_date, node):
 
@@ -172,52 +165,98 @@ def diff(request, left_version, left_eff_date, right_version, right_eff_date, no
                                                           'mode': 'diff',
                                                           'meta': meta})
 
-
+@never_cache
 def search_partial(request):
 
     if request.method == 'GET':
 
-        print request.GET
-        q = request.GET['q']
-        version = Version.objects.get(request.GET['version'])
-        page = int(request.GET.get('page', 1)) - 1
+        results = get_search_results(request)
+        return render_to_response('search_results.html', results)
 
-        results = SearchQuerySet().filter(content=q, reg_version=version)
-        view_results = results[page * 10: page * 10 + 10]
+@never_cache
+def search(request):
 
-        result_nodes = []
-        for r in view_results:
-            ancestors = r.object.get_ancestors()[::-1]
-            for ancestor in ancestors:
-                if ancestor.tag in ['paragraph', 'interpParagraph']:
-                    ancestor.get_descendants()
-                    result_nodes.append((ancestor, r.text))
-                    break
+    if request.method == 'GET':
+        version = request.GET['version']
+        results = get_search_results(request)
+        toc_id = ':'.join([version, 'tableOfContents'])
+        meta_id = ':'.join([version, 'preamble'])
 
-        page +=1
+        toc = TableOfContents.objects.get(node_id=toc_id)
+        meta = Preamble.objects.get(node_id=meta_id)
 
-        if page == 1:
-            prev_page = None
-        else:
-            prev_page = page - 1
+        toc.get_descendants()
+        meta.get_descendants(auto_infer_class=False)
 
-        rem = len(results) % 10
-        total_pages = len(results) // 10 + rem // 10
+        versions = Version.objects.exclude(version=None)
+        regulations = [r for r in RegNode.objects.filter(label=meta.cfr_section, reg_version__in=versions).select_related('reg_version')]
+        regulations = sorted(regulations, key=lambda x: x.version.split(':')[1], reverse=True)
+        timeline = []
 
-        if page >= total_pages:
-            next_page = None
-        else:
-            next_page = page + 1
+        preambles = Preamble.objects.filter(node_id__in=[reg.version + ':preamble' for reg in regulations]).\
+            select_related('reg_version').order_by('reg_version')
+        fdsys = Fdsys.objects.filter(node_id__in=[reg.version + ':fdsys' for reg in regulations]).\
+            select_related('reg_version').order_by('reg_version')
 
-        print prev_page, page, next_page
+        for pre, fd in zip(preambles, fdsys):
+            pre.get_descendants(auto_infer_class=False)
+            fd.get_descendants(auto_infer_class=False)
+            timeline.append((pre, fd))
 
-        return render_to_response('search_results.html', {'results': result_nodes,
-                                                          'search_term': q,
-                                                          'version': version,
-                                                          'total_pages': total_pages,
-                                                          'page': page,
-                                                          'prev_page': prev_page,
-                                                          'next_page': next_page})
+        results['toc'] = toc
+        results['mode'] = 'search'
+        results['meta'] = meta
+        results['timeline'] = timeline
+
+        return render_to_response('regulation.html', results)
+
+
+def get_search_results(request):
+
+    q = request.GET['q']
+    q_version = request.GET['version']
+    version = Version.objects.get(version=q_version)
+    page = int(request.GET.get('page', 1)) - 1
+
+    results = SearchQuerySet().filter(content=q, version__exact=q_version)
+    view_results = results[page * 10: page * 10 + 10]
+
+    result_nodes = []
+
+    for r in view_results:
+        ancestors = r.object.get_ancestors()[::-1]
+        for ancestor in ancestors:
+            if ancestor.tag in ['paragraph', 'interpParagraph'] and r.text is not None and not r.text.strip == ''\
+                    and len(r.version.split(':')) == 2:
+                ancestor.get_descendants()
+                result_nodes.append((ancestor, r.text))
+                break
+
+    page += 1
+
+    if page == 1:
+        prev_page = None
+    else:
+        prev_page = page - 1
+
+    rem = len(results) % 10
+    total_pages = len(results) // 10 + rem // 10
+
+    if page >= total_pages:
+        next_page = None
+    else:
+        next_page = page + 1
+
+    if total_pages == 0:
+        total_pages = 1
+
+    return {'results': result_nodes,
+            'search_term': q,
+            'version': version,
+            'total_pages': total_pages,
+            'page': page,
+            'prev_page': prev_page,
+            'next_page': next_page}
 
 
 def regulation_main(request, part_number):

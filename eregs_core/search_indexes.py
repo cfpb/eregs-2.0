@@ -5,7 +5,7 @@ from models import RegNode
 class RegNodeIndex(indexes.SearchIndex, indexes.Indexable):
 
     text = indexes.CharField(document=True, use_template=True)
-    version = indexes.CharField(model_attr='version')
+    version = indexes.CharField(model_attr='reg_version__version', null=True)
 
     def get_model(self):
 
