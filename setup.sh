@@ -12,7 +12,7 @@ init(){
 
 # Clean project deps
 clean(){
-    if [-d $NODE_DIR ]; then
+    if [ -d $NODE_DIR ]; then
 	echo 'Removing project dependency directories...'
 	rm -rf $NODE_DIR
     fi

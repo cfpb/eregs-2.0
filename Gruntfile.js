@@ -37,7 +37,7 @@ module.exports = function(grunt) {
     less: {
         dev: {
             options: {
-                paths: ['<%= env.frontEndPath %>/css/less'],
+                paths: ['<%= env.frontEndSourcePath %>/css/less'],
                 compress: false,
                 sourceMap: true,
                 sourceMapFilename: '<%= env.frontEndPath %>/css/style.css.map',
@@ -45,7 +45,7 @@ module.exports = function(grunt) {
                 sourceMapURL: 'style.css.map'
             },
             files: {
-                '<%= env.frontEndPath %>/css/style.css': '<%= env.frontEndPath %>/css/less/main.less'
+                '<%= env.frontEndPath %>/css/style.css': '<%= env.frontEndSourcePath %>/css/less/main.less'
             }
         }
     },
@@ -58,7 +58,7 @@ module.exports = function(grunt) {
     cssmin: {
       target: {
         files: {
-          '<%= env.frontEndPath %>/css/regulations.min.css': ['<%= env.frontEndPath %>/css/style.css']
+          '<%= env.frontEndPath %>/css/regulations.min.css': ['<%= env.frontEndSourcePath %>/css/style.css']
         }
       }
     },
@@ -70,10 +70,10 @@ module.exports = function(grunt) {
     eslint: {
         target: [
           'Gruntfile.js',
-          '<%= env.frontEndPath %>/js/source/*.js',
-          '<%= env.frontEndPath %>/js/source/events/**/*.js',
-          '<%= env.frontEndPath %>/js/source/models/**/*.js',
-          '<%= env.frontEndPath %>/js/source/views/**/*.js'
+          '<%= env.frontEndSourcePath %>/js/source/*.js',
+          '<%= env.frontEndSourcePath %>/js/source/events/**/*.js',
+          '<%= env.frontEndSourcePath %>/js/source/models/**/*.js',
+          '<%= env.frontEndSourcePath %>/js/source/views/**/*.js'
         ]
     },
 
@@ -116,11 +116,11 @@ module.exports = function(grunt) {
 
     mocha_istanbul: {
       coverage: {
-        src: ['<%= env.frontEndPath %>/js/unittests/specs/**/*'],
+        src: ['<%= env.frontEndSourcePath %>/js/unittests/specs/**/*'],
         options: {
           mask:'**/*-spec.js',
-          coverageFolder: '<%= env.frontEndPath %>/js/unittests/coverage',
-          excludes: ['<%= env.frontEndPath %>/js/unittests/specs/**/*'],
+          coverageFolder: '<%= env.frontEndSourcePath %>/js/unittests/coverage',
+          excludes: ['<%= env.frontEndSourcePath %>/js/unittests/specs/**/*'],
           coverage: false
         }
       }
@@ -156,11 +156,11 @@ module.exports = function(grunt) {
      */
     watch: {
       js: {
-        files: ['Gruntfile.js', '<%= env.frontEndPath %>/js/source/**/*.js'],
+        files: ['Gruntfile.js', '<%= env.frontEndSourcePath %>/js/source/**/*.js'],
         tasks: ['browserify:dev']
       },
       css: {
-        files: ['<%= env.frontEndPath %>/css/less/**/*.less'],
+        files: ['<%= env.frontEndSourcePath %>/css/less/**/*.less'],
         tasks: ['less:dev']
       },
       options: {
@@ -189,7 +189,7 @@ module.exports = function(grunt) {
   grunt.registerTask('nose', ['shell:nose-chrome', 'shell:nose-ie10']);
   grunt.registerTask('test', ['eslint', 'mocha_istanbul', 'nose']);
   grunt.registerTask('test-js', ['eslint', 'mocha_istanbul']);
-  grunt.registerTask('build', ['default', 'test-js']);
+  grunt.registerTask('build', ['default']);
   grunt.registerTask('squish', ['browserify', 'uglify', 'less', 'cssmin']);
   grunt.registerTask('default', ['copy', 'browserify', 'uglify', 'less', 'cssmin']);
 };
