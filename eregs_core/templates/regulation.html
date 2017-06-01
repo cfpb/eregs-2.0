@@ -34,9 +34,12 @@ Main
         </main>
         {% if mode == "reg" %}
             {% with node=reg %}
-
-                {% include "right_sidebar.html" %}
-
+                <div id="sidebar" class="secondary-content" role="complementary">
+                    <div id="sidebar-content" class="sidebar-inner">
+                        <section id="definition"></section>
+                        {% include "right_sidebar.html" %}
+                    </div>
+                </div>
             {% endwith %}
         {% elif mode == "landing" %}
             {% include landing_page_sidebar %}
