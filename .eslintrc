@@ -162,10 +162,6 @@ rules:
       requireReturnDescription: true
       requireReturnType: true
 
-  # Enforces that the results of typeof are compared against a valid string.
-  valid-typeof: 2
-
-
   # Rules for encouraging BEST PRACTICES.
 
   # Enforces getter/setter pairs in objects.
@@ -184,9 +180,6 @@ rules:
   complexity:
     - 1
     - 4
-
-  # Enforces return statements to either always or never specify values.
-  consistent-return: 2
 
   # Enforces curly brace conventions for all control statements.
   curly:
@@ -233,9 +226,6 @@ rules:
   # Disallows else after a return in an if.
   no-else-return: 2
 
-  # Disallow use of empty functions.
-  no-empty-function: 2
-
   # Disallow use of empty destructuring patterns.
   no-empty-pattern: 2
 
@@ -244,9 +234,6 @@ rules:
 
   # Disallows use of eval().
   no-eval: 2
-
-  # Disallows adding to native types.
-  no-extend-native: 2
 
   # Disallows unnecessary function binding.
   no-extra-bind: 2
@@ -336,14 +323,6 @@ rules:
   # Disallows usage of __proto__ property.
   no-proto: 2
 
-  # Disallows declaring the same variable more then once.
-  no-redeclare: 2
-
-  # Disallows use of assignment in return statement.
-  no-return-assign:
-    - 2
-    - 'except-parens'
-
   # Disallows use of javascript: urls.
   no-script-url: 2
 
@@ -361,9 +340,6 @@ rules:
 
   # Disallow unmodified conditions of loops.
   no-unmodified-loop-condition: 2
-
-  # Disallows usage of expressions in statement position.
-  no-unused-expressions: 2
 
   # Disallow unused labels.
   no-unused-labels: 2
@@ -461,9 +437,6 @@ rules:
     - 2
     - typeof: true
 
-  # Disallows use of undefined variable.
-  no-undefined: 2
-
   # Disallows declaration of variables that are not used in the code.
   no-unused-vars:
     - 1
@@ -475,27 +448,7 @@ rules:
       caughtErrors: 'none'
       caughtErrorsIgnorePattern: ''
 
-  # Disallows use of variables before they are defined.
-  no-use-before-define:
-    - 2
-    -
-      functions: false
-      classes: true
-
-
   # Rules for Node.js and CommonJS.
-
-  # Enforce return after a callback.
-  # callback, cb, and next are possible callback function names.
-  callback-return:
-    - 2
-    -
-      - callback
-      - cb
-      - next
-
-  # Disallow require() outside of the top-level module scope.
-  global-require: 2
 
   # Enforce error handling in callbacks.
   # Matches any string that contains err or Err (err, error, anyError, an_err).
@@ -543,13 +496,6 @@ rules:
   block-spacing:
     - 2
     - always
-
-  # Enforce one true brace style.
-  brace-style:
-    - 2
-    - 1tbs
-    -
-      allowSingleLine: true
 
   # Enforce camel case names.
   camelcase:
@@ -719,15 +665,6 @@ rules:
   # Enforce newlines between operands of ternary expressions.
   multiline-ternary: 0
 
-  # Require a capital letter for constructors.
-  new-cap:
-    - 2
-    -
-      newIsCap: true
-      capIsNew: true
-      newIsCapExceptions: []
-      capIsNewExceptions: []
-
   # Disallows omission of parentheses when invoking a constructor with no arguments.
   new-parens: 2
 
@@ -775,9 +712,6 @@ rules:
       max: 2
       maxEOF: 1
       maxBOF: 0
-
-  # Disallows negated conditions.
-  no-negated-condition: 2
 
   # Disallows nested ternary expressions.
   no-nested-ternary: 2

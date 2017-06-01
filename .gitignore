@@ -5,3 +5,4 @@
 #############
 node_modules/
 /static/
+eregs_core/static/regulations/js/unittests/coverage/lcov-report/

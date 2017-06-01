@@ -19,15 +19,15 @@
 // even if the internals are different
 
 'use strict';
-var $ = require('jquery');
-var _ = require('underscore');
-var Backbone = require('backbone');
-var RegsHelpers = require('../helpers');
-var MetaModel = require('./meta-model');
+var $ = require( 'jquery' );
+var _ = require( 'underscore' );
+var Backbone = require( 'backbone' );
+var RegsHelpers = require( '../helpers' );
+var MetaModel = require( './meta-model' );
 Backbone.$ = $;
 
 // represents a whole regulation
-Backbone.RegModel = MetaModel.extend({
+Backbone.RegModel = MetaModel.extend( {
     // **Param**
     // ```id```: string, dash-delimited reg entity id
     //
@@ -36,19 +36,19 @@ Backbone.RegModel = MetaModel.extend({
     // The magic of the flexibility of the app is that we can pass around these
     // dash-delimited ids and get the job done pretty seamlessly w/o worrying about
     // what exactly we're dealing with. We just rely on a set of rules.
-    getChildren: function(id) {
-        var kids = [],
-            structureLen = this.structure.length,
-            regex = new RegExp(id + '[-,a-z,0-9]');
+  getChildren: function( id ) {
+    var kids = [],
+        structureLen = this.structure.length,
+        regex = new RegExp( id + '[-,a-z,0-9]' );
 
-        while (structureLen--) {
-            if (regex.test(this.structure[structureLen])) {
-                kids.push(this.structure[structureLen]);
-            }
-        }
+    while ( structureLen-- ) {
+      if ( regex.test( this.structure[structureLen] ) ) {
+        kids.push( this.structure[structureLen] );
+      }
+    }
 
-        return kids;
-    },
+    return kids;
+  },
 
     // **Param**
     // ```id```: string, dash-delimited reg entity id
@@ -57,19 +57,19 @@ Backbone.RegModel = MetaModel.extend({
     // the id passed in or boolean false if the requested id has no parent
     //
     // The converse of ```this.getChildren```
-    getParent: function(id) {
-        var parent, z;
-        z  = id.split('-');
-        z.pop();
-        parent = z.join('-');
+  getParent: function( id ) {
+    var parent, z;
+    z = id.split( '-' );
+    z.pop();
+    parent = z.join( '-' );
 
-        if (this.structure.indexOf(parent) !== -1) {
-            return this.content[parent];
-        }
-
-        return false;
+    if ( this.structure.indexOf( parent ) !== -1 ) {
+      return this.content[parent];
     }
-});
+
+    return false;
+  }
+} );
 
 var reg = new Backbone.RegModel();
 

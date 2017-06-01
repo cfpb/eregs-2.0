@@ -16,16 +16,16 @@ describe('Diff Model:', function() {
 
     beforeEach(function(){
         Resources.versionElements = {
-            toc: $('<nav id="toc" data-toc-version="2014-20681"></nav>'),
+            toc: $('<nav id="toc" data-toc-version="2014-20681" data-effective-date="2000-10-10"></nav>'),
         };
     });
 
     it('getAJAXUrl returns the correct URL endpoint with /diff supplemental path', function() {
-        expect(DiffModel.getAJAXUrl('1005-2')).to.equal('/eregulations/partial/diff/1005-2/2014-20681');
+        expect(DiffModel.getAJAXUrl('1005-2')).to.equal('/eregulations/partial/diff/2014-20681/2000-10-10/1005-2');
 
 
         window.APP_PREFIX = ''; // Test without a urlPrefix
-        expect(DiffModel.getAJAXUrl('1005-2')).to.equal('/partial/diff/1005-2/2014-20681');
+        expect(DiffModel.getAJAXUrl('1005-2')).to.equal('/partial/diff/2014-20681/2000-10-10/1005-2');
 
         window.APP_PREFIX = '/eregulations/'; //Return to normalt
 
