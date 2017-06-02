@@ -22,9 +22,16 @@ class Command(BaseCommand):
             xml = f.read()
             xml_tree = etree.fromstring(xml)
 
+        comments = xml_tree.xpath('//comment()')
+        for comment in comments:
+            parent = comment.getparent()
+            parent.remove(comment)
+
         preamble = xml_tree.find('.//{eregs}preamble')
         fdsys = xml_tree.find('.//{eregs}fdsys')
         doc_number = preamble.find('{eregs}documentNumber').text
+        if '_' in doc_number:
+            doc_number = doc_number.split('_')[0]
         eff_date = preamble.find('{eregs}effectiveDate').text
         prefix = ':'.join([doc_number, eff_date])
 
@@ -35,12 +42,21 @@ class Command(BaseCommand):
         subparts = part_content.findall('{eregs}subpart')
         for subpart in subparts:
             subpart_toc = subpart.find('{eregs}tableOfContents')
-            subpart.remove(subpart_toc)
+            if subpart_toc is not None:
+                subpart.remove(subpart_toc)
 
         # strip interp ToC to avoid duplicate ToC nodes
         interps = part_content.find('{eregs}interpretations')
         interp_toc = interps.find('{eregs}tableOfContents')
-        interps.remove(interp_toc)
+        if interp_toc is not None:
+            interps.remove(interp_toc)
+
+        # strip out the appendix ToCs also
+        appendices = part_content.findall('{eregs}appendix')
+        for appendix in appendices:
+            appendix_toc = appendix.find('{eregs}tableOfContents')
+            if appendix_toc is not None:
+                appendix.remove(appendix_toc)
 
         # part_toc = part.find('{eregs}tableOfContents')
 
@@ -57,50 +73,57 @@ class Command(BaseCommand):
         new_version.save()
         reg_json = xml_to_json(xml_tree, 1, prefix)[0]
 
-        recursive_insert(reg_json, new_version)
+        insert_all(reg_json, new_version)
 
 
-def recursive_insert(node, version):
+def insert_all(node, version):
 
-    # make a shallow copy of the node sans children
-    node_to_insert = {}
-    for key, value in node.items():
-        if key != 'children':
-            node_to_insert[key] = value
+    result_nodes = []
 
-    # if we're a content node, we'd better restore the children that
-    # we don't need to recurse on
+    def recursive_insert(node, version):
 
-    if node['tag'] in ['paragraph', 'interpParagraph', 'analysisParagraph',
-                       'section', 'appendix', 'tocSecEntry', 'tocAppEntry',
-                       'interpSection', 'interpretations', 'tableOfContents']:
+        # make a shallow copy of the node sans children
+        node_to_insert = {}
+        for key, value in node.items():
+            if key != 'children':
+                node_to_insert[key] = value
+
+        # if we're a content node, we'd better restore the children that
+        # we don't need to recurse on
+
+        if node['tag'] in ['paragraph', 'interpParagraph', 'analysisParagraph',
+                           'section', 'appendix', 'tocSecEntry', 'tocAppEntry',
+                           'interpSection', 'interpretations', 'tableOfContents']:
+            for child in node['children']:
+                if 'label' not in child['attributes']:
+                    node_to_insert.setdefault('children', []).append(child)
+
+        # allow children for preamble and fdsys
+        if node['tag'] in ['fdsys', 'preamble']:
+            node_to_insert['children'] = node['children']
+
+        new_node = RegNode()
+        new_node.tag = node['tag']
+        new_node.node_id = node.get('node_id', '')
+        new_node.label = node['attributes'].get('label', '')
+        new_node.marker = node['attributes'].get('marker', '')
+        new_node.attribs = node['attributes']
+        new_node.right = node['right']
+        new_node.left = node['left']
+        new_node.depth = node['depth']
+        new_node.reg_version = version
+
+        if node['tag'] == 'regtext':
+            new_node.text = node['content']
+
+        result_nodes.append(new_node)
+        #new_node.save()
+
+        # recurse only if this node has subchildren that are labeled
+        # this ensures that paragraphs are the lowest level of recursion
         for child in node['children']:
-            if 'label' not in child['attributes']:
-                node_to_insert.setdefault('children', []).append(child)
+            if type(child) is not str:
+                recursive_insert(child, version)
 
-    # allow children for preamble and fdsys
-    if node['tag'] in ['fdsys', 'preamble']:
-        node_to_insert['children'] = node['children']
-
-    new_node = RegNode()
-    new_node.tag = node['tag']
-    new_node.node_id = node.get('node_id', '')
-    new_node.label = node['attributes'].get('label', '')
-    new_node.marker = node['attributes'].get('marker', '')
-    new_node.attribs = node['attributes']
-    new_node.right = node['right']
-    new_node.left = node['left']
-    new_node.depth = node['depth']
-    new_node.reg_version = version
-
-    if node['tag'] == 'regtext':
-        new_node.text = node['content']
-
-    new_node.save()
-
-    # recurse only if this node has subchildren that are labeled
-    # this ensures that paragraphs are the lowest level of recursion
-    for child in node['children']:
-        if type(child) is not str:
-            recursive_insert(child, version)
-
+    recursive_insert(node, version)
+    RegNode.objects.bulk_create(result_nodes)

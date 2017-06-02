@@ -373,7 +373,7 @@ class TableOfContents(RegNode):
 
     @property
     def section_entries(self):
-        return [entry for entry in self.children if entry.tag == 'tocSecEntry']
+        return [entry for entry in self.children if entry.tag == 'tocSecEntry' or entry.tag == 'tocSubpartEntry']
 
     @property
     def appendix_entries(self):
@@ -408,6 +408,8 @@ class TableOfContents(RegNode):
     def non_intro_interp_entries(self):
         if self.interp_intro_entry:
             return self.interp_entries[1:]
+        else:
+            return self.interp_entries
 
 
 class ToCEntry(RegNode):
@@ -520,6 +522,23 @@ class ToCInterpEntry(RegNode):
             return 'Appendices'
         else:
             return 'Regulation Text'
+
+
+class ToCSubpartEntry(RegNode):
+
+    class Meta:
+        proxy = True
+
+    def target(self):
+        return self.attribs['target']
+
+    @property
+    def subpart_letter(self):
+        return self.get_child('subpartLetter/regtext').text
+
+    @property
+    def subpart_title(self):
+        return self.get_child('subpartTitle/regtext').text
 
 
 class Section(RegNode):
@@ -795,7 +814,7 @@ class Reference(RegNode):
             try:
                 url = '/regulation/{}/{}/{}'.format(split_version[0], split_version[1], target)
                 return url
-            except Exception:
+            except Exception as ex:
                 # we don't want to die if this happens, but we should definitely log the error
                 print 'Invalid target {} at text {}! '.format(str(self.target()), self.regtext())
                 return ''
@@ -907,19 +926,19 @@ class DiffPreamble(Preamble, RegNode):
 
     @property
     def left_document_number(self):
-        return self.left_version.split(':')[0]
+        return self.reg_version.left_version.split(':')[0]
 
     @property
     def left_effective_date(self):
-        return self.left_version.split(':')[1]
+        return self.reg_version.left_version.split(':')[1]
 
     @property
     def right_document_number(self):
-        return self.right_version.split(':')[0]
+        return self.reg_version.right_version.split(':')[0]
 
     @property
     def right_effective_date(self):
-        return self.right_version.split(':')[1]
+        return self.reg_version.right_version.split(':')[1]
 
 
 # top-level because it needs to have all the classes defined
@@ -934,6 +953,7 @@ tag_to_object_mapping = {
     'tocSecEntry': ToCSecEntry,
     'tocAppEntry': ToCAppEntry,
     'tocInterpEntry': ToCInterpEntry,
+    'tocSubpartEntry': ToCSubpartEntry,
     'analysisSection': AnalysisSection,
     'analysisParagraph': AnalysisParagraph,
     'footnote': Footnote

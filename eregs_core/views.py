@@ -128,15 +128,17 @@ def sxs_partial(request, version, eff_date, node):
 def diff_redirect(request, left_version, left_eff_date):
 
     if request.method == 'GET':
-        new_version = request.GET['new_version'].split(':')
-        print left_version, left_eff_date
-        version = Version.objects.get(left_version + ':' + left_eff_date)
+        new_version = request.GET['new_version']
+        right_version = new_version.split(':')
+        print left_version, left_eff_date, new_version
+        version = Version.objects.get(left_version=':'.join([left_version, left_eff_date]),
+                                      right_version=new_version)
         sections = Section.objects.filter(reg_version=version,
                                           tag='section').exclude(label='').order_by('label')
         first_section = sections[0]
         print first_section
         return HttpResponseRedirect('/diff/{}/{}/{}/{}/{}'.format(
-            left_version, left_eff_date, new_version[0], new_version[1], first_section.label
+            left_version, left_eff_date, right_version[0], right_version[1], first_section.label
         ))
 
 

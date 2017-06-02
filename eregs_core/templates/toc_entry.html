@@ -1,4 +1,4 @@
-<li>
+<li {% if entry.tag == "tocSubpartEntry" %}data-subpart-heading{% endif %}>
     {% if entry.tag == "tocSecEntry" or entry.tag == "tocAppEntry" or entry.tag == "tocInterpEntry" %}
         {% if mode == 'reg' or mode == 'landing' or mode == 'search' %}
             <a href="/regulation/{{ meta.document_number }}/{{ meta.effective_date }}/{{ entry.target }}"
@@ -25,9 +25,9 @@
             {% endif %}
         </a>
     {% elif entry.tag == "tocSubpartEntry" %}
-        <a href="#"><b>Subpart {{ entry.children.1.children.0 }} -
-        {{ entry.section_subject }}</b>
-        </a>
+        <h3 class="subpart-heading" id="nav-{{ entry.label }}">Subpart {{ entry.subpart_letter }} -
+            <span class="subpart-subhead">{{ entry.subpart_title }}</span>
+        </h3>
         {% for node in entry.children %}
             {% with entry=node template_name="toc_entry.html" %}
                 {% include template_name %}
