@@ -420,6 +420,9 @@ class ToCEntry(RegNode):
     def target(self):
         return self.attribs['target']
 
+    def action(self):
+        return self.attribs.get('action', None)
+
     @property
     def section_number(self):
         return self.get_child('sectionNum/regtext').text
@@ -456,6 +459,9 @@ class ToCSecEntry(RegNode):
     def target(self):
         return self.attribs['target']
 
+    def action(self):
+        return self.attribs.get('action', None)
+
     @property
     def section_number(self):
         return self.get_child('sectionNum/regtext').text
@@ -476,6 +482,9 @@ class ToCAppEntry(RegNode):
 
     def target(self):
         return self.attribs['target']
+
+    def action(self):
+        return self.attribs.get('action', None)
 
     @property
     def appendix_letter(self):
@@ -505,6 +514,9 @@ class ToCInterpEntry(RegNode):
     def target(self):
         return self.attribs['target']
 
+    def action(self):
+        return self.attribs.get('action', None)
+
     @property
     def interp_title(self):
         if self.tag == 'tocInterpEntry':
@@ -531,6 +543,9 @@ class ToCSubpartEntry(RegNode):
 
     def target(self):
         return self.attribs['target']
+
+    def action(self):
+        return self.attribs.get('action', None)
 
     @property
     def subpart_letter(self):
@@ -939,6 +954,20 @@ class DiffPreamble(Preamble, RegNode):
     @property
     def right_effective_date(self):
         return self.reg_version.right_version.split(':')[1]
+
+    @property
+    def left_version(self):
+        if self.reg_version.left_version is not None:
+            return self.reg_version.left_version
+        else:
+            return ''
+
+    @property
+    def right_version(self):
+        if self.reg_version.right_version is not None:
+            return self.reg_version.right_version
+        else:
+            return ''
 
 
 # top-level because it needs to have all the classes defined

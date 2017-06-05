@@ -18,8 +18,11 @@
         <!--./date-form-->
         <ul class="version-list" id="history-toc-list">
             {% for preamble, fdsys in timeline %}
-
-                <li class="status-list {% if preamble.version == meta.version %}current{% endif %}"
+                <!--{{ preamble.version }} {{ meta.left_version }} {{ meta.right_version }}-->
+                <li class="status-list
+                {% if preamble.version == meta.left_version or preamble.version == meta.right_version or preamble.version == meta.version %}
+                    current
+                {% endif %}"
                     data-base-version="{{ preamble.version }}">
                     <a href="/{{ preamble.reg_url }}" class="version-link" data-version="{{ preamble.version }}"
                             id="link-{{ preamble.version }}">
@@ -35,6 +38,7 @@
                                     Published {{ fdsys.date|effective_date }}</a>
                             </li>
                         </ul>
+                        {% if mode == "reg" %}
                         <div class="diff-selector group">
                             <h4 class="compare-title">Compare this with</h4>
                             <div class="select-content">
@@ -55,6 +59,15 @@
                                 </form>
                             </div>
                         </div>
+                        {% elif mode == "diff"%}
+                            {% if preamble.version == meta.right_version %}
+                                <div class="timeline-content-wrap">
+                                    <h4 class="compare-title">Compare this with</h4>
+                                    <a class="stop-button" data-version="{{ preamble.version }}"
+                                       href="/{{ preamble.reg_url }}">Stop Comparing</a>
+                                </div>
+                            {% endif %}
+                        {% endif %}
                     </div>
                 </li>
             {% endfor %}

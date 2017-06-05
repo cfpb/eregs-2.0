@@ -161,11 +161,30 @@ def diff(request, left_version, left_eff_date, right_version, right_eff_date, no
         meta.__class__ = DiffPreamble
         regtext.__class__ = Section
 
+        versions = Version.objects.exclude(version=None)
+        regulations = [r for r in RegNode.objects.filter(label=meta.cfr_section, reg_version__in=versions).select_related('reg_version')]
+        regulations = sorted(regulations, key=lambda x: x.version.split(':')[1], reverse=True)
+        timeline = []
+
+        preambles = Preamble.objects.filter(node_id__in=[reg.version + ':preamble' for reg in regulations]).\
+            select_related('reg_version').order_by('reg_version')
+        fdsys = Fdsys.objects.filter(node_id__in=[reg.version + ':fdsys' for reg in regulations]).\
+            select_related('reg_version').order_by('reg_version')
+
+        print meta.left_version, meta.right_version
+        for pre, fd in zip(preambles, fdsys):
+            pre.get_descendants(auto_infer_class=False)
+            fd.get_descendants(auto_infer_class=False)
+            timeline.append((pre, fd))
+            print pre.version
+
+
         if regtext is not None and toc is not None:
             return render_to_response('regulation.html', {'toc': toc,
                                                           'reg': regtext,
                                                           'mode': 'diff',
-                                                          'meta': meta})
+                                                          'meta': meta,
+                                                          'timeline': timeline})
 
 @never_cache
 def search_partial(request):
