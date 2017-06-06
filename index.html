@@ -90,6 +90,13 @@
     </li>
 <li>
           
+            <li>
+    <li class="toctree-l1 ">
+        <a class="" href="pipeline/">End-to-end pipeline</a>
+        
+    </li>
+<li>
+          
         </ul>
       </div>
       &nbsp;
@@ -132,12 +139,16 @@ pip install -r requirements.txt
 </code></pre>
 <p>The other thing you'll need is the <code>eregsip</code> repository, which contains some static content for branding. If you are inside the CFPB developer VPN, you know where you can find this repository, and if you're not, you'll have to go without. You can run the project without this repository, but some static assets will be missing.</p>
 <h2 id="installing-the-prerequisites">Installing the prerequisites</h2>
-<p>In addition to installing the various required Python modules, you will need to install and configure a MySQL database and an ElasticSearch instance. If you are developing on a Mac, you should be able to install both of these via <code>homebrew</code> like so:</p>
+<p>In addition to installing the various required Python modules, you will need to install and configure a MySQL database and an ElasticSearch instance. If you are developing on a Mac, you may be able to install both of these via <code>homebrew</code> like so:</p>
 <pre><code>brew install mysql
 brew install elasticsearch23
 </code></pre>
-<p>Note that you will need ElasticSearch 2.3, not one of the later versions, which do not work correctly with Haystack, the search interface between Django and a search backend. </p>
-<p>Once you have MySQL installed, you'll need to configure it to match the <code>settings.py</code> file. You should create two users, <code>eregs</code> and <code>test_eregs</code>, both authenticated by the password <code>eregs</code>. Once that's done, you should run <code>./manage.py migrate</code> to create the database and the model tables. You should also make sure that ElasticSearch is running.</p>
+<p>Note that you will need ElasticSearch 2.3, not one of the later versions, which do not work correctly with Haystack, the search interface between Django and a search backend. If you are not able to install ElasticSearch 2.3, it might have been removed from Homebrew, in which case you will have to download the binary yourself. You can get the ElasticSearch 2.3 binar <a href="https://www.elastic.co/downloads/past-releases/elasticsearch-2-3-0">here</a>.</p>
+<p>Once you have MySQL installed, you'll need to configure it to match the <code>settings.py</code> file. This means creating the two databases, creating the appropriate users, and granting those users privileges on the databases. First, create two databases named <code>eregs</code> and <code>test_eregs</code>. Then, create the user <code>eregs</code> authenticated by the password <code>eregs</code>. Finally, grant the <code>eregs</code> user privileges by logging into MySQL as root (<code>mysql -u root</code>) and running the following commands:</p>
+<pre><code>grant all privileges on eregs.* to 'eregs'@'localhost' identified by eregs
+grant all privileges on eregs.* to 'test_eregs'@'localhost' identified by eregs
+</code></pre>
+<p>Once that's done, you should run <code>./manage.py migrate</code> to create the database and the model tables. You should also make sure that ElasticSearch is running.</p>
 <h2 id="loading-data">Loading data</h2>
 <p>In order to load data, you'll need to grab the repository that contains the RegML files. Wherever you want to have this data, do:</p>
 <pre><code>git clone https://github.com/cfpb/regulations-xml
@@ -218,5 +229,5 @@ regulation/                # compiled regulations
 
 <!--
 MkDocs version : 0.15.3
-Build Date UTC : 2017-04-28 16:51:44.068202
+Build Date UTC : 2017-06-06 17:09:35.366390
 -->

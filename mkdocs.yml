@@ -1,8 +1,0 @@
-site_name: eRegs 2.0
-pages:
-  - Installation and Data Loading: index.md
-  - RegML: regml.md
-  - API: api.md
-  - End-to-end pipeline: pipeline.md
-
-theme: readthedocs
