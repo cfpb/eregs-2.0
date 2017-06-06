@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  
+  
+  <title>API - eRegs 2.0</title>
+  
+
+  <link rel="shortcut icon" href="../img/favicon.ico">
+
+  
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
+
+  <link rel="stylesheet" href="../css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../css/theme_extra.css" type="text/css" />
+  <link rel="stylesheet" href="../css/highlight.css">
+
+  
+  <script>
+    // Current page data
+    var mkdocs_page_name = "API";
+    var mkdocs_page_input_path = "api.md";
+    var mkdocs_page_url = "/api/";
+  </script>
+  
+  <script src="../js/jquery-2.1.1.min.js"></script>
+  <script src="../js/modernizr-2.8.3.min.js"></script>
+  <script type="text/javascript" src="../js/highlight.pack.js"></script>
+  <script src="../js/theme.js"></script> 
+
+  
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+      <div class="wy-side-nav-search">
+        <a href=".." class="icon icon-home"> eRegs 2.0</a>
+        <div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+        <ul class="current">
+          
+            <li>
+    <li class="toctree-l1 ">
+        <a class="" href="..">Installation and Data Loading</a>
+        
+    </li>
+<li>
+          
+            <li>
+    <li class="toctree-l1 ">
+        <a class="" href="../regml/">RegML</a>
+        
+    </li>
+<li>
+          
+            <li>
+    <li class="toctree-l1 current">
+        <a class="current" href="./">API</a>
+        
+            <ul>
+            
+                <li class="toctree-l3"><a href="#eregs-api-a-guided-tour">eRegs API - a guided tour</a></li>
+                
+                    <li><a class="toctree-l4" href="#differences-from-old-eregs">Differences from old eRegs</a></li>
+                
+                    <li><a class="toctree-l4" href="#url-scheme">URL scheme</a></li>
+                
+                    <li><a class="toctree-l4" href="#model-logic">Model logic</a></li>
+                
+                    <li><a class="toctree-l4" href="#view-logic">View logic</a></li>
+                
+                    <li><a class="toctree-l4" href="#template-logic">Template logic</a></li>
+                
+            
+            </ul>
+        
+    </li>
+<li>
+          
+            <li>
+    <li class="toctree-l1 ">
+        <a class="" href="../pipeline/">End-to-end pipeline</a>
+        
+    </li>
+<li>
+          
+        </ul>
+      </div>
+      &nbsp;
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="..">eRegs 2.0</a>
+      </nav>
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="..">Docs</a> &raquo;</li>
+    
+      
+    
+    <li>API</li>
+    <li class="wy-breadcrumbs-aside">
+      
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main">
+            <div class="section">
+              
+                <h1 id="eregs-api-a-guided-tour">eRegs API - a guided tour</h1>
+<p>This part of the documentation provides an explanation of the eRegs API and the design, storage, and view logic of the project.</p>
+<h2 id="differences-from-old-eregs">Differences from old eRegs</h2>
+<p>The eRegs API is drastically revised from the previous version. Before the advent of eRegs 2.0, the eRegs deployment process involved breaking a regulation up into its constituent parts, storing those parts in the database as "layers", and then reassembling those layers into the final display version of the regulation. The diagram below illustrates the old eRegs content generation process:</p>
+<p><img alt="Old eRegs pipeline" src="../img/old-eregs-pipeline.png" /></p>
+<p>Not only was this process complicated and error-prone (in particular, the assembly of layers into the display HTML could fail in unexpected ways if some crucial piece of content was missing from the JSON layers), but it also took an extremely long time, especially for giant regulations like Z. Furthermore, because of the original design of eRegs, the storage logic actually lived in a different project called <code>regcore</code> which provided an API to <code>regsite</code>, which was the actual project that fetched the data and displayed it.</p>
+<p>In the new version of eRegs, all of this complexity has been eliminated. The new eRegs stores the regulation tree directly in a single table and designates a node's position in the regulation tree hierarchy through the use of <a href="https://en.wikipedia.org/wiki/Nested_set_model">nested sets</a>. The <code>regcore</code> project is eliminated entirely and display HTML is generated directly via server-side templating. The result is the following conceptual diagram, encompassed by a single project:</p>
+<p><img alt="New eRegs pipeline" src="../img/new-eregs-pipeline.png" /></p>
+<h2 id="url-scheme">URL scheme</h2>
+<p>The old eRegs API contained a complicated URL scheme which required a great deal of complicated server-side processing in order to render the appropriate content. The new API simplifies the URL scheme using the principle that there are three pieces of data that uniquely identify a node within the regulatory structure: the document number, the effective date, and the node label. Althought not every node in the tree has a label, every node <em>either</em> has a label <em>or</em> is uniquely associated with a labeled node (in principle, every node <em>could</em> have a label, if it is so desired), and any node <em>that can be navigated to</em> has a label.</p>
+<p>The document number identifies the actual document, as issued by the Federal Register, in which the content originates. For example, the initial document that originates Regulation C has the document number <code>2011-31712</code>. A document contains at least one, but possibly more effective dates, which indicate on which date the regulatory text becomes effective. An example of this is a document that amends Regulation C, <code>2015-26607</code>, which contains <em>three</em> effective dates (1/1/2017, 1/1/2018, and 1/1/2019). Obviously, multiple regulations may become effective on the same date.</p>
+<p>The label of a node uniquely identifies the node <em>within that specific regulation tree</em>. With a few exceptions, the label consists of the part number, either the section number or the appendix letter, and the paragraph marker(s), separated by dashes. For example, Section 1 in Regulation C will have the label <code>1003-1</code>, the first paragraph in that section has label <code>1003-1-a</code> and so on. Nodes for interpretations have the form of the node to which they are appended, followed by the word <code>Interp</code>, and then followed by paragraph markers indicating the internal structure of the interpretation paragraph or section. So, for example, the interpretation of paragraph (a)(1) of section 3 will have the label <code>1003-3-a-1-Interp</code>, and its first paragraph would have the label <code>1003-3-a-1-Interp-1</code>, and so on.</p>
+<p>Together, the document number, the effective date, and the label, separated by colons, are combined into a uniquely identifying <code>node_id</code>. Thus, paragraph (a) of section 1 of Regulation C from the document <code>2011-31712</code> effective on <code>2011-12-30</code> will have the <code>node_id</code> of <code>2011-31712:2011-12-30:1003-1-a</code>. Accoringly, that node (or any other node with a label) can be accessed via the url <code>localhost:8000/regulation/2011-31712/2011-12-30/1003-1-a</code>.</p>
+<h2 id="model-logic">Model logic</h2>
+<p>The entire storage logic of the new eRegs is rooted in a single model, <code>RegNode</code>. That model defines the basic properties of a node (<code>label</code>, <code>text</code>, <code>tag</code>, <code>node_id</code>). It also defines a <code>version</code> property, which is the document number and effective date concatenated together with a colon, e.g. <code>2011-31712:2011-12-30</code>. There is also an <code>attribs</code> property which is a <code>JSONField</code> (present only in MySQL 5.7+ and PostgreSQL 9.3+). The <code>attribs</code> field contains all the data that would be present as an attribute in the RegML, e.g. <code>&lt;paragraph marker=(a)&gt;</code> would generate a <code>RegNode</code> whose <code>attribs</code> dictionary would contain a <code>marker</code> key whose value is <code>(a)</code>. The <code>RegNode</code> inherits some generic node functions for fetching descendants and ancestors of an element in a nested set (<code>GenericNodeMixin</code>) and provides some additional functionality for testing the type of internal list that the node contains, if any, and which of its children have content, if any.</p>
+<p>Subsequent node types are derived from <code>RegNode</code> as proxy models, which means that they do not have their own table; they are simply extensions of the <code>RegNode</code> that provide additional functionality. So, for example, the <code>Paragraph</code> model contains additional functionality for displaying the paragraphs, and so on. There is a one-to-one correspondence between the <code>tag</code> of a node (as obtained from the RegML), which allows automatic inference of node class when retrieving descendants and ancestors.</p>
+<p>The only special node that is derived from <code>RegNode</code> is the <code>DiffNode</code>, which <em>does</em> have its own table. The difference between <code>RegNode</code> and <code>DiffNode</code> is that the <code>DiffNode</code> contains <em>two</em> version fields, <code>left_version</code> and <code>right_version</code>, which carry the same semantics as the <code>version</code> field of <code>RegNode</code>. Thus, every <code>DiffNode</code> in the table encodes the difference between the left and right versions of the regulation. As noted in the <a href="..">installation</a> guide, diffs are <em>not</em> symmetric; thus a <code>DiffNode</code> with <code>left version = X</code> and <code>right_version = Y</code> is not necessarily identical to one with <code>left_version = Y</code> and <code>right_version = X</code>. Additionally, all node models which can encode version-differing content have accessory functions for retrieving the left and right versions of the content, as well as for rendering it.</p>
+<h2 id="view-logic">View logic</h2>
+<p>The view logic in eRegs 2.0 is also drastically simplified relative to the old version of eRegs. The basic structure of a view is that it's identified by its functionality prepended to the aforementioned URL scheme, so that e.g. a node within a regulation has the relative URL <code>regulation/2011-31712/2011-12-30/1003-1-a</code>. Most of the other views are intended to render partials, and thus the URL is prepended with e.g. <code>partial/sxs/</code> or <code>partial/definition/</code>. Views that render partials return the appropriate HTML directly to the caller, which can then be appended in the correct place on the front-end.</p>
+<h2 id="template-logic">Template logic</h2>
+<p>The major templating work happens in the <code>regnode.html</code> file. The basic logic of that file is to render the regulation tree, starting at the specified root node, in a recursive fashion. Thus, depending on the type of node, <code>regnode.html</code> renders the opening HTML tag, recurses into the node to render its insides, and then renders the closing HTML tag on the way back up. There are some templates that render content independent of this structure (for example the sidebar, analysis, and table of contents are rendered separately). This simplifies the process of the old eRegs, in which the various JSON layers were assembled into the final rendered HTML; instead, there is a single point of entry for most rendering and substantially fewer places where an exception could happen.</p>
+              
+            </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../pipeline/" class="btn btn-neutral float-right" title="End-to-end pipeline">Next <span class="icon icon-circle-arrow-right"></span></a>
+      
+      
+        <a href="../regml/" class="btn btn-neutral" title="RegML"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+    
+  </div>
+
+  Built with <a href="http://www.mkdocs.org">MkDocs</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+	  
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+<div class="rst-versions" role="note" style="cursor: pointer">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      
+      
+        <span><a href="../regml/" style="color: #fcfcfc;">&laquo; Previous</a></span>
+      
+      
+        <span style="margin-left: 15px"><a href="../pipeline/" style="color: #fcfcfc">Next &raquo;</a></span>
+      
+    </span>
+</div>
+
+</body>
+</html>
