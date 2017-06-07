@@ -1,9 +1,7 @@
 'use strict';
-var $ = require('jquery');
 var _ = require('underscore');
 var Backbone = require('backbone');
 var GAEvents = require('../events/ga-events');
-Backbone.$ = $;
 
 var AnalyticsHandler = Backbone.View.extend({
     initialize: function() {
@@ -21,8 +19,9 @@ var AnalyticsHandler = Backbone.View.extend({
         this.externalEvents.on('drawer:close', this.sendEvent, 'close');
         this.externalEvents.on('drawer:switchTab', this.sendEvent, 'switch tab');
 
-        // not sure if this works
-        $('#timeline .stop-button').on('click', function() {
+        // TODO: verify this works.
+        var timelineStopButton = document.querySelector('#timeline .stop-button');
+        timelineStopButton.addEventListener('click', function() {
             this.sendEvent({type: 'diff'}).bind('click stop comparing');
         }.bind(this));
     },
