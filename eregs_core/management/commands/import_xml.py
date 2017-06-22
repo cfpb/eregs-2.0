@@ -46,10 +46,11 @@ class Command(BaseCommand):
                 subpart.remove(subpart_toc)
 
         # strip interp ToC to avoid duplicate ToC nodes
-        interps = part_content.find('{eregs}interpretations')
-        interp_toc = interps.find('{eregs}tableOfContents')
-        if interp_toc is not None:
-            interps.remove(interp_toc)
+        interps = part_content.findall('{eregs}interpretations')
+        for interp in interps:
+            interp_toc = interp.find('{eregs}tableOfContents')
+            if interp_toc is not None:
+                interp.remove(interp_toc)
 
         # strip out the appendix ToCs also
         appendices = part_content.findall('{eregs}appendix')

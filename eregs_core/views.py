@@ -329,7 +329,7 @@ def main(request):
         # meta = Preamble.objects.filter(tag='preamble')
         reg_versions = Version.objects.exclude(version=None)
         meta = [r for r in Preamble.objects.filter(tag='preamble', reg_version__in=reg_versions)]
-        meta = sorted(meta, key=lambda x: x.version.split(':')[1], reverse=True)
+        # meta = sorted(meta, key=lambda x: x.reg_letter, reverse=True)
 
         regs_meta = []
         reg_parts = set()
@@ -340,6 +340,8 @@ def main(request):
                 regs_meta.append(item)
                 reg_parts.add(item.reg_letter)
 
+        regs_meta = sorted(regs_meta, key=lambda x: int(x.cfr_section))
+        print [(item.reg_letter, item.node_id) for item in regs_meta]
         fdsys = RegNode.objects.filter(tag='fdsys')
 
         return render_to_response('main.html', {'preamble': regs_meta,

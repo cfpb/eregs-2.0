@@ -595,13 +595,19 @@ class Section(RegNode):
 
     @property
     def subject(self):
-        # print 'I am', self.label(), 'with title', self.get_child('subject/title')
+        # print 'I am', self.node_id, 'with title', self.get_child('subject/title')
         if self.tag == 'section' or self.tag == 'appendixSection':
-            return self.get_child('subject/regtext').text
+            subject = self.get_child('subject/regtext')
+            if subject:
+                return subject.text
+            else:
+                return ''
         elif self.tag == 'interpSection':
             title = self.get_child('title/regtext')
             if title:
                 return title.text
+            else:
+                return ''
 
     @property
     def paragraphs(self):
