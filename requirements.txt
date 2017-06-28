@@ -4,5 +4,6 @@ lxml
 django-haystack
 django-mysql
 django-extensions
+elasticsearch==5.4.0
 python-dateutil
 git+https://github.com/PyMySQL/mysqlclient-python.git@master
