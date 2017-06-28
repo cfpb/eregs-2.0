@@ -143,10 +143,25 @@ pip install -r requirements.txt
 <pre><code>brew install mysql
 brew install elasticsearch23
 </code></pre>
-<p>Note that you will need ElasticSearch 2.3, not one of the later versions, which do not work correctly with Haystack, the search interface between Django and a search backend. If you are not able to install ElasticSearch 2.3, it might have been removed from Homebrew, in which case you will have to download the binary yourself. You can get the ElasticSearch 2.3 binar <a href="https://www.elastic.co/downloads/past-releases/elasticsearch-2-3-0">here</a>.</p>
-<p>Once you have MySQL installed, you'll need to configure it to match the <code>settings.py</code> file. This means creating the two databases, creating the appropriate users, and granting those users privileges on the databases. First, create two databases named <code>eregs</code> and <code>test_eregs</code>. Then, create the user <code>eregs</code> authenticated by the password <code>eregs</code>. Finally, grant the <code>eregs</code> user privileges by logging into MySQL as root (<code>mysql -u root</code>) and running the following commands:</p>
-<pre><code>grant all privileges on eregs.* to 'eregs'@'localhost' identified by eregs
-grant all privileges on eregs.* to 'test_eregs'@'localhost' identified by eregs
+<p>Note that you will need ElasticSearch 2.3, not one of the later versions, which do not work correctly with Haystack, the search interface between Django and a search backend. If you are not able to install ElasticSearch 2.3, it might have been removed from Homebrew, in which case you will have to download the binary yourself. You can get the ElasticSearch 2.3 binary <a href="https://www.elastic.co/downloads/past-releases/elasticsearch-2-3-0">here</a>.</p>
+<p>Once you have MySQL installed, you'll need to configure it to match the <code>settings.py</code> file. This means creating the two databases, creating the appropriate users, and granting those users privileges on the databases. You can do this from the MySQL shell after logging in as root with <code>mysql -u root</code>.</p>
+<p>First create two databases, one for data and one for testing:</p>
+<pre><code>mysql> CREATE DATABASE IF NOT EXISTS eregs;
+Query OK, 1 row affected (0.00 sec)
+
+mysql> CREATE DATABASE IF NOT EXISTS test_eregs;
+Query OK, 1 row affected (0.00 sec)
+</code></pre>
+<p>Next create an <code>eregs</code> user authenticated by the password <code>eregs</code>:
+<pre><code>mysql> CREATE USER 'eregs'@'localhost' IDENTIFIED BY 'eregs';
+Query OK, 0 rows affected (0.00 sec)
+</code></pre>
+<p>Finally, grant the new user permission to the appropriate databases:</p>
+<pre><code>mysql> GRANT ALL PRIVILEGES ON eregs.* TO 'eregs'@'localhost';
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> GRANT ALL PRIVILEGES ON test_eregs.* TO 'eregs'@'localhost';
+Query OK, 0 rows affected (0.00 sec)
 </code></pre>
 <p>Once that's done, you should run <code>./manage.py migrate</code> to create the database and the model tables. You should also make sure that ElasticSearch is running.</p>
 <h2 id="loading-data">Loading data</h2>
