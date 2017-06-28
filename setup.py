@@ -11,5 +11,6 @@ setup(
     license='MIT',
     description='The new version of eRegs.',
     include_package_data=True,
+    setup_requires=['cfgov_setup==1.2',],
     frontend_build_script='setup.sh'
 )
