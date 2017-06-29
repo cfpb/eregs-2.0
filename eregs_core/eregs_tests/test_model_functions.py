@@ -2,27 +2,31 @@
 
 import os
 
-import settings
-
-from django.test import TestCase
+from django.conf import settings
 from django.core.management import call_command
+from django.test import TestCase
 
-from eregs.local_settings import REGML_ROOT
 from eregs_core.models import *
 
 
 class ModelFunctionsTest(TestCase):
 
     def setUp(self):
+        self.xml_file1 = os.path.join(settings.DATA_DIR, '2011-31712.xml')
+        self.xml_file2 = os.path.join(
+            settings.DATA_DIR,
+            '2015-26607_20180101.xml'
+        )
 
-        self.xml_file1 = os.path.join(REGML_ROOT, '1003', '2011-31712.xml')
-        self.xml_file2 = os.path.join(REGML_ROOT, '1003', '2015-26607_20180101.xml')
         call_command('import_xml', self.xml_file1)
         call_command('import_xml', self.xml_file2)
 
     def test_get_descendants(self):
 
-        preamble = Preamble.objects.get(tag='preamble', version='2011-31712:2011-12-30')
+        preamble = Preamble.objects.get(
+            tag='preamble',
+            reg_version__version='2011-31712:2011-12-30'
+        )
         preamble.get_descendants()
         agency = preamble.get_child('agency/regtext')
         cfr_section = preamble.get_child('cfr/section/regtext')
@@ -58,7 +62,7 @@ class ModelFunctionsTest(TestCase):
 
         self.assertEqual(interps[0].paragraph_title, 'Paragraph 4(a)(1).')
         self.assertEqual(interps[0].label, '1003-4-a-1-Interp')
-        self.assertEqual(interps[0].interp_target, '4(a)(1)')
+        self.assertEqual(interps[0].interp_target(), '4(a)(1)')
 
     def test_get_analysis(self):
 
@@ -93,7 +97,6 @@ class ModelFunctionsTest(TestCase):
         self.assertEqual(section.inner_list_type(), 'none')
         self.assertEqual(marked_par1.inner_list_type(), 'none')
         self.assertEqual(marked_par2.inner_list_type(), '1')
-        self.assertEqual(marked_par1.node_url(), '/regulation/2015-26607/2018-01-01/1003-2-a')
 
     def test_preamble_functions(self):
 
@@ -167,7 +170,7 @@ class ModelFunctionsTest(TestCase):
         marked_up_content = """This part, known as Regulation C, is issued by the Bureau of Consumer Financial Protection (Bureau) pursuant to the Home Mortgage Disclosure Act (HMDA) (<a href="USC:12-2801" class="citation definition" data-definition="USC:12-2801" data-defined-term="12 U.S.C. 2801" data-gtm-ignore-"true">12 U.S.C. 2801</a> et seq.), as amended. The information-collection requirements have been approved by the U.S. Office of Management and Budget (OMB) under <a href="USC:44-3501" class="citation definition" data-definition="USC:44-3501" data-defined-term="44 U.S.C. 3501" data-gtm-ignore-"true">44 U.S.C. 3501</a> et seq. and have been assigned OMB numbers for institutions reporting data to the Office of the Comptroller of the Currency (1557-0159), the Federal Deposit Insurance Corporation (3064-0046), the Federal Reserve System (7100-0247), the Department of Housing and Urban Development (HUD) (2502-0529), the National Credit Union Administration (3133-0166), and the Bureau of Consumer Financial Protection (3170-0008)."""
 
         self.assertIsNone(par.target())
-        self.assertIsNone(par.interp_target)
+        self.assertIsNone(par.interp_target())
         self.assertEquals(par.formatted_label(), '1003.1(a)')
         self.assertTrue(par.has_content)
         self.assertFalse(par.has_diff_content)

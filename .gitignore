@@ -1,12 +1,23 @@
 *.*~
-*.pyc
 eregsip/**
 *.ipynb
 *.sqlite3
 eregs_core/static/eregsip/**
 eregs_core/static/regulations/js/built/**
 
+# Python #
+##########
+*.pyc
+__pycache__/
+*.eggs/
+*.egg/
+
 # Front-End #
 #############
 node_modules/
 /static/
+
+# Unit test / coverage reports #
+################################
+.tox/
+.coverage
