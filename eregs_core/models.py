@@ -39,8 +39,9 @@ class Version(models.Model):
     def left_eff_date(self):
         return self.left_version.split(':')[1]
 
-    class Meta:
-        indexes = [models.Index(fields=['version', 'left_version', 'right_version'])]
+    # The code below will not work with Django versions less than 1.11
+    # class Meta:
+    #     indexes = [models.Index(fields=['version', 'left_version', 'right_version'])]
 
     def __str__(self):
         if self.version is not None:
@@ -210,14 +211,15 @@ class RegNode(models.Model, GenericNodeMixin):
     right = models.IntegerField()
     depth = models.IntegerField()
 
-    class Meta:
-        indexes = [
-            models.Index(fields=['node_id']),
-            models.Index(fields=['label']),
-            models.Index(fields=['tag']),
-            models.Index(fields=['left']),
-            models.Index(fields=['right'])
-        ]
+    # The code below will not work with Django versions less than 1.11
+    # class Meta:
+    #     indexes = [
+    #         models.Index(fields=['node_id']),
+    #         models.Index(fields=['label']),
+    #         models.Index(fields=['tag']),
+    #         models.Index(fields=['left']),
+    #         models.Index(fields=['right'])
+    #     ]
 
     def __init__(self, *args, **kwargs):
         super(RegNode, self).__init__(*args, **kwargs)
