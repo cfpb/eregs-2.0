@@ -158,7 +158,7 @@ def diff(request, left_version, left_eff_date, right_version, right_eff_date, no
         regtext.get_descendants(desc_type=DiffNode)
 
         toc.__class__ = TableOfContents
-        meta.__class__ = DiffPreamble
+        meta.__class__ = Preamble
         regtext.__class__ = Section
 
         versions = Version.objects.exclude(version=None)
