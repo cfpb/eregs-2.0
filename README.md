@@ -1,4 +1,7 @@
-# eregs-2.0 [![Build Status](https://travis-ci.org/cfpb/eregs-2.0.svg?branch=master)](https://travis-ci.org/cfpb/eregs-2.0)
+# eregs-2.0
+
+[![Build Status](https://travis-ci.org/cfpb/eregs-2.0.svg?branch=master)](https://travis-ci.org/cfpb/eregs-2.0)
+[![Coverage Status](https://coveralls.io/repos/github/cfpb/eregs-2.0/badge.svg?branch=master)](https://coveralls.io/github/cfpb/eregs-2.0?branch=master)
 
 This is the new version of eRegs.
 
