@@ -2,25 +2,32 @@
 
 import os
 
-from django.test import TestCase
+from django.conf import settings
 from django.core.management import call_command
+from django.test import TestCase
 
-from eregs.local_settings import REGML_ROOT
 from eregs_core.models import *
 
 
 class ModelFunctionsTest(TestCase):
 
     def setUp(self):
+        self.xml_file1 = os.path.join(settings.DATA_DIR, '2011-31712.xml')
+        self.xml_file2 = os.path.join(
+            settings.DATA_DIR,
+            '2015-26607_20180101.xml'
+        )
 
-        self.xml_file1 = os.path.join(REGML_ROOT, 'regulation', '1003', '2011-31712.xml')
-        self.xml_file2 = os.path.join(REGML_ROOT, 'regulation', '1003', '2015-26607_20180101.xml')
         call_command('import_xml', self.xml_file1)
         call_command('import_xml', self.xml_file2)
 
     def test_get_descendants(self):
 
-        preamble = Preamble.objects.get(tag='preamble', reg_version__version='2011-31712:2011-12-30')
+        preamble = Preamble.objects.get(
+            tag='preamble',
+            reg_version__version='2011-31712:2011-12-30'
+        )
+
         preamble.get_descendants()
         agency = preamble.get_child('agency/regtext')
         cfr_section = preamble.get_child('cfr/section/regtext')
