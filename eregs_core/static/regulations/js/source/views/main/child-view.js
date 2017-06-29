@@ -1,165 +1,165 @@
 'use strict';
-var $ = require('jquery');
-var _ = require('underscore');
-var Backbone = require('backbone');
-require('../../events/scroll-stop.js');
-var Router = require('../../router');
-var HeaderEvents = require('../../events/header-events');
-var DrawerEvents = require('../../events/drawer-events');
-var Helpers = require('../../helpers');
-var MainEvents = require('../../events/main-events');
-var GAEvents = require('../../events/ga-events');
+var $ = require( 'jquery' );
+var _ = require( 'underscore' );
+var Backbone = require( 'backbone' );
+require( '../../events/scroll-stop.js' );
+var Router = require( '../../router' );
+var HeaderEvents = require( '../../events/header-events' );
+var DrawerEvents = require( '../../events/drawer-events' );
+var Helpers = require( '../../helpers' );
+var MainEvents = require( '../../events/main-events' );
+var GAEvents = require( '../../events/ga-events' );
 Backbone.$ = $;
 
-var ChildView = Backbone.View.extend({
-    initialize: function() {
-        var cb;
+var ChildView = Backbone.View.extend( {
+  initialize: function() {
+    var cb;
 
-        this.model = this.options.model;
-        this.externalEvents = MainEvents;
-        this.listenTo(this.externalEvents, 'section:rendered', this.setElement);
+    this.model = this.options.model;
+    this.externalEvents = MainEvents;
+    this.listenTo( this.externalEvents, 'section:rendered', this.setElement );
 
         // callback to be sent to model's get method
         // called after ajax resolves sucessfully
-        cb = function(success, returned) {
-            if (success) {
-                if (typeof this.options.cb !== 'undefined') {
-                    this.options.cb(returned, this.options);
-                }
+    cb = function( success, returned ) {
+      if ( success ) {
+        if ( typeof this.options.cb !== 'undefined' ) {
+          this.options.cb( returned, this.options );
+        }
 
-                if (typeof this.title === 'undefined') {
-                    this.title = this.assembleTitle();
-                }
+        if ( typeof this.title === 'undefined' ) {
+          this.title = this.assembleTitle();
+        }
 
-                this.route(this.options);
+        this.route( this.options );
 
-                GAEvents.trigger('section:open', this.options);
+        GAEvents.trigger( 'section:open', this.options );
 
-                this.attachWayfinding();
-                this.render();
-            }
-            else {
-                this.externalEvents.trigger('section:error');
-            }
-        }.bind(this);
+        this.attachWayfinding();
+        this.render();
+      }
+      else {
+        this.externalEvents.trigger( 'section:error' );
+      }
+    }.bind( this );
 
         // if the site wasn't loaded on this content
-        if (this.options.render) {
-            console.log('fetching ' + this.options.id)
-            this.model.get(this.options.id, cb);
-        }
-        else if (this.options.id) {
+    if ( this.options.render ) {
+      console.log( 'fetching ' + this.options.id );
+      this.model.get( this.options.id, cb );
+    }
+    else if ( this.options.id ) {
             // hard code the id update for users who directly load a section
-            $('.wayfinding').attr('id', 'wayfind-' + this.id);
+      $( '.wayfinding' ).attr( 'id', 'wayfind-' + this.id );
             // attach wayfinding and trigger the section:open drawer event
-            this.attachWayfinding();
-            DrawerEvents.trigger('section:open', this.id);
-        }
+      this.attachWayfinding();
+      DrawerEvents.trigger( 'section:open', this.id );
+    }
 
-        this.$sections = this.$sections || {};
-        this.activeSection = this.id;
-        this.$activeSection = $('#' + this.activeSection);
+    this.$sections = this.$sections || {};
+    this.activeSection = this.id;
+    this.$activeSection = $( '#' + this.activeSection );
 
-        return this;
-    },
+    return this;
+  },
 
-    setElement: function() {
-        if (this.id) {
-            Backbone.View.prototype.setElement.call(this, '#' + this.id);
-        }
-    },
+  setElement: function() {
+    if ( this.id ) {
+      Backbone.View.prototype.setElement.call( this, '#' + this.id );
+    }
+  },
 
-    attachWayfinding: function() {
-        this.updateWayfinding();
+  attachWayfinding: function() {
+    this.updateWayfinding();
         // * when a scroll event completes, check what the active secion is
         // we can't scope the scroll to this.$el because there's no localized
         // way to grab the scroll event, even with overflow:scroll
-        $(window).on('scrollstop', (_.bind(this.checkActiveSection, this)));
-    },
+    $( window ).on( 'scrollstop', _.bind( this.checkActiveSection, this ) );
+  },
 
-    render: function() {
-        this.updateWayfinding();
-        HeaderEvents.trigger('section:rendered', this.id);
-        DrawerEvents.trigger('section:open', this.id);
-    },
+  render: function() {
+    this.updateWayfinding();
+    HeaderEvents.trigger( 'section:rendered', this.id );
+    DrawerEvents.trigger( 'section:open', this.id );
+  },
 
-    changeFocus: function(id) {
-        $(id).focus();
-    },
+  changeFocus: function( id ) {
+    $( id ).focus();
+  },
 
-    assembleTitle: function() {
-        var titleParts, newTitle;
-        titleParts = _.compact(document.title.split(' '));
-        newTitle = [titleParts[0], titleParts[1], Helpers.idToRef(this.id), '|', 'eRegulations'];
-        return newTitle.join(' ');
-    },
+  assembleTitle: function() {
+    var titleParts, newTitle;
+    titleParts = _.compact( document.title.split( ' ' ) );
+    newTitle = [ titleParts[0], titleParts[1], Helpers.idToRef( this.id ), '|', 'eRegulations' ];
+    return newTitle.join( ' ' );
+  },
 
     // naive way to update the active table of contents link and wayfinding header
     // once a scroll event ends, we loop through each content section DOM node
     // the first one whose offset is greater than the window scroll position, accounting
     // for the fixed position header, is deemed the active section
-    checkActiveSection: function() {
-        var len = this.$contentContainer.length - 1;
+  checkActiveSection: function() {
+    var len = this.$contentContainer.length - 1;
 
-        for (var i = 0; i <= len; i++) {
-            if (this.$sections[i].offset().top + this.$contentHeader.height() >= $(window).scrollTop()) {
-                if (_.isEmpty(this.activeSection) || (this.activeSection !== this.$sections[i].id)) {
-                    this.activeSection = this.$sections[i][0].id;
-                    this.$activeSection = $(this.$sections[i][0]);
+    for ( var i = 0; i <= len; i++ ) {
+      if ( this.$sections[i].offset().top + this.$contentHeader.height() >= $( window ).scrollTop() ) {
+        if ( _.isEmpty( this.activeSection ) || this.activeSection !== this.$sections[i].id ) {
+          this.activeSection = this.$sections[i][0].id;
+          this.$activeSection = $( this.$sections[i][0] );
                     // **Event** trigger active section change
-                    HeaderEvents.trigger('section:open', this.activeSection);
-                    this.externalEvents.trigger('paragraph:active', this.activeSection);
+          HeaderEvents.trigger( 'section:open', this.activeSection );
+          this.externalEvents.trigger( 'paragraph:active', this.activeSection );
 
-                    if (typeof window.history !== 'undefined' && typeof window.history.replaceState !== 'undefined') {
+          if ( typeof window.history !== 'undefined' && typeof window.history.replaceState !== 'undefined' ) {
                         // update hash in url
-                        window.history.replaceState(
+            window.history.replaceState(
                             null,
                             null,
                             window.location.origin + window.location.pathname + window.location.search + '#' + this.activeSection
                         );
-                    }
+          }
 
-                    return;
-                }
-            }
+          return;
         }
+      }
+    }
 
 
-        return this;
-    },
+    return this;
+  },
 
-    updateWayfinding: function() {
-        var i, len;
+  updateWayfinding: function() {
+    var i, len;
 
         // cache all sections in the DOM eligible to be the active section
         // also cache some jQobjs that we will refer to frequently
-        this.$contentHeader = this.$contentHeader || $('header.reg-header');
+    this.$contentHeader = this.$contentHeader || $( 'header.reg-header' );
 
         // sections that are eligible for being the active section
-        this.$contentContainer = $('#' + this.id).find('.level-1 li[id], .reg-section, .appendix-section, .supplement-section');
+    this.$contentContainer = $( '#' + this.id ).find( '.level-1 li[id], .reg-section, .appendix-section, .supplement-section' );
 
         // cache jQobjs of each reg section
-        len = this.$contentContainer.length;
+    len = this.$contentContainer.length;
 
         // short term solution: sometimes, back buttoning on diffs, this.$sections undefined. why?
-        this.$sections = this.$sections || {};
+    this.$sections = this.$sections || {};
 
-        for (i = 0; i < len; i++) {
-            this.$sections[i] = $(this.$contentContainer[i]);
-        }
-    },
+    for ( i = 0; i < len; i++ ) {
+      this.$sections[i] = $( this.$contentContainer[i] );
+    }
+  },
 
-    route: function(options) {
-        if (Router.hasPushState && typeof options.noRoute === 'undefined') {
-            var url = this.url,
-                hashPosition;
+  route: function( options ) {
+    if ( Router.hasPushState && typeof options.noRoute === 'undefined' ) {
+      var url = this.url,
+          hashPosition;
 
             // console.log(this.model.getAJAXUrl(options.id))
-            url = this.model.getAJAXUrl(options.id)
-            url = url.replace('/partial', '/regulation')
+      url = this.model.getAJAXUrl( options.id );
+      url = url.replace( '/partial', '/regulation' );
 
             // if a hash has been passed in
-            /*if (options && typeof options.scrollToId !== 'undefined') {
+            /* if (options && typeof options.scrollToId !== 'undefined') {
                 url += '#' + options.scrollToId;
                 this.navigate(url);
                 $('html, body').scrollTop($('#' + options.scrollToId).offset().top);
@@ -176,22 +176,22 @@ var ChildView = Backbone.View.extend({
                     url += '#' + options.id;
                 }
             this.navigate(url);
-            }*/
-            this.navigate(url)
-        }
-    },
-
-    navigate: function(url) {
-        Router.navigate(url);
-        document.title = this.title;
-    },
-
-    remove: function() {
-        $(window).off('scrollstop');
-        this.stopListening();
-        this.off();
-        return this;
+            } */
+      this.navigate( url );
     }
-});
+  },
+
+  navigate: function( url ) {
+    Router.navigate( url );
+    document.title = this.title;
+  },
+
+  remove: function() {
+    $( window ).off( 'scrollstop' );
+    this.stopListening();
+    this.off();
+    return this;
+  }
+} );
 
 module.exports = ChildView;

@@ -4,10 +4,17 @@ cache: pip
 python:
   - 2.7
 
+node_js:
+  - 6
+
 install:
   pip install tox coveralls
 
+before_script:
+  - ./setup.sh
+
 script:
+  npm test
   tox
 
 after_success:
