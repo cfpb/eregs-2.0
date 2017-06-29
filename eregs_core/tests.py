@@ -1,15 +1,16 @@
+import os
+
+from django.conf import settings
 from django.test import TestCase
 from django.core.management import call_command
-from eregs_core.models import *
 
-# Create your tests here.
+from eregs_core.models import Preamble, Section
 
 
 class EregsModelTests(TestCase):
 
     def setUp(self):
-
-        filename = '/Users/vinokurovy/Development/regulations-xml/regulation/1003/2011-31712.xml'
+        filename = os.path.join(settings.DATA_DIR, '2011-31712.xml')
         call_command('import_xml', filename)
 
     def test_get_child(self):
@@ -19,8 +20,14 @@ class EregsModelTests(TestCase):
         agency = preamble.get_child('agency/regtext')
         cfr_section = preamble.get_child('cfr/section/regtext')
 
-        self.assertEqual(agency.text, 'Bureau of Consumer Financial Protection')
-        self.assertEqual(preamble.agency, 'Bureau of Consumer Financial Protection')
+        self.assertEqual(
+            agency.text,
+            'Bureau of Consumer Financial Protection'
+        )
+        self.assertEqual(
+            preamble.agency,
+            'Bureau of Consumer Financial Protection'
+        )
         self.assertEqual(cfr_section.text, '1003')
 
     def test_get_children(self):

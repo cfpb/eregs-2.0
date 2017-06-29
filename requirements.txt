@@ -7,3 +7,4 @@ django-extensions
 elasticsearch==5.4.0
 python-dateutil
 git+https://github.com/PyMySQL/mysqlclient-python.git@master
+sqlparse==0.2.3

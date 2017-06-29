@@ -14,6 +14,7 @@ https://docs.djangoproject.com/en/1.8/ref/settings/
 import os
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+DATA_DIR = os.path.join(BASE_DIR, 'data')
 
 
 # Quick-start development settings - unsuitable for production
@@ -45,16 +46,16 @@ INSTALLED_APPS = (
 
 MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
+    #'django.middleware.cache.UpdateCacheMiddleware',
     'django.middleware.common.CommonMiddleware',
+    #'django.middleware.cache.FetchFromCacheMiddleware',
     #'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.middleware.security.SecurityMiddleware',
-    #'django.middleware.cache.UpdateCacheMiddleware',
     #'django.middleware.common.CommonMiddleware',
-    #'django.middleware.cache.FetchFromCacheMiddleware',
 )
 
 ROOT_URLCONF = 'eregs.urls'
@@ -94,21 +95,6 @@ DATABASES = {
             'charset': 'utf8mb4',
         },
     },
-    'replica': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'test_eregs',
-        'USER': 'eregs',
-        'PASSWORD': 'eregs',
-        'HOST': 'localhost',
-        'PORT': '3307',
-        'TEST': {
-            'MIRROR': 'default'
-        },
-        'OPTIONS': {
-            # Tell MySQLdb to connect with 'utf8mb4' character set
-            'charset': 'utf8mb4',
-        },
-    }
 }
 
 HAYSTACK_CONNECTIONS = {

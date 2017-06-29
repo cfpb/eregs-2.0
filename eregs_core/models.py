@@ -353,6 +353,48 @@ class Preamble(RegNode):
         link = '/'.join(['regulation'] + version_and_eff_date + [section + '-1'])
         return link
 
+    @property
+    def left_document_number(self):
+        if self.reg_version.left_version is not None:
+            return self.reg_version.left_version.split(':')[0]
+        else:
+            return ''
+
+    @property
+    def left_effective_date(self):
+        if self.reg_version.left_version is not None:
+            return self.reg_version.left_version.split(':')[1]
+        else:
+            return ''
+
+    @property
+    def right_document_number(self):
+        if self.reg_version.right_version is not None:
+            return self.reg_version.right_version.split(':')[0]
+        else:
+            return ''
+
+    @property
+    def right_effective_date(self):
+        if self.reg_version.right_version is not None:
+            return self.reg_version.right_version.split(':')[1]
+        else:
+            return ''
+
+    @property
+    def left_version(self):
+        if self.reg_version.left_version is not None:
+            return self.reg_version.left_version
+        else:
+            return ''
+
+    @property
+    def right_version(self):
+        if self.reg_version.right_version is not None:
+            return self.reg_version.right_version
+        else:
+            return ''
+
 
 class Fdsys(RegNode):
 
@@ -807,13 +849,19 @@ class Paragraph(RegNode):
             elif child.tag == 'ref':
                 if child.reftype() == 'term':
                     text += '<a href="{}" class="citation definition" data-definition="{}"' \
-                            ' data-defined-term="{}" data-gtm-ignore-"true">{}</a>'.format(child.target_url(),
+                            ' data-defined-term="{}" data-gtm-ignore="true">{}</a>'.format(child.target_url(),
                                                                                            child.target(),
                                                                                            child.regtext(),
                                                                                            child.regtext())
                 elif child.reftype() == 'internal':
                     text += '<a href="{}" class="citation internal" ' \
                             ' data-section-id="{}">{}</a>'.format(child.target_url(), child.target(), child.regtext())
+                elif child.reftype() == 'external':
+                    text += '<a href="{}" class="citation definition" data-definition="{}"' \
+                            ' data-defined-term="{}" data-gtm-ignore="true">{}</a>'.format(child.target(),
+                                                                                           child.target(),
+                                                                                           child.usc_target_text(),
+                                                                                           child.usc_target_text())
         return text
 
     def formatted_label(self):
@@ -860,6 +908,15 @@ class Reference(RegNode):
 
         else:
             return self.target()
+
+    def usc_target_text(self):
+        target = self.target()
+        if 'USC:' in target:
+            split_target = target.split(':')
+            title, section = split_target[1].split('-')[0], split_target[1].split('-')[1]
+            return '{} U.S.C. {}'.format(title, section)
+        else:
+            return ''
 
 
 class Definition(RegNode):
@@ -942,42 +999,6 @@ class DiffNode(RegNode):
 
     # left_version = models.CharField(max_length=250)
     # right_version = models.CharField(max_length=250)
-
-    @property
-    def left_version(self):
-        if self.reg_version.left_version is not None:
-            return self.reg_version.left_version
-        else:
-            return ''
-
-    @property
-    def right_version(self):
-        if self.reg_version.right_version is not None:
-            return self.reg_version.right_version
-        else:
-            return ''
-
-
-class DiffPreamble(Preamble, RegNode):
-
-    class Meta:
-        proxy = True
-
-    @property
-    def left_document_number(self):
-        return self.reg_version.left_version.split(':')[0]
-
-    @property
-    def left_effective_date(self):
-        return self.reg_version.left_version.split(':')[1]
-
-    @property
-    def right_document_number(self):
-        return self.reg_version.right_version.split(':')[0]
-
-    @property
-    def right_effective_date(self):
-        return self.reg_version.right_version.split(':')[1]
 
     @property
     def left_version(self):
