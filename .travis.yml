@@ -10,7 +10,6 @@ before_install:
   - source ~/.nvm/nvm.sh
   - nvm install 6
   - npm install -g npm
-  - npm install -g grunt-cli
 
 install:
   pip install tox coveralls
@@ -19,8 +18,8 @@ before_script:
   - ./setup.sh
 
 script:
-  npm test
-  tox
+  - npm test
+  - tox
 
 after_success:
   coveralls
