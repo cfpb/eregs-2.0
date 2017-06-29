@@ -4,8 +4,13 @@ cache: pip
 python:
   - 2.7
 
-node_js:
-  - 6
+before_install:
+  - rm -rf ~/.nvm
+  - curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.30.2/install.sh | bash
+  - source ~/.nvm/nvm.sh
+  - nvm install 6
+  - npm install -g npm
+  - npm install -g grunt-cli
 
 install:
   pip install tox coveralls
