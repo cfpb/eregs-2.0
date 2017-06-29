@@ -23,6 +23,22 @@ class Version(models.Model):
     left_version = models.CharField(max_length=250, null=True)
     right_version = models.CharField(max_length=250, null=True)
 
+    @property
+    def right_doc_number(self):
+        return self.right_version.split(':')[0]
+
+    @property
+    def left_doc_number(self):
+        return self.left_version.split(':')[0]
+
+    @property
+    def right_eff_date(self):
+        return self.right_version.split(':')[1]
+
+    @property
+    def left_eff_date(self):
+        return self.left_version.split(':')[1]
+
     class Meta:
         indexes = [models.Index(fields=['version', 'left_version', 'right_version'])]
 
