@@ -8,6 +8,7 @@ install_requires = (
     'django-haystack',
     'lxml',
     'python-dateutil',
+    'sqlparse',
 )
 
 
