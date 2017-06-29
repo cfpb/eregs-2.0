@@ -13,9 +13,8 @@ before_install:
   - source ~/.nvm/nvm.sh
   - nvm install 6
   - npm install -g npm
-  - mysql -uroot -e "CREATE DATABASE eregs;"
   - mysql -uroot -e "CREATE USER 'eregs'@'localhost' IDENTIFIED BY 'eregs';"
-  - mysql -uroot -e "GRANT ALL PRIVILEGES ON eregs.* TO 'eregs'@'localhost';"
+  - mysql -uroot -e "GRANT ALL PRIVILEGES ON `test_%`.* TO 'eregs'@'localhost';"
 
 install:
   pip install tox coveralls
