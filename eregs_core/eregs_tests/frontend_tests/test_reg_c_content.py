@@ -4,6 +4,7 @@ import unittest
 from selenium import webdriver
 
 
+@unittest.skip('hits production server')
 class TestLandingPageRegC(unittest.TestCase):
 
     def setUp(self):
