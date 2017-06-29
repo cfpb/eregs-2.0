@@ -958,7 +958,7 @@ class DiffNode(RegNode):
             return ''
 
 
-class DiffPreamble(Preamble, RegNode):
+class DiffPreamble(Preamble):
 
     class Meta:
         proxy = True
