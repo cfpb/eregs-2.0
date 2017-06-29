@@ -16,16 +16,16 @@ describe('SxS Model:', function() {
 
     beforeEach(function(){
         Resources.versionElements = {
-            toc: $('<nav id="toc" data-toc-version="2014-20681"></nav>'),
+            toc: $('<nav id="toc" data-toc-version="2014-20681" data-effective-date="2000-10-10"></nav>'),
         };
     });
 
     it('getAJAXUrl returns the correct URL endpoint with /sxs supplemental path', function() {
-        expect(SxSModel.getAJAXUrl('1005-2')).to.equal('/eregulations/partial/sxs/1005-2/2014-20681');
+        expect(SxSModel.getAJAXUrl('1005-2')).to.equal('/eregulations/partial/sxs/2014-20681/2000-10-10/1005-2');
 
 
         window.APP_PREFIX = ''; // Test without a urlPrefix
-        expect(SxSModel.getAJAXUrl('1005-2')).to.equal('/partial/sxs/1005-2/2014-20681');
+        expect(SxSModel.getAJAXUrl('1005-2')).to.equal('/partial/sxs/2014-20681/2000-10-10/1005-2');
 
         window.APP_PREFIX = '/eregulations/'; //Return to normal
 

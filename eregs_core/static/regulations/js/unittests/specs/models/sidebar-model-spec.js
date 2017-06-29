@@ -16,16 +16,16 @@ describe('Sidebar Model:', function() {
 
     beforeEach(function(){
         Resources.versionElements = {
-            toc: $('<nav id="toc" data-toc-version="2014-20681"></nav>'),
+            toc: $('<nav id="toc" data-toc-version="2014-20681" data-effective-date="2000-10-10"></nav>'),
         };
     });
 
     it('getAJAXUrl returns the correct URL endpoint with /sidebar supplemental path', function() {
-        expect(SidebarModel.getAJAXUrl('1005-2')).to.equal('/eregulations/partial/sidebar/1005-2/2014-20681');
+        expect(SidebarModel.getAJAXUrl('1005-2')).to.equal('/eregulations/partial/sidebar/2014-20681/2000-10-10/1005-2');
 
 
         window.APP_PREFIX = ''; // Test without a urlPrefix
-        expect(SidebarModel.getAJAXUrl('1005-2')).to.equal('/partial/sidebar/1005-2/2014-20681');
+        expect(SidebarModel.getAJAXUrl('1005-2')).to.equal('/partial/sidebar/2014-20681/2000-10-10/1005-2');
 
         window.APP_PREFIX = '/eregulations/'; //Return to normal
 
