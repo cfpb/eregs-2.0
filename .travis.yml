@@ -4,12 +4,18 @@ cache: pip
 python:
   - 2.7
 
+services:
+  - mysql
+
 before_install:
   - rm -rf ~/.nvm
   - curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.30.2/install.sh | bash
   - source ~/.nvm/nvm.sh
   - nvm install 6
   - npm install -g npm
+  - mysql -uroot -e "CREATE DATABASE eregs;"
+  - mysql -uroot -e "CREATE USER 'eregs'@'localhost' IDENTIFIED BY 'eregs';"
+  - mysql -uroot -e "GRANT ALL PRIVILEGES ON eregs.* TO 'eregs'@'localhost';"
 
 install:
   pip install tox coveralls
