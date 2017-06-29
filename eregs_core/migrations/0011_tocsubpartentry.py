@@ -18,7 +18,6 @@ class Migration(migrations.Migration):
             ],
             options={
                 'proxy': True,
-                'indexes': [],
             },
             bases=('eregs_core.regnode',),
         ),
