@@ -23,15 +23,6 @@ class Migration(migrations.Migration):
             ],
         ),
         migrations.CreateModel(
-            name='DiffPreamble',
-            fields=[
-            ],
-            options={
-                'proxy': True,
-            },
-            bases=('eregs_core.preamble', 'eregs_core.regnode'),
-        ),
-        migrations.CreateModel(
             name='Fdsys',
             fields=[
             ],
