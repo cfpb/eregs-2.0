@@ -6,6 +6,7 @@ install_requires = (
     'Django>=1.8,<1.12',
     'django-extensions',
     'django-haystack',
+    'jsonfield==2.0.2',
     'lxml',
     'python-dateutil',
     'sqlparse',
@@ -16,6 +17,7 @@ testing_extras = (
     'MySQL-python==1.2.5',
     'coverage>=3.7.0',
     'django-mysql==2.1.0',
+    'model_mommy==1.2.6',
     'selenium==3.4.3',
 )
 

@@ -6,13 +6,19 @@ import difflib
 from hashlib import sha256
 from utils import xml_node_text
 from diffs import merge_text_diff
+from django.conf import settings
 from django.db import models
+
+from eregs_core import LEGACY_JSON_LOOKUPS
 
 # if we're using postgres, we need to import JSONField from here
 # from django.contrib.postgres.fields import JSONField
 
 # but if we're using mysql, import it from here
-from django_mysql.models import JSONField
+if LEGACY_JSON_LOOKUPS:
+    from jsonfield import JSONField
+else:
+    from django_mysql.models import JSONField
 
 from itertools import product
 
@@ -140,7 +146,6 @@ class GenericNodeMixin(object):
         # the class in the arguments until it's defined. So instead, we check if
         # desc_type is other than None; if it is, we use that class to pull
         # objects from the db, otherwise default to RegNode.
-
         if desc_type is None:
             desc_type = RegNode
 
@@ -194,6 +199,47 @@ class GenericNodeMixin(object):
         return ancestors
 
 
+class RegNodeQuerySet(models.QuerySet):
+    def filter_by_attribs(self, **kwargs):
+        qs = self.all()
+
+        # If proper JSON lookups are supported by the database backend,
+        # this code queries using
+        #
+        #    filter(attribs__contains={k: v})
+        #
+        # Otherwise, the code falls back to a two-step lookup. First, a
+        # query using a string lookup of the JSON representation of the
+        # desired attribute is used:
+        #
+        #    filter(attribs__contains='"k":v')
+        #
+        # This matches against JSON data stored as text in the database,
+        # e.g. '{"foo":3,"bar":"baz","k":v}', but unfortunately will also
+        # match incorrectly against nested dictionaries, for example
+        # '{"foo":{"k":v}}'. This motivates a second step that checks
+        # the objects returned from the database and removes any that
+        # don't match the desired attribute.
+        for k, v in kwargs.items():
+            qs = qs.filter(attribs__contains=(
+                {k: v}
+                if not settings.LEGACY_JSON_LOOKUPS else
+                '"{}":'.format(k) + json.dumps(v)
+            ))
+
+        if settings.LEGACY_JSON_LOOKUPS:
+            pks_to_exclude = [
+                node.pk for node in qs if not all(
+                    k in node.attribs and
+                    node.attribs[k] == v
+                    for k, v in kwargs.items()
+                )
+            ]
+            qs = qs.exclude(pk__in=pks_to_exclude)
+
+        return qs
+
+
 class RegNode(models.Model, GenericNodeMixin):
 
     text = models.TextField()
@@ -211,6 +257,8 @@ class RegNode(models.Model, GenericNodeMixin):
     right = models.IntegerField()
     depth = models.IntegerField()
 
+    objects = RegNodeQuerySet.as_manager()
+
     # The code below will not work with Django versions less than 1.11
     # class Meta:
     #     indexes = [
@@ -226,8 +274,13 @@ class RegNode(models.Model, GenericNodeMixin):
         self.merkle_hash = ''
 
     def get_interpretations(self):
+        interp_root = Paragraph.objects.filter(
+            reg_version=self.reg_version,
+            tag='interpParagraph'
+        ).filter_by_attribs(
+            target=self.label
+        )
 
-        interp_root = Paragraph.objects.filter(reg_version=self.reg_version, attribs__target=self.label, tag='interpParagraph')
         if len(interp_root) > 0:
             interp_root[0].get_descendants()
             self.interps = [interp_root[0]]
@@ -235,9 +288,13 @@ class RegNode(models.Model, GenericNodeMixin):
         return self.interps
 
     def get_analysis(self):
+        analysis_root = AnalysisSection.objects.filter(
+            reg_version=self.reg_version,
+            tag='analysisSection'
+        ).filter_by_attribs(
+            target=self.label
+        ).select_related('reg_version')
 
-        analysis_root = AnalysisSection.objects.filter(reg_version=self.reg_version, tag='analysisSection',
-                                                       attribs__target=self.label).select_related('reg_version')
         if len(analysis_root) > 0:
             analysis_root[0].get_descendants()
             self.analysis = [analysis_root[0]]

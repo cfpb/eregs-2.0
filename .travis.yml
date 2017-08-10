@@ -1,33 +1,27 @@
+dist: trusty
 sudo: required
 
 language: python
-cache: pip
+cache:
+  - pip
+  - directories:
+    - mysql-archives
+
 
 python:
   - 2.7
 
-services:
-  - mysql
-
-before_install:
-  - rm -rf ~/.nvm
-  - curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.30.2/install.sh | bash
-  - source ~/.nvm/nvm.sh
-  - nvm install 6
-  - npm install -g npm
-  - ./.travis-install-mysql-5.7.sh
-  - mysql -uroot -e "CREATE USER 'eregs'@'localhost' IDENTIFIED BY 'eregs';"
-  - mysql -uroot -e "GRANT ALL PRIVILEGES ON \`test_%\`.* TO 'eregs'@'localhost';"
+env:
+  - TOXENV=dj18-sqlite
+  - TOXENV=dj18-mysql51
+  - TOXENV=dj18-mysql57
+  - FRONTEND=1
 
 install:
-  pip install tox coveralls
-
-before_script:
-  - ./setup.sh
+  - pip install tox coveralls
 
 script:
-  - npm test
-  - TOXENV=dj18 tox
+  - ./run_travis.sh
 
 after_success:
   coveralls

@@ -21,4 +21,4 @@ node_modules/
 ################################
 .tox/
 .coverage
-eregs_core/static/regulations/js/unittests/coverage/lcov-report/
+eregs_core/static/regulations/js/unittests/coverage/

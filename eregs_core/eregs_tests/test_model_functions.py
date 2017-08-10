@@ -66,7 +66,6 @@ class ModelFunctionsTest(TestCase):
         self.assertEqual(interps[0].interp_target(), '4(a)(1)')
 
     def test_get_analysis(self):
-
         paragraph = Paragraph.objects.get(node_id='2015-26607:2018-01-01:1003-1-c')
         analyses = paragraph.get_analysis()
 

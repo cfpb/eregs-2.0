@@ -14,7 +14,7 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.RunSQL('''BEGIN;
+        migrations.RunSQL('''
         --
         -- Create index eregs_core__version_idx on field(s) version, left_version, right_version of model version
         --
@@ -39,5 +39,5 @@ class Migration(migrations.Migration):
         -- Create index eregs_core__right_idx on field(s) right of model regnode
         --
         CREATE INDEX `eregs_core__right_idx` ON `eregs_core_regnode` (`right`);
-        COMMIT;''')
+        ''')
     ]
