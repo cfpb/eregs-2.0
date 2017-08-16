@@ -1,13 +1,12 @@
 from django.conf import settings
-from django.core.management.base import BaseCommand, CommandError
+from django.core.management.base import BaseCommand
 from django.core.exceptions import ObjectDoesNotExist
-from eregs_core.models import DiffNode, Version
+from eregs_core.models import Version, RegNode
 from eregs_core.utils import xml_diff_to_json
 from eregs_core.diffs import diff_files
 from lxml import etree
 
 import os
-import json
 import time
 
 
@@ -58,12 +57,18 @@ class Command(BaseCommand):
             if subpart_toc is not None:
                 subpart.remove(subpart_toc)
 
-        # strip interp ToC to avoid duplicate ToC nodes
+        # strip interp, appendix  ToC to avoid duplicate ToC nodes
         interps = part_content.findall('{eregs}interpretations')
         for interp in interps:
             interp_toc = interp.find('{eregs}tableOfContents')
             if interp_toc is not None:
                 interp.remove(interp_toc)
+
+        appendices = part_content.findall('{eregs}appendix')
+        for appendix in appendices:
+            appendix_toc = appendix.find('{eregs}tableOfContents')
+            if appendix_toc is not None:
+                appendix.remove(appendix_toc)
 
         # part_toc = part.find('{eregs}tableOfContents')
 
@@ -73,7 +78,7 @@ class Command(BaseCommand):
 
         try:
             version = Version.objects.get(left_version=left_version, right_version=right_version)
-            regulation = DiffNode.objects.filter(reg_version=version)
+            regulation = RegNode.objects.filter(reg_version=version)
             regulation.delete()
             version.delete()
 
@@ -85,7 +90,7 @@ class Command(BaseCommand):
 
         reg_json = xml_diff_to_json(xml_tree, 1, left_version, right_version)[0]
 
-        insert_all(reg_json, new_version)
+        nodes = insert_all(reg_json, new_version)
 
         if settings.DEBUG:
             end_time = time.clock()
@@ -119,7 +124,7 @@ def insert_all(node, version):
         if node['tag'] in ['fdsys', 'preamble']:
             node_to_insert['children'] = node['children']
 
-        new_node = DiffNode()
+        new_node = RegNode()
         new_node.tag = node['tag']
         new_node.node_id = node.get('node_id', '')
         new_node.label = node['attributes'].get('label', '')
@@ -134,8 +139,7 @@ def insert_all(node, version):
         if node['tag'] == 'regtext':
             new_node.text = node['content']
 
-        #result_nodes.append(new_node)
-        new_node.save()
+        result_nodes.append(new_node)
 
         # recurse only if this node has subchildren that are labeled
         # this ensures that paragraphs are the lowest level of recursion
@@ -144,5 +148,6 @@ def insert_all(node, version):
                 recursive_insert(child, version)
 
     recursive_insert(node, version)
-    #DiffNode.objects.bulk_create(result_nodes)
+
+    RegNode.objects.bulk_create(result_nodes, batch_size=100)
 
