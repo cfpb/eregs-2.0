@@ -1,17 +1,12 @@
 import os
-import json
 import glob
 
 from django.core.management import call_command
-from django.core.management.base import BaseCommand, CommandError
-from lxml import etree
-from itertools import permutations
-
-from eregs_core.models import RegNode
-from eregs_core.utils import xml_to_json
+from django.core.management.base import BaseCommand
 from eregs import local_settings
 
 import time
+
 
 class Command(BaseCommand):
 
