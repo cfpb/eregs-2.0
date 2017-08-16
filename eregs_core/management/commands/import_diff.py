@@ -1,14 +1,12 @@
-from django.core.management.base import BaseCommand, CommandError
+from django.core.management.base import BaseCommand
 from django.core.exceptions import ObjectDoesNotExist
-from eregs_core.models import DiffNode, Version, RegNode
+from eregs_core.models import Version, RegNode
 from eregs_core.utils import xml_diff_to_json
 from eregs_core.diffs import diff_files
 from lxml import etree
 
 import os
-import json
 import time
-import math
 
 from eregs.local_settings import DEBUG
 
