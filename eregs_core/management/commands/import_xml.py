@@ -127,4 +127,4 @@ def insert_all(node, version):
                 recursive_insert(child, version)
 
     recursive_insert(node, version)
-    RegNode.objects.bulk_create(result_nodes)
+    RegNode.objects.bulk_create(result_nodes, batch_size=100)
