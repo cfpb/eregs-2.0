@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.core.management.base import BaseCommand
 from django.core.exceptions import ObjectDoesNotExist
 from eregs_core.models import Version, RegNode
@@ -7,8 +8,6 @@ from lxml import etree
 
 import os
 import time
-
-from eregs.local_settings import DEBUG
 
 
 class Command(BaseCommand):
@@ -74,7 +73,7 @@ class Command(BaseCommand):
         # part_toc = part.find('{eregs}tableOfContents')
 
         # flush the table of existing content for this reg
-        if DEBUG:
+        if settings.DEBUG:
             start_time = time.clock()
 
         try:
@@ -93,7 +92,7 @@ class Command(BaseCommand):
 
         nodes = insert_all(reg_json, new_version)
 
-        if DEBUG:
+        if settings.DEBUG:
             end_time = time.clock()
             print('Import time for diff between {} and {} was {} seconds'.format(left_version, right_version,
                 end_time - start_time))
