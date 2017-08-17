@@ -15,7 +15,7 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.RunSQL(
-            sql='''--
+            sql='''
 -- Create index eregs_core__version_idx on field(s)
 -- version, left_version, right_version of model version
 --
@@ -42,14 +42,14 @@ CREATE INDEX `eregs_core__left_idx` ON `eregs_core_regnode` (`left`);
 -- Create index eregs_core__right_idx on field(s) right of model regnode
 --
 CREATE INDEX `eregs_core__right_idx` ON `eregs_core_regnode` (`right`);
---''',
-            reverse_sql='''--
+'''.strip(),
+            reverse_sql='''
 DROP INDEX eregs_core__version_idx ON eregs_core_version;
 DROP INDEX eregs_core__node_id_idx ON eregs_core_regnode;
 DROP INDEX eregs_core__label_idx ON eregs_core_regnode;
 DROP INDEX eregs_core__tag_idx ON eregs_core_regnode;
 DROP INDEX eregs_core__left_idx ON eregs_core_regnode;
 DROP INDEX eregs_core__right_idx ON eregs_core_regnode;
---'''
+'''.strip()
         )
     ]
