@@ -264,6 +264,20 @@ class RegNode(models.Model, GenericNodeMixin):
             return ''
 
     @property
+    def left_version(self):
+        if self.reg_version.left_version is not None:
+            return self.reg_version.left_version
+        else:
+            return ''
+
+    @property
+    def right_version(self):
+        if self.reg_version.right_version is not None:
+            return self.reg_version.right_version
+        else:
+            return ''
+
+    @property
     def marker_type(self):
         marker = self.marker.replace('(', '')
         marker = marker.replace(')', '')
@@ -712,6 +726,8 @@ class Section(RegNode):
             diff = difflib.ndiff(left_text, right_text)
             text = merge_text_diff(diff)
             return text
+        else:
+            return self.subject
 
 
 class Paragraph(RegNode):
@@ -781,7 +797,10 @@ class Paragraph(RegNode):
 
     @property
     def paragraph_title(self):
-        return self.get_child('title/regtext').text
+        if self.get_child('title/regtext') is not None:
+            return self.get_child('title/regtext').text
+        else:
+            return ''
 
     @property
     def regtext(self):
@@ -999,6 +1018,9 @@ class DiffNode(RegNode):
 
     # left_version = models.CharField(max_length=250)
     # right_version = models.CharField(max_length=250)
+
+    class Meta:
+        proxy = True
 
     @property
     def left_version(self):
