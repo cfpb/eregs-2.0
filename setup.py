@@ -13,9 +13,10 @@ install_requires = (
 
 
 testing_extras = (
-    'MySQL-python==1.2.5',
     'coverage>=3.7.0',
     'django-mysql==2.1.0',
+    'mock==2.0.0',
+    'MySQL-python==1.2.5',
     'selenium==3.4.3',
 )
 

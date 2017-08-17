@@ -48,7 +48,7 @@
             {% endwith %}
 
     {% elif node.tag == "paragraph" or node.tag == "interpParagraph" %}
-        {% include "paragraph.html" %}
+        {% include "eregs_core/paragraph.html" %}
     {% endif %}
 
     {% if node.tag == "paragraph" or node.tag == "interpParagraph" %}
@@ -59,7 +59,7 @@
 
     {% for child in node.block_element_children %}
 
-        {% with node=child template_name="regnode.html" %}
+        {% with node=child template_name="eregs_core/regnode.html" %}
             {% with marker=node.marker_type %}
                 {% if not node.tag == "appendixSection" %}
                     <li {% if marker == "none" or marker == None or marker == '' %}class="markerless"{% endif %}
@@ -76,7 +76,7 @@
     {% if node.tag == "paragraph" or node.tag == "interpParagraph" %} </ol>
         {% if mode == 'reg' %}
             {% for interp in node.get_interpretations %}
-                {% include "interpretation.html" %}
+                {% include "eregs_core/interpretation.html" %}
             {% endfor %}
         {% endif %}
     {% endif %}
