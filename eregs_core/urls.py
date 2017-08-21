@@ -1,7 +1,7 @@
 from django.conf.urls import url
 
 from eregs_core.views import (
-    definition_partial, diff, diff_redirect, main, regulation, regulation_main,
+    definition_partial, diff, diff_partial, diff_redirect, main, regulation, regulation_main,
     regulation_partial, search, search_partial, sidebar_partial, sxs_partial
 )
 
