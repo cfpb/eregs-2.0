@@ -38,7 +38,6 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'django_mysql',
     'django_extensions',
     'haystack',
     'eregs_core'
@@ -85,17 +84,22 @@ WSGI_APPLICATION = 'eregs.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'eregs',
-        'USER': 'eregs',
-        'PASSWORD': 'eregs',
-        'HOST': 'localhost',
-        'PORT': '3307',
-        'OPTIONS': {
-            # Tell MySQLdb to connect with 'utf8mb4' character set
-            'charset': 'utf8mb4',
-        },
+        'NAME': os.environ.get('MYSQL_NAME', 'eregs'),
+        'USER': os.environ.get('MYSQL_USER', 'eregs'),
+        'PASSWORD': os.environ.get('MYSQL_PW', 'eregs'),
+        'HOST': os.environ.get('MYSQL_HOST', 'localhost'),
+        'PORT': os.environ.get('MYSQL_PORT', '3306'),
     },
 }
+
+LEGACY_JSON_LOOKUPS = os.getenv('LEGACY_JSON_LOOKUPS', False)
+if LEGACY_JSON_LOOKUPS:
+    MYSQL_CHARSET = 'utf8'
+else:
+    MYSQL_CHARSET = 'utf8mb4'
+    INSTALLED_APPS = INSTALLED_APPS + ('django_mysql',)
+
+DATABASES['default']['OPTIONS'] = {'charset': MYSQL_CHARSET}
 
 HAYSTACK_CONNECTIONS = {
     'default': {
