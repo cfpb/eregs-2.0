@@ -161,13 +161,13 @@ def diff(request, left_version, left_eff_date, right_version, right_eff_date, no
         toc_id = ':'.join([left_version, left_eff_date, right_version, right_eff_date, 'tableOfContents'])
         meta_id = ':'.join([left_version, left_eff_date, right_version, right_eff_date, 'preamble'])
 
-        toc = DiffNode.objects.get(node_id=toc_id)
-        meta = DiffNode.objects.get(node_id=meta_id)
-        regtext = DiffNode.objects.get(node_id=node_id)
+        toc = RegNode.objects.filter(node_id=toc_id)[0]
+        meta = RegNode.objects.get(node_id=meta_id)
+        regtext = RegNode.objects.get(node_id=node_id)
 
-        toc.get_descendants(desc_type=DiffNode)
-        meta.get_descendants(desc_type=DiffNode)
-        regtext.get_descendants(desc_type=DiffNode)
+        toc.get_descendants(desc_type=RegNode)
+        meta.get_descendants(desc_type=RegNode)
+        regtext.get_descendants(desc_type=RegNode)
 
         toc.__class__ = TableOfContents
         meta.__class__ = Preamble
@@ -183,12 +183,10 @@ def diff(request, left_version, left_eff_date, right_version, right_eff_date, no
         fdsys = Fdsys.objects.filter(node_id__in=[reg.version + ':fdsys' for reg in regulations]).\
             select_related('reg_version').order_by('reg_version')
 
-        print meta.left_version, meta.right_version
         for pre, fd in zip(preambles, fdsys):
             pre.get_descendants(auto_infer_class=False)
             fd.get_descendants(auto_infer_class=False)
             timeline.append((pre, fd))
-            print pre.version
 
 
         if regtext is not None and toc is not None:
@@ -199,6 +197,11 @@ def diff(request, left_version, left_eff_date, right_version, right_eff_date, no
                 'meta': meta,
                 'timeline': timeline,
             })
+
+
+def diff_partial(request, left_version, left_eff_date, right_version, right_eff_date, node):
+
+    pass
 
 @never_cache
 def search_partial(request):
