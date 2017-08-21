@@ -32,6 +32,7 @@ class TestViews(TestCase):
     @classmethod
     def tearDownClass(cls):
         cls.patched_sqs.stop()
+        super(TestViews, cls).tearDownClass()
 
     def request(self, **kwargs):
         return RequestFactory().get('/', kwargs)
