@@ -27,7 +27,7 @@ before_script:
 
 script:
   - npm test
-  - TOXENV=dj18 tox
+  - TOXENV=dj18 tox -- -v3
 
 after_success:
   coveralls
