@@ -144,41 +144,22 @@ class GenericNodeMixin(object):
         if desc_type is None:
             desc_type = RegNode
 
-        # print self.version, self.left, self.right
-
-        if isinstance(self, DiffNode):
-            descendants = desc_type.objects.filter(#left_version=self.left_version,
-                                                   #right_version=self.right_version,
-                                                   reg_version=self.reg_version,
-                                                   left__gt=self.left,
-                                                   right__lt=self.right).order_by('left')
-        elif isinstance(self, RegNode):
-            descendants = desc_type.objects.filter(reg_version=self.reg_version,
-                                                   left__gt=self.left,
-                                                   right__lt=self.right).select_related('reg_version').order_by('left')
+        descendants = desc_type.objects.filter(reg_version=self.reg_version,
+                                               left__gt=self.left,
+                                               right__lt=self.right).select_related('reg_version').order_by('left')
 
         if return_format == 'nested':
             last_node_at_depth = {self.depth: self}
-            # print 'number of descendants of {}: '.format(self.node_id), len(descendants)
             for desc in descendants:
-                if (desc_type is RegNode or desc_type is DiffNode) \
-                        and auto_infer_class and desc.tag in tag_to_object_mapping:
+                if desc_type is RegNode and auto_infer_class and desc.tag in tag_to_object_mapping:
                     desc.__class__ = tag_to_object_mapping[desc.tag]
-                # print desc, desc.attribs, desc.depth
-                # print desc, desc.depth
                 last_node_at_depth[desc.depth] = desc
                 ancestor = last_node_at_depth[desc.depth - 1]
                 ancestor.children.append(desc)
 
     def get_ancestors(self, auto_infer_class=True):
 
-        if isinstance(self, DiffNode):
-            ancestors = DiffNode.objects.filter(#left_version=self.left_version,
-                                                #right_version=self.right_version,
-                                                reg_version=self.reg_version,
-                                                left__lte=self.left,
-                                                right__gte=self.right).order_by('left')
-        elif isinstance(self, RegNode):
+        if isinstance(self, RegNode):
             ancestors = RegNode.objects.filter(left__lte=self.left,
                                                right__gte=self.right,
                                                reg_version=self.reg_version).\
@@ -1012,29 +993,6 @@ class Footnote(RegNode):
 
     def footnote_text(self):
         return self.get_child('regtext').text
-
-
-class DiffNode(RegNode):
-
-    # left_version = models.CharField(max_length=250)
-    # right_version = models.CharField(max_length=250)
-
-    class Meta:
-        proxy = True
-
-    @property
-    def left_version(self):
-        if self.reg_version.left_version is not None:
-            return self.reg_version.left_version
-        else:
-            return ''
-
-    @property
-    def right_version(self):
-        if self.reg_version.right_version is not None:
-            return self.reg_version.right_version
-        else:
-            return ''
 
 
 # top-level because it needs to have all the classes defined

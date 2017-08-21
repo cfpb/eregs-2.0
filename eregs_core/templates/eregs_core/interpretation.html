@@ -12,7 +12,7 @@
         <section data-base-version="{{ meta.document_number }}" data-type="interpretation">
             <section data-permalink-section>
                 {% with node=interp mode="inline_interp"%}
-                    {% include "regnode.html" %}
+                    {% include "eregs_core/regnode.html" %}
                         <a href="{{ node.node_url }}" data-linked-subsection="{{ node.label }}"
                                 class="internal section-link">
                             See this interpretation in Supplement I
