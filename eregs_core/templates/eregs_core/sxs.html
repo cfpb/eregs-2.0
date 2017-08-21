@@ -12,12 +12,12 @@
                 <h3>{{ node.analysis.0.section_title }}</h3>
             {% elif child.tag == 'analysisSection' %}
                 {% with section=child %}
-                    {% include 'analysis_section.html' %}
+                    {% include 'eregs_core/analysis_section.html' %}
                 {% endwith %}
             {% elif child.tag == 'analysisParagraph' %}
                 {% with paragraph=child %}
                     <p>
-                        {% include 'analysis_paragraph.html' %}
+                        {% include 'eregs_core/analysis_paragraph.html' %}
                     </p>
                 {% endwith %}
             {% endif %}

@@ -30,7 +30,7 @@
             <span class="subpart-subhead">{{ entry.subpart_title }}</span>
         </h3>
         {% for node in entry.children %}
-            {% with entry=node template_name="toc_entry.html" %}
+            {% with entry=node template_name="eregs_core/toc_entry.html" %}
                 {% include template_name %}
             {% endwith %}
         {% endfor %}

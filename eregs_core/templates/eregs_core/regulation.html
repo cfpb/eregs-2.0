@@ -1,15 +1,15 @@
-{% extends "base.html" %}
+{% extends "eregs_core/base.html" %}
 {% block title %}
 Main
 {% endblock %}
 
 {% block body %}
     {% block reg_header %}
-        {% include "regulation_header.html" %}
+        {% include "eregs_core/regulation_header.html" %}
     {% endblock %}
 
     <div id="menu" class="panel" data-reg-id="{{ meta.cfr_section }}" data-cfr-title-number="{{ meta.cfr_title }}">
-        {% include "sidebar.html" %}
+        {% include "eregs_core/sidebar.html" %}
     </div>
 
     <div class="wrap group">
@@ -18,7 +18,7 @@ Main
                 <section id="content-wrapper" class="reg-text">
                     {% if mode == "reg" or mode == "diff" %}
                         {% with node=reg %}
-                            {% include "regnode.html" %}
+                            {% include "eregs_core/regnode.html" %}
                         {% endwith %}
                     {% elif mode == "landing" %}
                         <section data-base-version="{{ meta.version }}" class="landing"
@@ -27,7 +27,7 @@ Main
                             {% include landing_page %}
                         </section>
                     {% elif mode == "search" %}
-                        {% include "search_results.html" %}
+                        {% include "eregs_core/search_results.html" %}
                     {% endif %}
                 </section>
             </div>
@@ -37,7 +37,7 @@ Main
                 <div id="sidebar" class="secondary-content" role="complementary">
                     <div id="sidebar-content" class="sidebar-inner">
                         <section id="definition"></section>
-                        {% include "right_sidebar.html" %}
+                        {% include "eregs_core/right_sidebar.html" %}
                     </div>
                 </div>
             {% endwith %}
