@@ -9,7 +9,7 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('eregs_core', '0006_analysisparagraph_analysissection_diffnode_footnote'),
+        ('eregs_core', '0006_analysisparagraph_analysissection_footnote'),
     ]
 
     operations = [

@@ -7,14 +7,14 @@
          data-effective-date="{{ meta.effective_date }}">
         <ol>
             {% for entry in toc.section_entries %}
-                {% include "toc_entry.html" %}
+                {% include "eregs_core/toc_entry.html" %}
             {% endfor %}
             {% if toc.has_appendices %}
                 <li data-subpart-heading>
                     <h3 class="subpart-heading">Appendices</h3>
                 </li>
                 {% for entry in toc.appendix_entries %}
-                    {% include "toc_entry.html" %}
+                    {% include "eregs_core/toc_entry.html" %}
                 {% endfor %}
             {% endif %}
             {% if toc.has_interps %}
@@ -24,11 +24,11 @@
                 </li>
                 {% if toc.interp_intro_entry %}
                     {% with intro=True entry=toc.interp_intro_entry %}
-                        {% include "toc_entry.html" %}
+                        {% include "eregs_core/toc_entry.html" %}
                     {% endwith %}
                 {% endif %}
                 {% for entry in toc.non_intro_interp_entries %}
-                    {% include "toc_entry.html" %}
+                    {% include "eregs_core/toc_entry.html" %}
                 {% endfor %}
             {% endif %}
         </ol>
