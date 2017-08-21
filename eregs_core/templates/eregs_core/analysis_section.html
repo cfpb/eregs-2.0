@@ -3,10 +3,10 @@
 {% for element in section.children %}
     {% if element.tag == 'analysisParagraph' %}
         {% with paragraph=element %}
-            <p>{% include 'analysis_paragraph.html' %}</p>
+            <p>{% include 'eregs_core/analysis_paragraph.html' %}</p>
         {% endwith %}
     {% elif element.tag == 'analysisSection' %}
-        {% with section=element template_name='analysis_section.html' %}
+        {% with section=element template_name='eregs_core/analysis_section.html' %}
             {% include template_name %}
         {% endwith %}
     {% endif %}
