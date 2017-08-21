@@ -1,5 +1,4 @@
 from distutils.core import setup
-from setuptools import find_packages
 
 
 install_requires = (
@@ -9,6 +8,12 @@ install_requires = (
     'lxml',
     'python-dateutil',
     'sqlparse',
+)
+
+
+setup_requires = (
+    'cfgov_setup==1.2',
+    'setuptools-git-version==1.0.3',
 )
 
 
@@ -22,16 +27,16 @@ testing_extras = (
 
 setup(
     name='eregs',
-    version='0.0.1',
-    author='Jerry Vinokurov and Chris Contolini',
-    author_email='yury.vinokurov@cfpb.gov',
-    packages=find_packages(),
+    version_format='{tag}.dev{commitcount}+{gitsha}',
+    author='CFPB',
+    author_email='tech@cfpb.gov',
+    packages=['eregs_core'],
     url='https://github.com/cfpb/eregs-2.0',
-    license='MIT',
+    license='CC0',
     description='The new version of eRegs.',
     include_package_data=True,
     install_requires=install_requires,
-    setup_requires=['cfgov_setup==1.2'],
+    setup_requires=setup_requires,
     frontend_build_script='setup.sh',
     extras_require={
         'testing': testing_extras,

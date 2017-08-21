@@ -58,7 +58,7 @@ MIDDLEWARE_CLASSES = (
     #'django.middleware.common.CommonMiddleware',
 )
 
-ROOT_URLCONF = 'eregs.urls'
+ROOT_URLCONF = 'eregs_core.urls'
 
 TEMPLATES = [
     {
