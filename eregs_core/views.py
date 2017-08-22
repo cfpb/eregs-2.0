@@ -17,7 +17,6 @@ import time
 from dateutil import parser as dt_parser
 
 
-
 def regulation(request, version, eff_date, node):
 
     if request.method == 'GET':
@@ -347,21 +346,19 @@ def main(request):
 
     if request.method == 'GET':
 
-        # meta = Preamble.objects.filter(tag='preamble')
         reg_versions = Version.objects.exclude(version=None)
         meta = [r for r in Preamble.objects.filter(tag='preamble', reg_version__in=reg_versions)]
-        # meta = sorted(meta, key=lambda x: x.reg_letter, reverse=True)
 
         regs_meta = []
         reg_parts = set()
 
         for item in meta:
             item.get_descendants(auto_infer_class=False)
-            if item.reg_letter not in reg_parts:
+            if (item.cfr_title, item.cfr_section) not in reg_parts:
                 regs_meta.append(item)
-                reg_parts.add(item.reg_letter)
+                reg_parts.add((item.cfr_title, item.cfr_section))
 
-        regs_meta = sorted(regs_meta, key=lambda x: int(x.cfr_section))
+        regs_meta = sorted(regs_meta, key=lambda x: (int(x.cfr_title), int(x.cfr_section)))
         fdsys = RegNode.objects.filter(tag='fdsys')
 
         return render_to_response('eregs_core/main.html', {
