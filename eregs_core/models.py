@@ -319,7 +319,11 @@ class Preamble(RegNode):
 
     @property
     def reg_letter(self):
-        return self.get_child('regLetter/regtext').text
+        reg_letter = self.get_child('regLetter')
+        if reg_letter is not None:
+            return reg_letter.get_child('regtext').text
+        else:
+            return None
 
     @property
     def cfr_title(self):

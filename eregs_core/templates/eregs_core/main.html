@@ -37,7 +37,7 @@ Main
                                     <a href="/{{ regulation.cfr_section }}">
                                         <span class="title-num">{{regulation.cfr_section}}</span>
                                         <div class="reg-sub-title">
-                                            <span class="reg-letter">Regulation {{regulation.reg_letter}}</span>
+                                            <span class="reg-letter">Regulation {{regulation.reg_letter|default:regulation.cfr_section}}</span>
                                             <!--<span class="reg-title">{{regulation.children.1.children.0}}</span>-->
                                         </div>
                                         <span class="cf-icon cf-icon-right-round"></span>
