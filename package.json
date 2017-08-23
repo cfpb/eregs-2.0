@@ -67,8 +67,10 @@
   "dependencies": {
     "backbone": "1.0.0",
     "backbone-query-parameters": "^0.4.0",
+    "bootstrap": "3.3.7",
     "jquery": "1.11.3",
     "jquery-scrollstop": "^1.2.0",
+    "modernizr": "3.5.0",
     "respond.js": "^1.4.2",
     "underscore": "1.4.4",
     "unveilable": "^0.2.0"
