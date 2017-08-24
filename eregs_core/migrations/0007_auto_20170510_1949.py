@@ -17,9 +17,9 @@ class Migration(migrations.Migration):
             name='Version',
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('version', models.CharField(max_length=250, null=True)),
-                ('left_version', models.CharField(max_length=250, null=True)),
-                ('right_version', models.CharField(max_length=250, null=True)),
+                ('version', models.CharField(max_length=64, null=True)),
+                ('left_version', models.CharField(max_length=64, null=True)),
+                ('right_version', models.CharField(max_length=64, null=True)),
             ],
         ),
         migrations.CreateModel(
