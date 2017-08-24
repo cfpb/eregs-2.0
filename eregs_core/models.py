@@ -19,9 +19,9 @@ from itertools import product
 
 class Version(models.Model):
 
-    version = models.CharField(max_length=250, null=True)
-    left_version = models.CharField(max_length=250, null=True)
-    right_version = models.CharField(max_length=250, null=True)
+    version = models.CharField(max_length=64, null=True)
+    left_version = models.CharField(max_length=64, null=True)
+    right_version = models.CharField(max_length=64, null=True)
 
     @property
     def right_doc_number(self):
