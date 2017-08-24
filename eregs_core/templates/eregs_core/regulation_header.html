@@ -8,7 +8,7 @@
                     </a>
                 </h1>
                 <h2 class="reg-title">
-                    <a href="#">{{ meta.cfr_title }} CFR Part {{ meta.cfr_section }} (Regulation {{ meta.reg_letter }})</a>
+                    <a href="#">{{ meta.cfr_title }} CFR Part {{ meta.cfr_section }} (Regulation {{ meta.reg_letter|default:meta.cfr_section}})</a>
                 </h2>
             </div>
             <nav class="app-nav">
