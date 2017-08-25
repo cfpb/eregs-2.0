@@ -5,7 +5,7 @@
         <h2 class="toc-type">Search</h2>
     </div>
     <div class="drawer-content">
-        <form action="/search/" method="get" role="search" _lpchecked="1">
+        <form action="{% url 'eregs_search' %}" method="get" role="search" _lpchecked="1">
             <div class="search-box">
                 <input type="text" name="q" value="" id="search-input"><button type="submit">
                     <i class="cf-icon cf-icon-search"></i>

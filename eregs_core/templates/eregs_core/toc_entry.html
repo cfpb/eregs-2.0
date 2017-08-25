@@ -2,11 +2,11 @@
         {% if entry.action == "modified" %}class="modified"{% endif %}>
     {% if entry.tag == "tocSecEntry" or entry.tag == "tocAppEntry" or entry.tag == "tocInterpEntry" %}
         {% if mode == 'reg' or mode == 'landing' or mode == 'search' %}
-            <a href="/regulation/{{ meta.document_number }}/{{ meta.effective_date }}/{{ entry.target }}"
+          <a href="{% url 'eregs_regulation' meta.document_number meta.effective_date entry.target %}"
                 data-section-id="{{ entry.target }}" id="nav-{{ entry.target }}"
                 data-doc-number="{{ meta.document_number }}" data-version="{{ meta.effective_date }}">
         {% elif mode == 'diff' %}
-            <a href="/diff/{{ meta.left_document_number}}/{{ meta.left_effective_date}}/{{ meta.right_document_number }}/{{ meta.right_effective_date }}/{{ entry.target }}"
+          <a href="{% url 'eregs_diff' meta.left_document_number meta.left_effective_date meta.right_document_number meta.right_effective_dat entry.target %}"
                 data-section-id="{{ entry.target }}" id="nav-{{ entry.target }}"
                 data-doc-number="{{ meta.left_document_number }}" data-version="{{ meta.left_effective_date }}">
         {% endif %}
