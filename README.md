@@ -3,7 +3,7 @@
 [![Build Status](https://travis-ci.org/cfpb/eregs-2.0.svg?branch=master)](https://travis-ci.org/cfpb/eregs-2.0)
 [![Coverage Status](https://coveralls.io/repos/github/cfpb/eregs-2.0/badge.svg?branch=master)](https://coveralls.io/github/cfpb/eregs-2.0?branch=master)
 
-Work in progress. This is an updated back-end for consumerfinance.gov/eregulations
+Work in progress. This is an updated back-end for [consumerfinance.gov/eregulations](https://www.consumerfinance.gov/eregulations/).
 
 [Documentation](https://cfpb.github.io/eregs-2.0/)
 
@@ -56,9 +56,8 @@ pip install -r requirements.txt
 Login to MySQL and create a database named `eregs`  with an `eregs` superuser.
 
 ```
-mysql -u root -p
+mysql
 mysql> CREATE DATABASE IF NOT EXISTS eregs;
-mysql> CREATE DATABASE IF NOT EXISTS test_eregs;
 mysql> CREATE USER 'eregs'@'localhost' IDENTIFIED BY 'eregs';
 mysql> GRANT ALL PRIVILEGES ON eregs.* TO 'eregs'@'localhost';
 mysql> GRANT ALL PRIVILEGES ON test_eregs.* TO 'eregs'@'localhost';
@@ -68,7 +67,7 @@ mysql> FLUSH PRIVILEGES;
 
 ### Import a regulation
 
-The application requires [regulation xml](https://github.com/cfpb/regulations-xml) data. To simplify development, sample data has been provided. To load the sample data into the database run:
+The application requires [RegML-compliant xml](https://github.com/cfpb/regulations-xml) data. To simplify development, sample data has been provided. To load the sample data into the database run:
 
 ```
 ./manage.py import_xml data/2011-31712.xml
