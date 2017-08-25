@@ -9,7 +9,7 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('eregs_core', '0006_analysisparagraph_analysissection_diffnode_footnote'),
+        ('eregs_core', '0006_analysisparagraph_analysissection_footnote'),
     ]
 
     operations = [
@@ -17,9 +17,9 @@ class Migration(migrations.Migration):
             name='Version',
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('version', models.CharField(max_length=250, null=True)),
-                ('left_version', models.CharField(max_length=250, null=True)),
-                ('right_version', models.CharField(max_length=250, null=True)),
+                ('version', models.CharField(max_length=64, null=True)),
+                ('left_version', models.CharField(max_length=64, null=True)),
+                ('right_version', models.CharField(max_length=64, null=True)),
             ],
         ),
         migrations.CreateModel(

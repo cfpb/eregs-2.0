@@ -11,13 +11,3 @@ class Migration(migrations.Migration):
         ('eregs_core', '0008_auto_20170510_2018'),
     ]
 
-    operations = [
-        migrations.RemoveField(
-            model_name='diffnode',
-            name='left_version',
-        ),
-        migrations.RemoveField(
-            model_name='diffnode',
-            name='right_version',
-        ),
-    ]
