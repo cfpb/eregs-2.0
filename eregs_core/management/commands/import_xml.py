@@ -20,7 +20,11 @@ class Command(BaseCommand):
         xml_filename = options['regml_file']
         with open(xml_filename, 'r') as f:
             xml = f.read()
-            xml_tree = etree.fromstring(xml)
+            parser = etree.XMLParser(huge_tree=True)
+            try:
+                xml_tree = etree.fromstring(xml, parser)
+            except etree.XMLSyntaxError as e:
+                raise CommandError('There was a problem parsing {}!'.format(xml_filename))
 
         comments = xml_tree.xpath('//comment()')
         for comment in comments:
@@ -127,4 +131,4 @@ def insert_all(node, version):
                 recursive_insert(child, version)
 
     recursive_insert(node, version)
-    RegNode.objects.bulk_create(result_nodes)
+    RegNode.objects.bulk_create(result_nodes, batch_size=100)

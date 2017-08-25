@@ -1,0 +1,77 @@
+{% load eregs_formatting %}
+
+<div id="timeline" class="history-drawer toc-container">
+    <div class="drawer-header">
+        <h2 class="toc-type">Regulation Timeline</h2>
+    </div>
+    <!-- /.drawer-header -->
+    <div class="drawer-content">
+        <p class="effective-label">Find the regulation effective on this date:</p>
+
+        <div class="form-wrap group">
+            <form action="#" method="GET" class="date-input">
+                <input type="text" name="month" class="month-input" maxlength="2" value="03">
+                / <input type="text" name="day" class="day-input" maxlength="2" value="19">
+                / <input type="text" name="year" class="year-input" maxlength="4" value="2017">
+                <button type="submit" class="find-button">Find</button>
+            </form>
+        </div>
+        <!--./date-form-->
+        <ul class="version-list" id="history-toc-list">
+            {% for preamble, fdsys in timeline %}
+                <!--{{ preamble.version }} {{ meta.left_version }} {{ meta.right_version }}-->
+                <li class="status-list
+                {% if preamble.version == meta.left_version or preamble.version == meta.right_version or preamble.version == meta.version %}
+                    current
+                {% endif %}"
+                    data-base-version="{{ preamble.version }}">
+                    <a href="/{{ preamble.reg_url }}" class="version-link" data-version="{{ preamble.version }}"
+                            id="link-{{ preamble.version }}">
+                        <span class="version-date">{{ preamble.effective_date|effective_date }}</span>
+                    </a>
+                    <div class="timeline-content-wrap">
+                        <h5 class="final-rule">Final Rule</h5>
+                        <ul class="rule-list">
+                            <li>
+                                <a class="fr-notice external"
+                                   href="https://www.federalregister.gov/a/{{ preamble.document_number }}"
+                                   aria-label="Link opens in new window" target="_blank">
+                                    Published {{ fdsys.date|effective_date }}</a>
+                            </li>
+                        </ul>
+                        {% if mode == "reg" or mode == "landing" %}
+                        <div class="diff-selector group">
+                            <h4 class="compare-title">Compare this with</h4>
+                            <div class="select-content">
+                                <form action="/diff_redirect/{{ preamble.document_number }}/{{ preamble.effective_date }}"
+                                      method="GET">
+                                    <select name="new_version" onchange="this.form.submit()">
+                                        <option value="default" disabled="disabled" selected="selected">
+                                            regulation effective
+                                        </option>
+                                        {% for other_preamble, other_fdsys in timeline %}
+                                            {% if preamble.version != other_preamble.version %}
+                                                <option value="{{ other_preamble.version }}">
+                                                    {{ other_preamble.effective_date|effective_date }}
+                                                </option>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </select>
+                                </form>
+                            </div>
+                        </div>
+                        {% elif mode == "diff"%}
+                            {% if preamble.version == meta.right_version %}
+                                <div class="timeline-content-wrap">
+                                    <h4 class="compare-title">Compare this with</h4>
+                                    <a class="stop-button" data-version="{{ preamble.version }}"
+                                       href="/{{ preamble.reg_url }}">Stop Comparing</a>
+                                </div>
+                            {% endif %}
+                        {% endif %}
+                    </div>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>

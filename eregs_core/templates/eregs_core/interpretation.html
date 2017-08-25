@@ -1,0 +1,24 @@
+<section class="inline-interpretation" data-interp-for="{{ interp.target }}"
+         data-interp-id="{{ interp.label }}">
+    <header class="inline-interp-header">
+        <h4 tabindex="0">Official Interpretation to
+            <span class="ref-num">{{ interp.interp_target }}</span>
+        </h4>
+        <a href="#" class="expand-button" tabindex="0">
+            <span class="expand-text">Show</span>
+        </a>
+    </header>
+    <section class="inline-interpretation-content hidden">
+        <section data-base-version="{{ meta.document_number }}" data-type="interpretation">
+            <section data-permalink-section>
+                {% with node=interp mode="inline_interp"%}
+                    {% include "eregs_core/regnode.html" %}
+                        <a href="{{ node.node_url }}" data-linked-subsection="{{ node.label }}"
+                                class="internal section-link">
+                            See this interpretation in Supplement I
+                        </a>
+                {% endwith %}
+            </section>
+        </section>
+    </section>
+</section>

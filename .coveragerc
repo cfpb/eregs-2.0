@@ -1,0 +1,12 @@
+[run]
+omit =
+    .tox/*
+    */migrations/*
+    eregs/settings*
+
+
+[report]
+exclude_lines = 
+    pragma: no cover
+    if __name__ == .__main__.:
+    if .__main__. == __name__:

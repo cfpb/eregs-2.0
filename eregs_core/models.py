@@ -19,9 +19,9 @@ from itertools import product
 
 class Version(models.Model):
 
-    version = models.CharField(max_length=250, null=True)
-    left_version = models.CharField(max_length=250, null=True)
-    right_version = models.CharField(max_length=250, null=True)
+    version = models.CharField(max_length=64, null=True)
+    left_version = models.CharField(max_length=64, null=True)
+    right_version = models.CharField(max_length=64, null=True)
 
     @property
     def right_doc_number(self):
@@ -144,41 +144,22 @@ class GenericNodeMixin(object):
         if desc_type is None:
             desc_type = RegNode
 
-        # print self.version, self.left, self.right
-
-        if isinstance(self, DiffNode):
-            descendants = desc_type.objects.filter(#left_version=self.left_version,
-                                                   #right_version=self.right_version,
-                                                   reg_version=self.reg_version,
-                                                   left__gt=self.left,
-                                                   right__lt=self.right).order_by('left')
-        elif isinstance(self, RegNode):
-            descendants = desc_type.objects.filter(reg_version=self.reg_version,
-                                                   left__gt=self.left,
-                                                   right__lt=self.right).select_related('reg_version').order_by('left')
+        descendants = desc_type.objects.filter(reg_version=self.reg_version,
+                                               left__gt=self.left,
+                                               right__lt=self.right).select_related('reg_version').order_by('left')
 
         if return_format == 'nested':
             last_node_at_depth = {self.depth: self}
-            # print 'number of descendants of {}: '.format(self.node_id), len(descendants)
             for desc in descendants:
-                if (desc_type is RegNode or desc_type is DiffNode) \
-                        and auto_infer_class and desc.tag in tag_to_object_mapping:
+                if desc_type is RegNode and auto_infer_class and desc.tag in tag_to_object_mapping:
                     desc.__class__ = tag_to_object_mapping[desc.tag]
-                # print desc, desc.attribs, desc.depth
-                # print desc, desc.depth
                 last_node_at_depth[desc.depth] = desc
                 ancestor = last_node_at_depth[desc.depth - 1]
                 ancestor.children.append(desc)
 
     def get_ancestors(self, auto_infer_class=True):
 
-        if isinstance(self, DiffNode):
-            ancestors = DiffNode.objects.filter(#left_version=self.left_version,
-                                                #right_version=self.right_version,
-                                                reg_version=self.reg_version,
-                                                left__lte=self.left,
-                                                right__gte=self.right).order_by('left')
-        elif isinstance(self, RegNode):
+        if isinstance(self, RegNode):
             ancestors = RegNode.objects.filter(left__lte=self.left,
                                                right__gte=self.right,
                                                reg_version=self.reg_version).\
@@ -264,6 +245,20 @@ class RegNode(models.Model, GenericNodeMixin):
             return ''
 
     @property
+    def left_version(self):
+        if self.reg_version.left_version is not None:
+            return self.reg_version.left_version
+        else:
+            return ''
+
+    @property
+    def right_version(self):
+        if self.reg_version.right_version is not None:
+            return self.reg_version.right_version
+        else:
+            return ''
+
+    @property
     def marker_type(self):
         marker = self.marker.replace('(', '')
         marker = marker.replace(')', '')
@@ -324,7 +319,11 @@ class Preamble(RegNode):
 
     @property
     def reg_letter(self):
-        return self.get_child('regLetter/regtext').text
+        reg_letter = self.get_child('regLetter')
+        if reg_letter is not None:
+            return reg_letter.get_child('regtext').text
+        else:
+            return None
 
     @property
     def cfr_title(self):
@@ -712,6 +711,8 @@ class Section(RegNode):
             diff = difflib.ndiff(left_text, right_text)
             text = merge_text_diff(diff)
             return text
+        else:
+            return self.subject
 
 
 class Paragraph(RegNode):
@@ -781,7 +782,10 @@ class Paragraph(RegNode):
 
     @property
     def paragraph_title(self):
-        return self.get_child('title/regtext').text
+        if self.get_child('title/regtext') is not None:
+            return self.get_child('title/regtext').text
+        else:
+            return ''
 
     @property
     def regtext(self):
@@ -993,26 +997,6 @@ class Footnote(RegNode):
 
     def footnote_text(self):
         return self.get_child('regtext').text
-
-
-class DiffNode(RegNode):
-
-    # left_version = models.CharField(max_length=250)
-    # right_version = models.CharField(max_length=250)
-
-    @property
-    def left_version(self):
-        if self.reg_version.left_version is not None:
-            return self.reg_version.left_version
-        else:
-            return ''
-
-    @property
-    def right_version(self):
-        if self.reg_version.right_version is not None:
-            return self.reg_version.right_version
-        else:
-            return ''
 
 
 # top-level because it needs to have all the classes defined

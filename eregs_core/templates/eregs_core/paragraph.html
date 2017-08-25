@@ -1,0 +1,63 @@
+{% load eregs_formatting %}
+
+{% if node.children.0.tag == "title" %}
+    {% if node.target %}
+        <h5>
+    {% else %}
+        <h4>
+    {% endif %}
+
+        <em class="paragraph-marker">{{ node.attributes.marker }}</em>
+        {% if node.has_diff_title %}
+            {{ node.title_diff|safe }}
+        {% else %}
+            {{ node.paragraph_title }}
+            {% if node.target %}
+                </h5>
+            {% else %}
+                </h4>
+            {% endif %}
+        {% endif %}
+    <p>
+{% else %}
+    <p>
+    {% if node.attributes.marker != "none" and node.attributes.marker != None %}
+        <em class="paragraph-marker">{{ node.attributes.marker }}</em>
+    {% endif %}
+{% endif %}
+
+{% if node.action == 'deleted' %}
+    <del>
+        {% for child in node.paragraph_content %}
+            {% if child.tag == "ref" or child.tag == "def" %}
+                {{ child.regtext }}
+            {% else %}
+                {{ child.text }}
+            {% endif %}
+        {% endfor %}
+    </del>
+{% elif node.action == 'added' %}
+    <ins>
+        {% for child in node.paragraph_content %}
+            {% if child.tag == "ref" or child.tag == "def"%}
+                {{ child.regtext }}
+            {% else %}
+                {{ child.text }}
+            {% endif %}
+        {% endfor %}
+    </ins>
+{% elif mode == 'reg' or node.has_content %}
+    {% comment %}
+    The display of the actual content has to be written as a class-level functions for paragraphs
+    because otherwise the Django templating system inserts newlines where they are not wanted,
+    resulting in unnecessary spaces following links, (e.g. <a href="some term">foo</a> , more content).
+    Instead at the actual text level, the html is assembled from the paragraph and rendered directly
+    with the necessary HTML.
+    {% endcomment %}
+    {{ node.marked_up_content|safe }}
+
+{% elif mode == 'diff' or node.has_diff_content %}
+    {{ node.content_diff|safe }}
+{% endif %}
+</p>
+

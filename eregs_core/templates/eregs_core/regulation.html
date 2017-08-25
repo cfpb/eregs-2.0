@@ -1,0 +1,50 @@
+{% extends "eregs_core/base.html" %}
+{% block title %}
+Main
+{% endblock %}
+
+{% block body %}
+    {% block reg_header %}
+        {% include "eregs_core/regulation_header.html" %}
+    {% endblock %}
+
+    <div id="menu" class="panel" data-reg-id="{{ meta.cfr_section }}" data-cfr-title-number="{{ meta.cfr_title }}">
+        {% include "eregs_core/sidebar.html" %}
+    </div>
+
+    <div class="wrap group">
+        <main role="main">
+            <div id="content-body" class="main-content">
+                <section id="content-wrapper" class="reg-text">
+                    {% if mode == "reg" or mode == "diff" %}
+                        {% with node=reg %}
+                            {% include "eregs_core/regnode.html" %}
+                        {% endwith %}
+                    {% elif mode == "landing" %}
+                        <section data-base-version="{{ meta.version }}" class="landing"
+                                 data-page-type="landing-page" data-reg-part="{{ meta.cfr_section }}"
+                                 data-effective-date="{{ meta.effective_date }}">
+                            {% include landing_page %}
+                        </section>
+                    {% elif mode == "search" %}
+                        {% include "eregs_core/search_results.html" %}
+                    {% endif %}
+                </section>
+            </div>
+        </main>
+        {% if mode == "reg" %}
+            {% with node=reg %}
+                <div id="sidebar" class="secondary-content" role="complementary">
+                    <div id="sidebar-content" class="sidebar-inner">
+                        <section id="definition"></section>
+                        {% include "eregs_core/right_sidebar.html" %}
+                    </div>
+                </div>
+            {% endwith %}
+        {% elif mode == "landing" %}
+            {% include landing_page_sidebar %}
+        {% endif %}
+    </div>
+
+
+{% endblock %}

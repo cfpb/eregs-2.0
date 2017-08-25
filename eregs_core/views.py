@@ -13,6 +13,7 @@ from api import *
 import json
 import time
 
+
 from dateutil import parser as dt_parser
 
 
@@ -47,11 +48,13 @@ def regulation(request, version, eff_date, node):
             timeline.append((pre, fd))
 
         if regtext is not None and toc is not None:
-            return render_to_response('regulation.html', {'toc': toc,
-                                                          'reg': regtext,
-                                                          'mode': 'reg',
-                                                          'meta': meta,
-                                                          'timeline': timeline})
+            return render_to_response('eregs_core/regulation.html', {
+                'toc': toc,
+                'reg': regtext,
+                'mode': 'reg',
+                'meta': meta,
+                'timeline': timeline,
+            })
 
 
 def regulation_partial(request, version, eff_date, node):
@@ -67,9 +70,11 @@ def regulation_partial(request, version, eff_date, node):
         regtext.get_descendants()
 
         if regtext is not None and meta is not None:
-            result = render_to_string('regnode.html', {'node': regtext,
-                                                       'mode': 'reg',
-                                                       'meta': meta})
+            result = render_to_string('eregs_core/regnode.html', {
+                'node': regtext,
+                'mode': 'reg',
+                'meta': meta,
+            })
             result = '<section id="content-wrapper" class="reg-text">' + result + '</section>'
             return HttpResponse(result)
 
@@ -87,9 +92,11 @@ def sidebar_partial(request, version, eff_date, node):
         regtext.get_descendants()
 
         if regtext is not None:
-            return render_to_response('right_sidebar.html', {'node': regtext,
-                                                             'mode': 'reg',
-                                                             'meta': meta})
+            return render_to_response('eregs_core/right_sidebar.html', {
+                'node': regtext,
+                'mode': 'reg',
+                'meta': meta,
+            })
 
 
 def definition_partial(request, version, eff_date, node):
@@ -100,8 +107,10 @@ def definition_partial(request, version, eff_date, node):
         regtext.get_descendants()
 
         if regtext is not None:
-            return render_to_response('definition.html', {'node': regtext,
-                                                          'mode': 'reg'})
+            return render_to_response('eregs_core/definition.html', {
+                'node': regtext,
+                'mode': 'reg',
+            })
 
 
 def sxs_partial(request, version, eff_date, node):
@@ -120,9 +129,11 @@ def sxs_partial(request, version, eff_date, node):
                      for elem in child.children if elem.tag == 'footnote']
 
         if regtext is not None:
-            return render_to_response('sxs.html', {'node': regtext,
-                                                   'footnotes': footnotes,
-                                                   'mode': 'reg'})
+            return render_to_response('eregs_core/sxs.html', {
+                'node': regtext,
+                'footnotes': footnotes,
+                'mode': 'reg',
+            })
 
 
 def diff_redirect(request, left_version, left_eff_date):
@@ -149,13 +160,13 @@ def diff(request, left_version, left_eff_date, right_version, right_eff_date, no
         toc_id = ':'.join([left_version, left_eff_date, right_version, right_eff_date, 'tableOfContents'])
         meta_id = ':'.join([left_version, left_eff_date, right_version, right_eff_date, 'preamble'])
 
-        toc = DiffNode.objects.get(node_id=toc_id)
-        meta = DiffNode.objects.get(node_id=meta_id)
-        regtext = DiffNode.objects.get(node_id=node_id)
+        toc = RegNode.objects.filter(node_id=toc_id)[0]
+        meta = RegNode.objects.get(node_id=meta_id)
+        regtext = RegNode.objects.get(node_id=node_id)
 
-        toc.get_descendants(desc_type=DiffNode)
-        meta.get_descendants(desc_type=DiffNode)
-        regtext.get_descendants(desc_type=DiffNode)
+        toc.get_descendants(desc_type=RegNode)
+        meta.get_descendants(desc_type=RegNode)
+        regtext.get_descendants(desc_type=RegNode)
 
         toc.__class__ = TableOfContents
         meta.__class__ = Preamble
@@ -171,20 +182,25 @@ def diff(request, left_version, left_eff_date, right_version, right_eff_date, no
         fdsys = Fdsys.objects.filter(node_id__in=[reg.version + ':fdsys' for reg in regulations]).\
             select_related('reg_version').order_by('reg_version')
 
-        print meta.left_version, meta.right_version
         for pre, fd in zip(preambles, fdsys):
             pre.get_descendants(auto_infer_class=False)
             fd.get_descendants(auto_infer_class=False)
             timeline.append((pre, fd))
-            print pre.version
 
 
         if regtext is not None and toc is not None:
-            return render_to_response('regulation.html', {'toc': toc,
-                                                          'reg': regtext,
-                                                          'mode': 'diff',
-                                                          'meta': meta,
-                                                          'timeline': timeline})
+            return render_to_response('eregs_core/regulation.html', {
+                'toc': toc,
+                'reg': regtext,
+                'mode': 'diff',
+                'meta': meta,
+                'timeline': timeline,
+            })
+
+
+def diff_partial(request, left_version, left_eff_date, right_version, right_eff_date, node):
+
+    pass
 
 @never_cache
 def search_partial(request):
@@ -192,7 +208,7 @@ def search_partial(request):
     if request.method == 'GET':
 
         results = get_search_results(request)
-        return render_to_response('search_results.html', results)
+        return render_to_response('eregs_core/search_results.html', results)
 
 @never_cache
 def search(request):
@@ -229,7 +245,7 @@ def search(request):
         results['meta'] = meta
         results['timeline'] = timeline
 
-        return render_to_response('regulation.html', results)
+        return render_to_response('eregs_core/regulation.html', results)
 
 
 def get_search_results(request):
@@ -286,8 +302,6 @@ def regulation_main(request, part_number):
 
         non_blank_versions = Version.objects.exclude(version=None)
         regulations = [r for r in RegNode.objects.filter(label=part_number, reg_version__in=non_blank_versions)]
-        for r in regulations:
-            print r.reg_version.id, r.reg_version
         regulations = sorted(regulations, key=lambda x: x.version.split(':')[1], reverse=True)
 
         most_recent_reg = regulations[0]
@@ -310,39 +324,44 @@ def regulation_main(request, part_number):
                 fd.get_descendants(auto_infer_class=False)
                 timeline.append((pre, fd))
 
-        landing_page = 'landing_pages/reg_{}.html'.format(meta.cfr_section)
-        landing_page_sidebar = 'landing_pages/reg_{}_sidebar.html'.format(meta.cfr_section)
+        landing_page = 'eregs_core/landing_pages/reg_{}.html'.format(
+            meta.cfr_section
+        )
+        landing_page_sidebar = (
+            'eregs_core/landing_pages/reg_{}_sidebar.html'
+        ).format(meta.cfr_section)
 
         if toc is not None and meta is not None:
-            return render_to_response('regulation.html', {'toc': toc,
-                                                          'meta': meta,
-                                                          'timeline': timeline,
-                                                          'mode': 'landing',
-                                                          'landing_page': landing_page,
-                                                          'landing_page_sidebar': landing_page_sidebar})
+            return render_to_response('eregs_core/regulation.html', {
+                'toc': toc,
+                'meta': meta,
+                'timeline': timeline,
+                'mode': 'landing',
+                'landing_page': landing_page,
+                'landing_page_sidebar': landing_page_sidebar,
+            })
 
 
 def main(request):
 
     if request.method == 'GET':
 
-        # meta = Preamble.objects.filter(tag='preamble')
         reg_versions = Version.objects.exclude(version=None)
         meta = [r for r in Preamble.objects.filter(tag='preamble', reg_version__in=reg_versions)]
-        # meta = sorted(meta, key=lambda x: x.reg_letter, reverse=True)
 
         regs_meta = []
         reg_parts = set()
 
         for item in meta:
             item.get_descendants(auto_infer_class=False)
-            if item.reg_letter not in reg_parts:
+            if (item.cfr_title, item.cfr_section) not in reg_parts:
                 regs_meta.append(item)
-                reg_parts.add(item.reg_letter)
+                reg_parts.add((item.cfr_title, item.cfr_section))
 
-        regs_meta = sorted(regs_meta, key=lambda x: int(x.cfr_section))
-        print [(item.reg_letter, item.node_id) for item in regs_meta]
+        regs_meta = sorted(regs_meta, key=lambda x: (int(x.cfr_title), int(x.cfr_section)))
         fdsys = RegNode.objects.filter(tag='fdsys')
 
-        return render_to_response('main.html', {'preamble': regs_meta,
-                                                'fdsys': fdsys})
+        return render_to_response('eregs_core/main.html', {
+            'preamble': regs_meta,
+            'fdsys': fdsys,
+        })

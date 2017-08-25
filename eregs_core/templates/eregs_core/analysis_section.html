@@ -1,0 +1,13 @@
+<h4>{{ section.section_title }}</h4>
+
+{% for element in section.children %}
+    {% if element.tag == 'analysisParagraph' %}
+        {% with paragraph=element %}
+            <p>{% include 'eregs_core/analysis_paragraph.html' %}</p>
+        {% endwith %}
+    {% elif element.tag == 'analysisSection' %}
+        {% with section=element template_name='eregs_core/analysis_section.html' %}
+            {% include template_name %}
+        {% endwith %}
+    {% endif %}
+{% endfor %}

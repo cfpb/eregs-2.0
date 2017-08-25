@@ -1,0 +1,87 @@
+
+    {% if node.tag == "section" %}
+        {% if mode == 'reg' %}
+            <section id="{{ node.attribs.label }}" class="reg-section section-focus" tabindex="0"
+                     data-permalink-section data-base-version="{{ meta.document_number }}"
+                     data-effective-date="{{ meta.effective_date }}" data-page-type="reg-section">
+            <h2 class="section-title" tabindex="0">{{ node.subject }}</h2>
+
+        {% elif mode == 'diff' %}
+            <section id="{{ node.attribs.label }}" class="reg-section section-focus" tabindex="0"
+                     data-permalink-section data-base-version="{{ meta.document_number }}"
+                     data-newer-version="{{ node.right_version }}"
+                     data-effective-date="{{ meta.effective_date }}" data-page-type="diff">
+            <h2 class="section-title" tabindex="0">{{ node.subject_diff }}</h2>
+        {% endif %}
+        {% with inner=node.inner_list_type %}
+            <ol {% if inner == "none" %}list-style-type="none"{% else %}type="{{ inner }}"{% endif %} >
+        {% endwith %}
+
+    {% elif node.tag == "appendix" %}
+        <section id="{{ node.label }}" class="appendix-section section-focus content-{{ node.label }}"
+                 data-base-version="{{ meta.document_number }}" data-effective-date="{{ meta.effective_date }}"
+                 data-page-type="appendix">
+            <h2 class="appendix-title" tabindex="0">
+                {{ node.children.0.children.0.text }}
+            </h2>
+
+    {% elif node.tag == "interpretations" %}
+        <section id="{{ node.label }}" class="supplement-section" data-base-version="{{ meta.document_number }}"
+                 data-page-type="interpretation" data-effective-date="{{ meta.effective_date }}">
+
+    {% elif node.tag == "interpSection" %}
+        <section id="{{ node.label }}" data-permalink-section>
+            {% if node.has_diff_subject %}
+                <h3 tabindex="0">{{ node.subject_diff|safe }}</h3>
+            {% else %}
+                <h3 tabindex="0">{{ node.subject }}</h3>
+            {% endif %}
+            {% with inner=node.inner_list_type %}
+                <ol {% if inner == "none" %}list-style-type="none"{% else %}type="{{ inner }}"{% endif %} >
+            {% endwith %}
+
+    {% elif node.tag == "appendixSection" %}
+        <section id="{{ node.label }}" class="appendix-section">
+            <h3 class="appendix-heading">{{ node.subject }}</h3>
+            {% with inner=node.inner_list_type %}
+                <ol {% if inner == "none" %}list-style-type="none"{% else %}type="{{ inner }}"{% endif %} >
+            {% endwith %}
+
+    {% elif node.tag == "paragraph" or node.tag == "interpParagraph" %}
+        {% include "eregs_core/paragraph.html" %}
+    {% endif %}
+
+    {% if node.tag == "paragraph" or node.tag == "interpParagraph" %}
+        {% with inner=node.inner_list_type %}
+            <ol {% if inner == "none" %}list-style-type="none"{% else %}type="{{ inner }}"{% endif %} >
+        {% endwith %}
+    {% endif %}
+
+    {% for child in node.block_element_children %}
+
+        {% with node=child template_name="eregs_core/regnode.html" %}
+            {% with marker=node.marker_type %}
+                {% if not node.tag == "appendixSection" %}
+                    <li {% if marker == "none" or marker == None or marker == '' %}class="markerless"{% endif %}
+                            id="{{ node.label }}">
+                        {% include template_name %}</li>
+                {% else %}
+                    {% include template_name %}
+                {% endif %}
+            {% endwith %}
+        {% endwith %}
+    {% endfor %}
+
+
+    {% if node.tag == "paragraph" or node.tag == "interpParagraph" %} </ol>
+        {% if mode == 'reg' %}
+            {% for interp in node.get_interpretations %}
+                {% include "eregs_core/interpretation.html" %}
+            {% endfor %}
+        {% endif %}
+    {% endif %}
+
+    {% if node.tag == "section" or node.tag == "interpSection" or node.tag == "appendixSection" %}
+        </ol></section>
+    {% endif %}
+    {% if node.tag == "appendix" or node.tag == "interpretations" %}</section>{% endif %}

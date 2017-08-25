@@ -1,0 +1,36 @@
+<div id="table-of-contents" class="toc-drawer toc-container">
+    <div class="drawer-header">
+        <h2 class="toc-type">Table of Contents</h2>
+    </div>
+    <nav id="toc" class="regulation-nav drawer-content" role="navigation"
+         data-toc-version="{{ meta.document_number }}"
+         data-effective-date="{{ meta.effective_date }}">
+        <ol>
+            {% for entry in toc.section_entries %}
+                {% include "eregs_core/toc_entry.html" %}
+            {% endfor %}
+            {% if toc.has_appendices %}
+                <li data-subpart-heading>
+                    <h3 class="subpart-heading">Appendices</h3>
+                </li>
+                {% for entry in toc.appendix_entries %}
+                    {% include "eregs_core/toc_entry.html" %}
+                {% endfor %}
+            {% endif %}
+            {% if toc.has_interps %}
+                <li data-subpart-heading>
+                    <h3 class="subpart-heading">SUPPLEMENT I TO PART {{ meta.cfr_section }} -
+                    <span class="subpart-subhead">Staff Commentary</span></h3>
+                </li>
+                {% if toc.interp_intro_entry %}
+                    {% with intro=True entry=toc.interp_intro_entry %}
+                        {% include "eregs_core/toc_entry.html" %}
+                    {% endwith %}
+                {% endif %}
+                {% for entry in toc.non_intro_interp_entries %}
+                    {% include "eregs_core/toc_entry.html" %}
+                {% endfor %}
+            {% endif %}
+        </ol>
+    </nav>
+</div>

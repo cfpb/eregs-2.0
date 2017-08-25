@@ -10,16 +10,11 @@ from eregs_core.models import *
 
 
 class ModelFunctionsTest(TestCase):
-
-    def setUp(self):
-        self.xml_file1 = os.path.join(settings.DATA_DIR, '2011-31712.xml')
-        self.xml_file2 = os.path.join(
-            settings.DATA_DIR,
-            '2015-26607_20180101.xml'
-        )
-
-        call_command('import_xml', self.xml_file1)
-        call_command('import_xml', self.xml_file2)
+    @classmethod
+    def setUpClass(cls):
+        super(ModelFunctionsTest, cls).setUpClass()
+        for fn in ('2011-31712.xml', '2015-26607_20180101.xml'):
+            call_command('import_xml', os.path.join(settings.DATA_DIR, fn))
 
     def test_get_descendants(self):
 
