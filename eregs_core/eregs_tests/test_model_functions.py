@@ -107,7 +107,7 @@ class ModelFunctionsTest(TestCase):
         self.assertEqual(preamble.effective_date, '2011-12-30')
         self.assertEqual(preamble.document_number, '2011-31712')
         self.assertEqual(preamble.cfr_url, 'https://www.federalregister.gov/articles/2011/12/19/2011-31712/home-mortgage-disclosure-regulation-c')
-        self.assertEqual(preamble.reg_url, 'regulation/2011-31712/2011-12-30/1003-1')
+        self.assertEqual(preamble.reg_url, '/regulation/2011-31712/2011-12-30/1003-1')
 
     def test_fdsys_functions(self):
 

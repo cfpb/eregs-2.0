@@ -1,9 +1,12 @@
+{% load staticfiles %}
+
+
 {% block regulation_header %}
     <header if="site-header" class="reg-header chrome-header" role="banner">
         <div class="main-head">
             <div class="title">
                 <h1 class="site-title">
-                    <a href="/">
+                    <a href="{% url 'eregs_main' %}">
                         <span class="e">e</span>Regulations
                     </a>
                 </h1>
@@ -18,14 +21,14 @@
                 </a>
                 <ul class="app-nav-list">
                     <li class="app-nav-list-item">
-                        <a href="/">Regulations</a>
+                        <a href="{% url 'eregs_main' %}">Regulations</a>
                     </li>
                     <li class="app-nav-list-item">
                         <a href="/about">About</a>
                     </li>
                     <li class="app-nav-list-item logo-list-item">
-                        <a href="http://consumerfinance.gov">
-                            <img src="/static/eregsip/logo.png" class="logo"
+                        <a href="https://www.consumerfinance.gov">
+                            <img src="{% static 'eregsip/logo.png' %}" class="logo"
                             alt="Consumer Financial Protection Bureau" width="151">
                         </a>
                     </li>

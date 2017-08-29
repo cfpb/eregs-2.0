@@ -25,7 +25,7 @@
                     current
                 {% endif %}"
                     data-base-version="{{ preamble.version }}">
-                    <a href="/{{ preamble.reg_url }}" class="version-link" data-version="{{ preamble.version }}"
+                    <a href="{{ preamble.reg_url }}" class="version-link" data-version="{{ preamble.version }}"
                             id="link-{{ preamble.version }}">
                         <span class="version-date">{{ preamble.effective_date|effective_date }}</span>
                     </a>
@@ -43,7 +43,7 @@
                         <div class="diff-selector group">
                             <h4 class="compare-title">Compare this with</h4>
                             <div class="select-content">
-                                <form action="/diff_redirect/{{ preamble.document_number }}/{{ preamble.effective_date }}"
+                                <form action="{% url 'eregs_diff_redirect' preamble.document_number preamble.effective_date %}"
                                       method="GET">
                                     <select name="new_version" onchange="this.form.submit()">
                                         <option value="default" disabled="disabled" selected="selected">
@@ -65,7 +65,7 @@
                                 <div class="timeline-content-wrap">
                                     <h4 class="compare-title">Compare this with</h4>
                                     <a class="stop-button" data-version="{{ preamble.version }}"
-                                       href="/{{ preamble.reg_url }}">Stop Comparing</a>
+                                       href="{{ preamble.reg_url }}">Stop Comparing</a>
                                 </div>
                             {% endif %}
                         {% endif %}

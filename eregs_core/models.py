@@ -6,6 +6,7 @@ import difflib
 from hashlib import sha256
 from utils import xml_node_text
 from diffs import merge_text_diff
+from django.core.urlresolvers import reverse
 from django.db import models
 
 # if we're using postgres, we need to import JSONField from here
@@ -347,10 +348,12 @@ class Preamble(RegNode):
 
     @property
     def reg_url(self):
-        version_and_eff_date = self.node_id.split(':')[0:2]
-        section = self.cfr_section
-        link = '/'.join(['regulation'] + version_and_eff_date + [section + '-1'])
-        return link
+        version, effective_date = self.node_id.split(':')[0:2]
+        return reverse('eregs_regulation', args=[
+            version,
+            effective_date,
+            self.cfr_section + '-1'
+        ])
 
     @property
     def left_document_number(self):
@@ -633,7 +636,11 @@ class Section(RegNode):
 
     def node_url(self):
         split_version = self.version.split(':')
-        return '/regulation/{}/{}/{}'.format(split_version[0], split_version[1], self.label)
+        return reverse('eregs_regulation', [
+            split_version[0],
+            split_version[1],
+            self.label
+        ])
 
     def get_all_analyses(self):
         if not self.children:
@@ -744,8 +751,14 @@ class Paragraph(RegNode):
         split_version = self.version.split(':')
         ancestor_section = self.ancestor_section()
         if len(split_version) >= 2:
-            return '/regulation/{}/{}/{}#{}'.format(split_version[0], split_version[1],
-                                                    ancestor_section.label, self.label)
+            return '{}#{}'.format(
+                reverse('eregs_regulation', args=[
+                    split_version[0],
+                    split_version[1],
+                    ancestor_section.label,
+                ]),
+                self.label
+            )
         else:
             return ''
 
@@ -892,18 +905,30 @@ class Reference(RegNode):
             split_version = self.version.split(':')
             split_target = self.target().split('-')
             target = None
+            target_hash = None
+
             if 'Interp' in split_target:
                 if len(split_target) == 2:
                     target = self.target()
                 elif len(split_target) > 2:
-                    target = split_target[0] + '-Interp#' + self.target()
+                    target = split_target[0] + '-Interp'
+                    target_hash = self.target()
             else:
                 if len(split_target) == 2:
                     target = self.target()
                 elif len(split_target) > 2:
-                    target = split_target[0] + '-' + split_target[1] + '#' + self.target()
+                    target = split_target[0] + '-' + split_target[1]
+                    target_hash = self.target()
             try:
-                url = '/regulation/{}/{}/{}'.format(split_version[0], split_version[1], target)
+                url = reverse('eregs_regulation', args=[
+                    split_version[0],
+                    split_version[1],
+                    target
+                ])
+
+                if target_hash:
+                    url += '#{}'.format(target_hash)
+
                 return url
             except Exception as ex:
                 # we don't want to die if this happens, but we should definitely log the error
@@ -978,7 +1003,12 @@ class AnalysisSection(RegNode):
         return ''.join([section] + ['({})'.format(item) for item in split_target[2:]])
 
     def target_url(self):
-        return '/partial/sxs/{}/{}/{}'.format(self.version.split(':')[0], self.version.split(':')[1], self.target())
+        split_version = self.version.split(':')
+        return reverse('eregs_sxs_partial', args=[
+            split_version[0],
+            split_version[1],
+            self.target()
+        ])
 
 
 class AnalysisParagraph(RegNode):

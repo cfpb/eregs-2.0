@@ -18,10 +18,10 @@
     </section>
     <footer class="search-nav">
         {% if prev_page %}
-            <a class="previous" href="/partial/search/?q={{ search_term }}&version={{ version }}&page={{ prev_page }}"><span class="cf-icon cf-icon-left"></span>Previous 10 Results</a>
+          <a class="previous" href="{% url 'eregs_partial_search' %}?q={{ search_term }}&version={{ version }}&page={{ prev_page }}"><span class="cf-icon cf-icon-left"></span>Previous 10 Results</a>
         {% endif %}
         {% if next_page %}
-            <a class="next" href="/partial/search/?q={{ search_term }}&version={{ version }}&page={{ next_page }}"><span class="cf-icon cf-icon-right"></span>Next 10 Results</a>
+          <a class="next" href="{% url 'eregs_partial_search' %}?q={{ search_term }}&version={{ version }}&page={{ next_page }}"><span class="cf-icon cf-icon-right"></span>Next 10 Results</a>
         {% endif %}
         <div class="pager">Page {{ page }} of {{ total_pages }}</div>
     </footer>
