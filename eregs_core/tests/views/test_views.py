@@ -6,7 +6,7 @@ from django.test import RequestFactory, TestCase
 from mock import Mock, patch
 
 from eregs_core.views import (
-    definition_partial, main, regulation, regulation_main, regulation_partial,
+    definition_partial, regulation, regulation_main, regulation_partial,
     search, search_partial, sidebar_partial
 )
 
@@ -44,10 +44,6 @@ class TestViews(TestCase):
             self.effective_date,
             '1003-A'
         )
-        self.assertEquals(response.status_code, 200)
-
-    def test_view_main(self):
-        response = main(self.request())
         self.assertEquals(response.status_code, 200)
 
     def test_view_regulation(self):

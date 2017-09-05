@@ -1,0 +1,24 @@
+<regulation xmlns="eregs">
+  <fdsys>
+    <cfrTitleNum>99</cfrTitleNum>
+    <cfrTitleText>TESTING</cfrTitleText>
+    <volume>99</volume>
+    <date>2017-01-01</date>
+    <originalDate>2017-01-01</originalDate>
+    <title>TEST</title>
+  </fdsys>
+  <preamble>
+    <agency>Bureau of Consumer Financial Protection</agency>
+    <regLetter>TEST</regLetter>
+    <cfr>
+      <title>123</title>
+      <section>4567</section>
+    </cfr>
+    <documentNumber>9999-99999</documentNumber>
+    <effectiveDate>2017-01-01</effectiveDate>
+    <federalRegisterURL>https://www.federalregister.gov/testing</federalRegisterURL>
+  </preamble>
+  <part label="9999">
+    <content></content>
+  </part>
+</regulation>

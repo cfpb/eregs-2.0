@@ -1,20 +1,13 @@
-from django.shortcuts import render, render_to_response
+from django.shortcuts import render_to_response
 from django.template.loader import render_to_string
-from django.http import HttpResponse, HttpResponseRedirect, Http404
-from django.views.decorators.csrf import csrf_exempt
+from django.http import HttpResponse, HttpResponseRedirect
 from django.views.decorators.cache import never_cache
 
 from haystack.query import SearchQuerySet
 
-from models import *
-from utils import *
-from api import *
-
-import json
-import time
-
-
-from dateutil import parser as dt_parser
+from eregs_core.models import *
+from eregs_core.utils import *
+from eregs_core.api import *
 
 
 def regulation(request, version, eff_date, node):
@@ -340,28 +333,3 @@ def regulation_main(request, part_number):
                 'landing_page': landing_page,
                 'landing_page_sidebar': landing_page_sidebar,
             })
-
-
-def main(request):
-
-    if request.method == 'GET':
-
-        reg_versions = Version.objects.exclude(version=None)
-        meta = [r for r in Preamble.objects.filter(tag='preamble', reg_version__in=reg_versions)]
-
-        regs_meta = []
-        reg_parts = set()
-
-        for item in meta:
-            item.get_descendants(auto_infer_class=False)
-            if (item.cfr_title, item.cfr_section) not in reg_parts:
-                regs_meta.append(item)
-                reg_parts.add((item.cfr_title, item.cfr_section))
-
-        regs_meta = sorted(regs_meta, key=lambda x: (int(x.cfr_title), int(x.cfr_section)))
-        fdsys = RegNode.objects.filter(tag='fdsys')
-
-        return render_to_response('eregs_core/main.html', {
-            'preamble': regs_meta,
-            'fdsys': fdsys,
-        })

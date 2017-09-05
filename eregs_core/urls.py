@@ -1,13 +1,15 @@
 from django.conf.urls import url
 
 from eregs_core.views import (
-    definition_partial, diff, diff_partial, diff_redirect, main, regulation, regulation_main,
-    regulation_partial, search, search_partial, sidebar_partial, sxs_partial
+    definition_partial, diff, diff_partial, diff_redirect, regulation,
+    regulation_main, regulation_partial, search, search_partial,
+    sidebar_partial, sxs_partial
 )
+from eregs_core.views.main import MainView
 
 
 urlpatterns = [
-    url(r'^$', main, name='eregs_main'),
+    url(r'^$', MainView.as_view(), name='eregs_main'),
     url(r'^(?P<part_number>[\d]{4})',
         regulation_main,
         name='eregs_regulation_main'),
