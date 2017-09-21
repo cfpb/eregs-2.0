@@ -7,10 +7,6 @@ nodejs: 6
 services:
 - mysql
 before_install:
-- rm -rf ~/.nvm
-- curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.30.2/install.sh | bash
-- source ~/.nvm/nvm.sh
-- nvm install 6
 - npm install -g npm
 - ./.travis-install-mysql-5.7.sh
 - mysql -uroot -e "CREATE USER 'eregs'@'localhost' IDENTIFIED BY 'eregs';"
