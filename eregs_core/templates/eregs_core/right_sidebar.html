@@ -12,8 +12,10 @@
             {% with analyses=node.get_all_analyses %}
                 {% if analyses %}
                     <h5 class="subtitle">Most Recent Analysis</h5>
-                    <a class="what" href="/about#related-info" aria-label="Link opens in a new window"
-                        target="_blank">(What's this?)</a>
+                    <a class="what" href="/about#related-info"
+                       aria-label="Link opens in a new window"
+                       rel="noopener noreferrer"
+                       target="_blank">(What's this?)</a>
                     <ul class="sxs-list">
                     {% for analysis in analyses %}
                         <li>
@@ -27,7 +29,10 @@
                     </ul>
                 {% else %}
                     No analyses available for this section in this tool.
-                    <a class="what" href="/about#related-info" aria-label="Link opens in a new window"
+                    <a class="what"
+                       href="/about#related-info"
+                       aria-label="Link opens in a new window"
+                       rel="noopener noreferrer"
                         target="_blank">(What's this?)</a>
                 {% endif %}
             {% endwith %}
@@ -35,6 +40,7 @@
         {% else %}
             No analyses available for this section in this tool. <a class="what" href="/about#related-info"
                                                                     aria-label="Link opens in a new window"
+                                                                    rel="noopener noreferrer"
                                                                     target="_blank">(What's this?)</a>
         {% endif %}
 
@@ -49,7 +55,11 @@
     <div class="chunk expand-drawer">
         <div class="sidebar-subsection">
             <h5 class="help-title">Interface Help</h5>
-            <a class="what" href="/about#navigation" aria-label="Link opens in a new window" target="_blank">(What's
+            <a class="what"
+               href="/about#navigation"
+               aria-label="Link opens in a new window"
+               rel="noopener noreferrer"
+               target="_blank">(What's
                 this?)</a>
 
             <ul class="help-list">
@@ -64,7 +74,11 @@
 
         <div class="sidebar-subsection">
             <h5 class="help-title">Textual Help</h5>
-            <a class="what" href="/about#related-info" aria-label="Link opens in a new window" target="_blank">(What's
+            <a class="what"
+               href="/about#related-info"
+               aria-label="Link opens in a new window"
+               rel="noopener noreferrer"
+               target="_blank">(What's
                 this?)</a>
 
             <ul class="help-list">
