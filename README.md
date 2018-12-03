@@ -1,3 +1,6 @@
+# :warning: THIS REPO IS DEPRECATED (12/3/2018) :warning:
+Please migrate to using [cfgov-refresh](https://github.com/cfpb/cfgov-refresh).
+
 # eregs-2.0
 
 [![Build Status](https://travis-ci.org/cfpb/eregs-2.0.svg?branch=master)](https://travis-ci.org/cfpb/eregs-2.0)
